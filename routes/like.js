@@ -1,9 +1,11 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router({ mergeParams: true });
+const { addLike, cancelLike } = require('../controllers/like');
 
-/* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.send('respond with a resource');
-});
+/* Add Like API */
+router.post('/', addLike);
+
+/* cancel Like API */
+router.delete('/', cancelLike);
 
 module.exports = router;

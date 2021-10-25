@@ -1,6 +1,4 @@
-var express = require('express');
-var router = express.Router();
-const logger = require('../config/logger');
-const {db} = require('../models/index');
+const express = require('express');
+const router = express.Router();
 
 module.exports = router;
