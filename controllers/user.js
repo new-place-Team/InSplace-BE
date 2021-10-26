@@ -34,7 +34,7 @@ const registUser = async (req, res) => {
       logger.error(`Nickname 중복검사 에러 : ${err}`);
       res
         .status(400)
-        .json({ success: false, errMSG: 'Email 중복검사 에러', err });
+        .json({ success: false, errMSG: 'Nickname 중복검사 에러', err });
     }
   };
   //Email 중복검사
