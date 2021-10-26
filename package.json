@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www",
+    "start": "nodemon --experimental-modules ./bin/www",
     "test": "jest"
   },
   "dependencies": {
     "app-root-path": "^3.0.0",
     "aws-sdk": "^2.1013.0",
+    "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
