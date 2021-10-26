@@ -1,5 +1,5 @@
 const logger = require('../config/logger');
-
+const { pool } = require('../models/index');
 /* 가본 장소 리스트에 추가 */
 const addVisitedList = (req, res) => {
   try {
@@ -15,6 +15,15 @@ const addVisitedList = (req, res) => {
   }
 };
 
+const showDetailPost = async (req, res) => {
+  const { postId } = req.params;
+  const result = await pool.query(
+    `SELECT * FROM Posts INNER JOIN Categories ON Posts.category_id = Categories.category_id  WHERE post_id = ? `,
+    [postId]
+  );
+  console.log(result[0]);
+};
 module.exports = {
   addVisitedList,
+  showDetailPost,
 };
