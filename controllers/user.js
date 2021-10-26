@@ -2,32 +2,49 @@ const logger = require('../config/logger');
 const { pool } = require('../models/index');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
 const registUser = async (req, res) => {
   const { email, nickname, password } = req.user;
   const { male_yn, mbti_id } = req.body;
   //Email 중복 검사 함수 선언
-  const duplicateEmailCheck = async (email) => {
-    const [result] = await pool.query(`SELECT * FROM Users WHERE email = ?`, [
-      email,
-    ]);
-    return result[0];
+
+  const checkDuplicateOfEmail = async (email) => {
+    try {
+      const [result] = await pool.query(`SELECT * FROM Users WHERE email = ?`, [
+        email,
+      ]);
+      return result[0];
+    } catch (err) {
+      logger.error(`Email 중복검사 에러 : ${err}`);
+      res
+        .status(400)
+        .json({ success: false, errMSG: 'Email 중복검사 에러', err });
+    }
   };
 
   //Nickname 중복 검사 함수 선언
-  const duplicateNicknameCheck = async (nickname) => {
-    const [result] = await pool.query(
-      `SELECT * FROM Users WHERE nickname = ?`,
-      [nickname]
-    );
-    return result[0];
+  const checkDuplicateOfNickname = async (nickname) => {
+    try {
+      const [result] = await pool.query(
+        `SELECT * FROM Users WHERE nickname = ?`,
+        [nickname]
+      );
+      return result[0];
+    } catch (err) {
+      logger.error(`Nickname 중복검사 에러 : ${err}`);
+      res
+        .status(400)
+        .json({ success: false, errMSG: 'Email 중복검사 에러', err });
+    }
   };
-  //Email Nickname 중복검사
-  if (await duplicateEmailCheck(email)) {
+  //Email 중복검사
+  if (await checkDuplicateOfEmail(email)) {
     return res
       .status(200)
       .json({ success: true, msg: '이메일이 중복되었습니다' });
   }
-  if (await duplicateNicknameCheck(nickname)) {
+  //Nickname 중복검사
+  if (await checkDuplicateOfNickname(nickname)) {
     return res
       .status(200)
       .json({ success: true, msg: '닉네임이 중복되었습니다' });
