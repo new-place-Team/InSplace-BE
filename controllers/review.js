@@ -5,15 +5,22 @@ const {db} = require('../models/index');
 
 const postingReview = async(req, res) => {
   const postId = req.params.postId;
-  const review_images = req.file.transforms[0].location;
-  const {review_desc, revisit_yn} = req.body
+  const reviewImages = req.file.transforms[0].location;
+  const {review_desc, revisit_yn} = req.body;
+  const params = [
+    postId,
+    reviewImages,
+    reviewImages,
+    review_desc,
+    revisit_yn
+  ]
   try{
-    const ReviewQuery = `
+    const reviewQuery = `
     INSERT INTO 
     Reviews(post_id, review_images, review_desc, revisit_yn, review_delete_yn)
     VALUES(?, ?, ?, ?, ?)
     `;
-    await db.query(ReviewQuery, [postId, review_images, review_desc, revisit_yn, 0], (err, rows, fields) => {});
+    await db.query(reviewQuery, params);
     return res.status(201).json({
       success: true,
     });
@@ -23,9 +30,7 @@ const postingReview = async(req, res) => {
       success: false,
       errMsg: `리뷰 등록에서 예상치 못한 에러가 발생했습니다: ${err}`,
     });
-  } finally {
-    db.release(); // db 회수
-  }
+  } 
 }
 
 module.exports = {
