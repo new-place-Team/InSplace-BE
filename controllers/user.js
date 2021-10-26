@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const registUser = async (req, res) => {
   const { email, nickname, password } = req.user;
-  const { male_yn, mbti_id } = req.body;
+  const { male_yn, mbti } = req.body;
   //Email 중복 검사 함수 선언
 
   const checkDuplicateOfEmail = async (email) => {
@@ -18,7 +18,7 @@ const registUser = async (req, res) => {
       logger.error(`Email 중복검사 에러 : ${err}`);
       res
         .status(400)
-        .json({ success: false, errMSG: 'Email 중복검사 에러', err });
+        .json({ success: false, errMSG: 'Email 중복검사 에러', err: err });
     }
   };
 
@@ -34,7 +34,7 @@ const registUser = async (req, res) => {
       logger.error(`Nickname 중복검사 에러 : ${err}`);
       res
         .status(400)
-        .json({ success: false, errMSG: 'Nickname 중복검사 에러', err });
+        .json({ success: false, errMSG: 'Nickname 중복검사 에러', err: err });
     }
   };
   //Email 중복검사
@@ -56,8 +56,9 @@ const registUser = async (req, res) => {
       `SELECT mbti_id 
        FROM Mbti 
        WHERE description = ?`,
-      [mbti_id]
+      [mbti]
     );
+
     //비밀번호 암호화
     const hashPassword = await bcrypt.hash(
       password,
@@ -79,7 +80,7 @@ const registUser = async (req, res) => {
         return res.status(400).json({
           success: false,
           errMSG: '유저정보 등록과정에서 에러 발생',
-          err,
+          err: err,
         });
       });
   } catch (err) {
@@ -87,7 +88,7 @@ const registUser = async (req, res) => {
     return res.status(400).json({
       success: false,
       errMSG: 'mbti, 비밀번호 Hash과정에서 에러 발생',
-      err,
+      err: err,
     });
   }
 };
@@ -131,7 +132,7 @@ const authUser = async (req, res) => {
     return res.status(400).json({
       success: false,
       errMSG: '해쉬된 비밀번호 가지고 오는 과정에서 에러',
-      err,
+      err: err,
     });
   }
 };
