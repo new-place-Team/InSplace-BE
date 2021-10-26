@@ -1,5 +1,5 @@
 const logger = require('../config/logger');
-const { db } = require('../models/index');
+const { pool } = require('../models/index');
 const bcrypt = require('bcrypt');
 
 const userRegist = async (req, res) => {
@@ -8,7 +8,7 @@ const userRegist = async (req, res) => {
 
   //Email 중복 검사 함수 선언
   const duplicateEmailCheck = async (email) => {
-    const [result] = await db.query(`SELECT * FROM Users WHERE email = ?`, [
+    const [result] = await pool.query(`SELECT * FROM Users WHERE email = ?`, [
       email,
     ]);
     return result[0];
@@ -16,9 +16,10 @@ const userRegist = async (req, res) => {
 
   //Nickname 중복 검사 함수 선언
   const duplicateNicknameCheck = async (nickname) => {
-    const [result] = await db.query(`SELECT * FROM Users WHERE nickname = ?`, [
-      nickname,
-    ]);
+    const [result] = await pool.query(
+      `SELECT * FROM Users WHERE nickname = ?`,
+      [nickname]
+    );
     return result[0];
   };
   //Email Nickname 중복검사
@@ -36,7 +37,7 @@ const userRegist = async (req, res) => {
   //중복검사 통과
   try {
     //mbti id검사
-    const [data] = await db.query(
+    const [data] = await pool.query(
       `SELECT mbti_id 
        FROM Mbti 
        WHERE description = ?`,
@@ -48,12 +49,13 @@ const userRegist = async (req, res) => {
       parseInt(process.env.HASH_SALT)
     );
     //유저 정보 저장
-    db.query(
-      `INSERT INTO Users 
+    pool
+      .query(
+        `INSERT INTO Users 
       (email, nickname, password, male_yn, mbti_id) 
       VALUES(?,?,?,?,?)`,
-      [email, nickname, hashPassword, male_yn, data[0].mbti_id]
-    )
+        [email, nickname, hashPassword, male_yn, data[0].mbti_id]
+      )
       .then((data) => {
         return res.status(201).json({ success: true });
       })

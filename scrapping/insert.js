@@ -1,5 +1,4 @@
 const axios = require('axios');
-
 const mysql = require('mysql2');
 
 // create the connection to database
@@ -10,26 +9,26 @@ const connection = mysql.createConnection({
   database: 'new_place',
 });
 
-// 원하는 위치를 위도로 바꾸기
-// axios
-//   .get(
-//     encodeURI(
-//       'https://dapi.kakao.com/v2/local/search/address.json?query=서울 중구 세종대로 110'
-//     ),
-//     {
-//       headers: {
-//         Authorization: 'KakaoAK c5b22a4795f62ae5790a2f735f2f0ffc',
-//       },
-//     }
-//   )
-//   .then((Response) => {
-//     x = Response.data.documents[0].x;
-//     y = Response.data.documents[0].y;
-//     console.log(x, y);
-//   })
-//   .catch((Error) => {
-//     console.log(Error);
-//   });
+
+axios
+  .get(
+    encodeURI(
+      'https://dapi.kakao.com/v2/local/search/address.json?query=서울 강남구 테헤란로 지하 340'
+    ),
+    {
+      headers: {
+        Authorization: 'KakaoAK c5b22a4795f62ae5790a2f735f2f0ffc',
+      },
+    }
+  )
+  .then((Response) => {
+    x = Response.data.documents[0].y; //위도
+    y = Response.data.documents[0].x; //경도
+    console.log(x, y);
+  })
+  .catch((Error) => {
+    console.log(Error);
+  });
 
 //좌표를 기점으로 주변 시설 검색
 // axios
