@@ -1,5 +1,5 @@
 const logger = require('../config/logger');
-const { db } = require('../models/index');
+// const { db } = require('../models/index');
 
 /* 좋아요 추가 함수 */
 const addLike = async (req, res) => {
@@ -40,7 +40,7 @@ const addLike = async (req, res) => {
 };
 
 /* 좋아요 취소 함수 */
-const cancelLike = (req, res) => {
+const cancelLike = async (req, res) => {
   const postId = req.params.postId;
   const userId = req.user.userId;
 
