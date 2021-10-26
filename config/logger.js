@@ -17,7 +17,7 @@ const logFormat = printf(({ level, message, label, timestamp }) => {
 const logger = winston.createLogger({
   format: combine(
     label({
-      label: 'VELOG',
+      label: 'NEW_PLACE',
     }),
     timestamp({
       format: 'YYYY-MM-DD HH:mm:ss',

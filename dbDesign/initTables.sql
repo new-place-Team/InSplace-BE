@@ -1,8 +1,11 @@
+-- DB 초기 셋팅
+
 -- User Table
 CREATE TABLE `Users` (
   `user_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
   `email` varchar(255) UNIQUE NOT NULL,
   `nickname` varchar(255) UNIQUE NOT NULL,
+  `password` varchar(40) NOT NULL,
   `male_yn` boolean NOT NULL,
   `mbti_id` integer NOT NULL,
   `user_image` varchar(255)
@@ -13,8 +16,8 @@ CREATE TABLE `Users` (
 -- "post_loc_x": "위도"
 -- "post_loc_y": "경도"
 -- "like_cnt" : 해당 포스트에 좋아요를 누른 횟수
--- "sunday_yn": 날씨가 맑음일 경우 1, 나머지 0
--- 
+-- "weather_id": 1: 맑음, 2: 비, 3: 눈, 4: 맑음, 비 5: 맑음, 눈, 6:  비, 눈 7: 맑음, 비, 눈
+-- member_cnt -> 1: 1명 , 2: 2명, 3: 4명 미만, 4: 4명 이상, 5: "4명 미만, 4명 이상"
 CREATE TABLE `Posts` (
   `post_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
   `title` varchar(45) NOT NULL,
@@ -24,25 +27,22 @@ CREATE TABLE `Posts` (
   `category_id` integer NOT NULL,
   `post_images` text,
   `post_desc` text,
-  `post_loc_x` varchar(255) NOT NULL,
-  `post_loc_y` varchar(255) NOT NULL,
+  `post_loc_x` varchar(20) NOT NULL,
+  `post_loc_y` varchar(20) NOT NULL,
   `like_cnt` integer NOT NULL DEFAULT 0,
-  `sunday_yn` boolean NOT NULL,
+  `weather_id` integer NOT NULL,
   `inside_yn` boolean NOT NULL,
-  `noisy_yn` boolean NOT NULL,
   `gender_id` integer NOT NULL,
-  `opening_hour` varchar(255) NOT NULL,
-  `closing_hour` varchar(255) NOT NULL,
-  `num_of_people` integer NOT NULL,
+  `member_id` integer NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
 -- Category Table
--- 1: "데이트",  2: "여행", 3: "스터디", 4:"엑티비티", 5:"예술"
+-- 1: "데이트",  2: "맛집", 3: "카페", 4:"예술", 5:"엑티비티"
 CREATE TABLE `Categories` (
   `category_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
-  `category_name` varchar(20)
+  `description` varchar(20)
 );
 
 -- Post Like Table
@@ -74,6 +74,11 @@ CREATE TABLE `Genders` (
   `description` varchar(20) NOT NULL
 );
 
+CREATE TABLE `MemberCnt` (
+  `member_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
+  `description` varchar(20) NOT NULL
+);
+
 -- 찜한 Post 목록들
 -- 해당 Post를 찜할 경우 생성, 반대일 경우 삭제
 CREATE TABLE `Favorites` (
@@ -87,7 +92,7 @@ CREATE TABLE `Favorites` (
 -- revisite_yn -> 재방문 의사가 있을 경우 1, 없을 경우 0
 CREATE TABLE `Reviews` (
   `review_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
-  `post_id` integer,
+  `post_id` integer NOT NULL,
   `review_images` varchar(255),
   `review_desc` varchar(255),
   `weekday_yn` boolean NOT NULL,
@@ -99,19 +104,40 @@ CREATE TABLE `Reviews` (
 -- MBTI 유형 별로 넣어 놓은 테이블(16가지)
 CREATE TABLE `Mbti` (
   `mbti_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
-  `mbti_info` varchar(20) DEFAULT "Unknown"
+  `description` varchar(20) DEFAULT "Unknown"
+);
+
+-- WEATHERS 
+CREATE TABLE `Weathers` (
+  `weather_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
+  `description` varchar(20)
 );
 
 ALTER TABLE `ReviewLikes` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE `PostLikes` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE `PostLikes` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-ALTER TABLE `Reviews` ADD FOREIGN KEY (`review_id`) REFERENCES `ReviewLikes` (`review_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-ALTER TABLE `Genders` ADD FOREIGN KEY (`gender_id`) REFERENCES `Posts` (`gender_id`);
-ALTER TABLE `Favorites` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`);
-ALTER TABLE `Posts` ADD FOREIGN KEY (`post_id`) REFERENCES `Favorites` (`post_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `Mbti` ADD FOREIGN KEY (`mbti_id`) REFERENCES `Users` (`mbti_id`);
+ALTER TABLE `ReviewLikes` ADD FOREIGN KEY (`review_id`) REFERENCES `Reviews` (`review_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `Posts` ADD FOREIGN KEY (`gender_id`) REFERENCES `Genders` (`gender_id`);
+ALTER TABLE `Favorites` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `Favorites` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `Users` ADD FOREIGN KEY (`mbti_id`) REFERENCES `Mbti` (`mbti_id`);
 ALTER TABLE `Reviews` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-ALTER TABLE `Categories` ADD FOREIGN KEY (`category_id`) REFERENCES `Posts` (`category_id`);
-ALTER TABLE `Users` ADD FOREIGN KEY (`user_id`) REFERENCES `visitedPosts` (`user_id`);
-ALTER TABLE `Posts` ADD FOREIGN KEY (`post_id`) REFERENCES `visitedPosts` (`post_id`);
+ALTER TABLE `Posts` ADD FOREIGN KEY (`category_id`) REFERENCES `Categories` (`category_id`);
+ALTER TABLE `VisitedPosts` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `VisitedPosts` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `Posts` ADD FOREIGN KEY (`weather_id`) REFERENCES `Weathers` (`weather_id`);
+ALTER TABLE `Posts` ADD FOREIGN KEY (`member_id`) REFERENCES `MemberCnt` (`member_id`);
 
+-- Charset UTF-8 추가 
+ALTER TABLE Users CONVERT TO character SET utf8;
+ALTER TABLE Posts CONVERT TO character SET utf8;
+ALTER TABLE Favorites CONVERT TO character SET utf8;
+ALTER TABLE Mbti CONVERT TO character SET utf8;
+ALTER TABLE ReviewLikes CONVERT TO character SET utf8;
+ALTER TABLE PostLikes CONVERT TO character SET utf8;
+ALTER TABLE Categories CONVERT TO character SET utf8;
+ALTER TABLE Reviews CONVERT TO character SET utf8;
+ALTER TABLE VisitedPosts CONVERT TO character SET utf8;
+ALTER TABLE Genders CONVERT TO character SET utf8;
+ALTER TABLE Weathers CONVERT TO character SET utf8;
+ALTER TABLE MemberCnt CONVERT TO character SET utf8;
