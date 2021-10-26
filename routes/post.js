@@ -9,5 +9,7 @@ router.get('/', function (req, res, next) {
 
 router.use('/:postId/reviews', reviewRouter);
 router.use('/:postId/likes', likeRouter);
+router.use('/:postId', likeRouter);
+router.use('/:postId/visited', likeRouter);
 
 module.exports = router;
