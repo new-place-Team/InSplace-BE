@@ -2,7 +2,7 @@ const logger = require('../config/logger');
 const { pool } = require('../models/index');
 const bcrypt = require('bcrypt');
 
-const userRegist = async (req, res) => {
+const registUser = async (req, res) => {
   const { email, nickname, password } = req.user;
   const { male_yn, mbti_id } = req.body;
 
@@ -77,4 +77,4 @@ const userRegist = async (req, res) => {
   }
 };
 
-module.exports = userRegist;
+module.exports = registUser;

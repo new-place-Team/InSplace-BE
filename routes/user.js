@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const valudationUser = require('../middlewares/valudationUser');
-const userRegist = require('../controllers/user');
+const validationUser = require('../middlewares/validationUser');
+const registUser = require('../controllers/user');
 /* GET users listing. */
-router.post('/register', valudationUser, userRegist);
+router.post('/register', validationUser, registUser);
 
 module.exports = router;
