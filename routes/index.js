@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const user = require('./user');
-const post = require('./post');
-const searching = require('./searching');
-const logger = require('../config/logger');
+const userRouter = require('./user');
+const postRouter = require('./post');
+const searchingRouter = require('./searching');
 require('dotenv').config();
+
 //swagger
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
@@ -44,9 +44,9 @@ router.get('./swagger.json', (req, res) => {
   res.send(swaggerSpec);
 });
 
-router.use('/users', user);
-router.use('/posts', post);
-router.use('/search', searching);
+router.use('/users', userRouter);
+router.use('/posts', postRouter);
+router.use('/search', searchingRouter);
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /* GET home page. */

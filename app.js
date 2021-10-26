@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const logger = require('./config/logger');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

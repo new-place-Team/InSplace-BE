@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const valudationUser = require('../middlewares/valudationUser');
+const validationUser = require('../middlewares/validationUser');
 const { registUser, authUser } = require('../controllers/user');
 /* GET users listing. */
-router.post('/register', valudationUser, registUser);
-router.post('/auth', authUser);
+router.post('/register', validationUser, registUser);
+router.post('/auth', validationUser, authUser);
 
 module.exports = router;
