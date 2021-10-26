@@ -1,14 +1,8 @@
 const axios = require('axios');
-const mysql = require('mysql2');
-
-// create the connection to database
-const connection = mysql.createConnection({
-  host: '52.79.162.82',
-  user: 'newPlace',
-  password: '12345',
-  database: 'new_place',
-});
-
+// const mysql = require('mysql2');
+// const { db } = require('../models/index');
+const logger = require('../config/logger');
+// create the db to database
 
 axios
   .get(
@@ -22,6 +16,7 @@ axios
     }
   )
   .then((Response) => {
+    console.log(Response.data.documents);
     x = Response.data.documents[0].y; //위도
     y = Response.data.documents[0].x; //경도
     console.log(x, y);
@@ -45,41 +40,40 @@ axios
 //   .then((Response) => {
 //     Response.data.documents.forEach((data) => {
 //       const [City, village] = data.road_address_name.split(' ');
-// console.log(data.road_address_name);
-// console.log(`${City} ${village}`);
-// console.log(data.phone);
-// console.log(data.place_name);
-// console.log(data.x);
-// console.log(data.y);
-// connection.query(
-//   'INSERT INTO Posts(title, address, contact_number, post_images, post_desc, post_loc_x, post_loc_y, noisy_yn, weather_yn ) VALUES (?,?,?,?,?,?,?,?,? );',
-//   [
-//     data.place_name,
-//     data.road_address_name,
-//     data.phone,
-//     '이미지를 넣어주세요',
-//     '장소에 대한 설명을 넣어주세요',
-//     data.x,
-//     data.y,
-//     1,
-//     1,
-//   ]
-// ),
-//   (err, data) => {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       console.log(data);
-//     }
-//   };
+//       const query = `'INSERT INTO Posts(title, address, contact_number, post_images, post_desc, post_loc_x, post_loc_y, noisy_yn, weather_yn ) VALUES (?,?,?,?,?,?,?,?,? );',`;
+//       const params = [
+//         data.place_name,
+//         data.road_address_name,
+//         data.phone,
+//         '이미지를 넣어주세요',
+//         '장소에 대한 설명을 넣어주세요',
+//         data.x,
+//         data.y,
+//         1,
+//         1,
+//       ];
+//       /* console.log(data.road_address_name);
+//       console.log(`${City} ${village}`);
+//       console.log(data.phone);
+//       console.log(data.place_name);
+//       console.log(data.x);
+//       console.log(data.y); */
+//       db.query(query, params),
+//         (err, data) => {
+//           if (err) {
+//             console.log(err);
+//           } else {
+//             console.log(data);
+//           }
+//         };
+//     });
+//   })
+//   .catch((Error) => {
+//     console.log(Error);
 //   });
-// })
-// .catch((Error) => {
-//   console.log(Error);
-// });
 
-// 데이터베이스에 중복제거
-// connection.query(
+// //데이터베이스에 중복제거
+// db.query(
 //   'DELETE a FROM Posts a, Posts b WHERE a.post_id > b.post_id AND a.title = b.title',
 //   (err, data) => {
 //     if (err) {
