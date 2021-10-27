@@ -9,7 +9,7 @@ const Schema = Joi.object({
   password: Joi.string().min(4),
 });
 
-const valudationUser = async (req, res, next) => {
+const validationUser = async (req, res, next) => {
   const { email, nickname, password } = req.body;
 
   try {
@@ -37,4 +37,4 @@ const valudationUser = async (req, res, next) => {
   }
 };
 
-module.exports = valudationUser;
+module.exports = validationUser;
