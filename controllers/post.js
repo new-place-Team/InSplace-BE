@@ -1,11 +1,18 @@
 const logger = require('../config/logger');
 const { pool } = require('../models/index');
 /* 가본 장소 리스트에 추가 */
-const addVisitedList = (req, res) => {
+const addVisitedList = async (req, res) => {
   try {
-    console.log(req.params);
-
-    // await pool.query('INSERT INTO VisitedPosts');
+    await pool.query(
+      `INSERT INTO VisitedPosts
+       (user_id, post_id)
+       VALUES(?,?)`,
+      [req.user, req.params.postId]
+    );
+    const payload = {
+      success: true,
+    };
+    res.status(200).json({ payload });
   } catch (err) {
     logger.error(`가본 장소 리스트 추가부분에서 에러:${err}`);
     res.status(400).json({

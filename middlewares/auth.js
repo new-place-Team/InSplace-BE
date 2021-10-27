@@ -27,8 +27,8 @@ const isAuth = async (req, res, next) => {
     const userID = decoded.user_id;
 
     const data = await getUserInfo(userID);
-    console.log(data);
-    req.user = data.rows;
+
+    req.user = data.rows.user_id;
     next();
   });
 };
@@ -68,7 +68,6 @@ async function getUserInfo(userID) {
         rows: rows[0],
       };
     } else {
-      console.log('여기타냐2');
       const payload = {
         success: true,
         msg: '존재하지 않는 회원입니다.',
