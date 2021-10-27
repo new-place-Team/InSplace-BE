@@ -1,15 +1,11 @@
 const logger = require('../config/logger');
 const { pool } = require('../models/index');
+const { addVisited, findDetailPage } = require('../query/post');
 /* 가본 장소 리스트에 추가 */
 const addVisitedList = async (req, res) => {
   try {
     //장소 리스트에 추가해주기
-    await pool.query(
-      `INSERT INTO VisitedPosts
-       (user_id, post_id)
-       VALUES(?,?)`,
-      [req.user, req.params.postId]
-    );
+    await pool.query(addVisited(req.user, req.params.postId));
     const payload = {
       success: true,
     };
@@ -25,16 +21,9 @@ const addVisitedList = async (req, res) => {
 };
 
 const showDetailPost = async (req, res) => {
-  const { postId } = req.params;
   //상세페이지 찾는 쿼리
   try {
-    const [result] = await pool.query(
-      `SELECT title, post_images, post_loc_x, post_loc_y, description, address, address_short, post_desc, like_cnt FROM Posts 
-     INNER JOIN Categories 
-     ON Posts.category_id = Categories.category_id  
-     WHERE post_id = ? `,
-      [postId]
-    );
+    const [result] = await pool.query(findDetailPage(req.params.postId));
     //payload
     const payload = { success: true, ...result[0] };
     res.status(200).json({ payload });

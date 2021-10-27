@@ -2,16 +2,20 @@ const logger = require('../config/logger');
 const { pool } = require('../models/index');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const {
+  getUsers,
+  checkMBTI,
+  insertNewUser,
+  getHashedPassword,
+} = require('../query/user');
 const registUser = async (req, res) => {
   const { email, nickname, password } = req.user;
   const { male_yn, mbti } = req.body;
-  //Email 중복 검사 함수 선언
+
+  // Email 중복 검사 함수 선언
   const checkDuplicateOfEmail = async (email) => {
     try {
-      const [result] = await pool.query(`SELECT * FROM Users WHERE email = ?`, [
-        email,
-      ]);
+      const [result] = await pool.query(getUsers(email, ''));
       return result[0];
     } catch (err) {
       logger.error(`Email 중복검사 에러 : ${err}`);
@@ -21,13 +25,10 @@ const registUser = async (req, res) => {
     }
   };
 
-  //Nickname 중복 검사 함수 선언
+  // Nickname 중복 검사 함수 선언
   const checkDuplicateOfNickname = async (nickname) => {
     try {
-      const [result] = await pool.query(
-        `SELECT * FROM Users WHERE nickname = ?`,
-        [nickname]
-      );
+      const [result] = await pool.query(getUsers('', nickname));
       return result[0];
     } catch (err) {
       logger.error(`Nickname 중복검사 에러 : ${err}`);
@@ -57,12 +58,7 @@ const registUser = async (req, res) => {
   //중복검사 통과
   try {
     //mbti id검사
-    const [data] = await pool.query(
-      `SELECT mbti_id 
-       FROM Mbti 
-       WHERE description = ?`,
-      [mbti]
-    );
+    const [data] = await pool.query(checkMBTI(mbti));
 
     //비밀번호 암호화
     const hashPassword = await bcrypt.hash(
@@ -72,10 +68,7 @@ const registUser = async (req, res) => {
     //유저 정보 저장
     pool
       .query(
-        `INSERT INTO Users 
-      (email, nickname, password, male_yn, mbti_id) 
-      VALUES(?,?,?,?,?)`,
-        [email, nickname, hashPassword, male_yn, data[0].mbti_id]
+        insertNewUser(email, nickname, hashPassword, male_yn, data[0].mbti_id)
       )
       .then((data) => {
         return res.status(201).json({ payload });
@@ -106,12 +99,7 @@ const authUser = async (req, res) => {
   };
   try {
     //유저가 입력한 이메일로 해쉬된 비밀번호 가져오기
-    const [userPasswordAndId] = await pool.query(
-      `SELECT password, user_id, nickname 
-       FROM Users 
-       WHERE email = ?`,
-      [email]
-    );
+    const [userPasswordAndId] = await pool.query(getHashedPassword(email));
     //해쉬된 비밀번호가 없는경우는 이메일이 없는경우이므로 로그인 실패
     if (userPasswordAndId.length == 0) {
       payload.msg = '이메일 혹은 패스워드가 틀렸습니다.';
