@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
+const { postingReview } = require('../controllers/review');
+const upload = require('../controllers/imgUpload');
 const logger = require('../config/logger');
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.send('respond with a resource');
-});
+router.post('/', upload.array('img', 3), postingReview);
 
 module.exports = router;
