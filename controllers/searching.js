@@ -1,8 +1,9 @@
 const logger = require('../config/logger');
 const { pool } = require('../models/index');
+const { queryOfResultPageOfCondition } = require('../query/searching');
 const axios = require('axios');
 
- const searchingMain = async(req, res) => {
+ const searchMain = async(req, res) => {
   let weatherCondition;
   let weatherTemp = 0;
 
@@ -70,4 +71,37 @@ const axios = require('axios');
     logger.error(`쿼리문을 실행할 때 오류가 발생했습니다 : ${err}`)
   }
 }
-module.exports = {searchingMain};
+
+
+/* 조건 결과 페이지 조회  */
+const getResultPageOfCondition = async (req, res) => {
+  const { weather, category, num, gender } = req.query;
+  logger.info(queryOfResultPageOfCondition);
+  const params = [weather, category, num, gender];
+  const connection = await pool.getConnection(async (conn) => conn);
+  try {
+    const result = await connection.query(queryOfResultPageOfCondition, params);
+    let payload = {
+      success: true,
+      posts: result[0],
+    };
+    return res.status(200).json({
+      payload,
+    });
+  } catch (err) {
+    logger.error('조건 결과 페이지 조회 기능에서 발생한 에러', err);
+    payload = {
+      success: false,
+      errMsg: `조건 결과 페이지 조회 기능에서 발생한 에러', ${err}`,
+      posts: [],
+    };
+    return res.status(400).json({ payload });
+  } finally {
+    await connection.release();
+  }
+};
+
+module.exports = {
+  getResultPageOfCondition,
+  searchMain
+};

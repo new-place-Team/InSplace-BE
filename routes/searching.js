@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const { searchingMain } = require('../controllers/searching');
+const { searchMain, getResultPageOfCondition } = require('../controllers/searching');
 
-/* GET users listing. */
-router.get('/main', searchingMain);
+/* 메인 페이지 조회. */
+router.get('/main', searchMain);
+const router = express.Router();
+
+/* 조건 결과 페이지 조회 라우터 */
+router.get('/condition', getResultPageOfCondition);
 
 module.exports = router;
