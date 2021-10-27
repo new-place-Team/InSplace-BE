@@ -24,7 +24,7 @@ const axios = require('axios');
   } else {
     weatherCondition = 1; //그 외의 모든 날씨는 맑음으로 처리합니다
   }
-  
+  const connection = await pool.getConnection(async (conn) => conn);
   try{
     const searchMainQuery = `
     SELECT *
@@ -61,9 +61,9 @@ const axios = require('axios');
        user = req.user
      }
 
-    const result = await pool.query(searchMainQuery);
-    const likeResult = await pool.query(likeQuery);
-    const mdResult = await pool.query(mdQuery);
+    const result = await connection.query(searchMainQuery);
+    const likeResult = await connection.query(likeQuery);
+    const mdResult = await connection.query(mdQuery);
 
     let payload = {
       weather: {
@@ -80,7 +80,13 @@ const axios = require('axios');
     return res.status(200).json({payload});
     
   } catch(err) {
-    logger.error(`쿼리문을 실행할 때 오류가 발생했습니다 : ${err}`)
+    logger.error(`쿼리문을 실행할 때 오류가 발생했습니다 :`, err)
+    return res.status(400).json({
+      success: false,
+      errMsg: `쿼리문을 실행할 때 오류가 발생했습니다: ${err}`,
+    });
+  } finally {
+    await connection.release();
   }
 }
 
