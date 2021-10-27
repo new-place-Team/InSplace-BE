@@ -11,12 +11,10 @@ const axios = require('axios');
   weatherTemp = (data.main.temp -272).toString().substr(0,2); //현재 온도입니다.
   weatherCondition = data.weather[0].id; //현재 어떤 날씨 상태코드인지 가져옵니다.
   waetherString = weatherCondition.toString();
-  console.log(data);
-  const date1 = new Date(1635307200000)
-  console.log('datetest', date1)
+  // console.log(data);
+  // const date1 = new Date(1635307200000)
+  // console.log('datetest', date1)
   
-
-
   if (waetherString.charAt(0) === 5 || waetherString.charAt(0) === 3 || waetherString.charAt(0) === 2 ){
     weatherCondition = 2; //rain, drizzle, storm일경우 비 상태로 보내줍니다
 
@@ -26,8 +24,6 @@ const axios = require('axios');
   } else {
     weatherCondition = 1; //그 외의 모든 날씨는 맑음으로 처리합니다
   }
-  console.log('///////////')
-  console.log(weatherCondition);
   
   try{
     const searchMainQuery = `

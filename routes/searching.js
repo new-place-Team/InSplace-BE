@@ -4,7 +4,7 @@ const { justCheckAuth } = require('../middlewares/auth')
 const { searchMain, getResultPageOfCondition } = require('../controllers/searching');
 
 /* 메인 페이지 조회. */
-router.get('/main', justCheckAuth, searchMain);
+router.get('/', justCheckAuth, searchMain);
 
 /* 조건 결과 페이지 조회 라우터 */
 router.get('/condition', getResultPageOfCondition);
