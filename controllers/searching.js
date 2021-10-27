@@ -7,7 +7,7 @@ const axios = require('axios');
   let weatherTemp = 0;
 
   const {data} = await axios.get('http://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=86a911705bccf5bb797d3d1ba9430709');
-  weatherTemp = (data.main.temp -272).toString().substr(0,3); //현재 온도입니다.
+  weatherTemp = (data.main.temp -272).toString().substr(0,2); //현재 온도입니다.
   weatherCondition = data.weather[0].id; //현재 어떤 날씨 상태코드인지 가져옵니다.
   waetherString = weatherCondition.toString();
   const date1 = new Date(1635307200000)
@@ -37,11 +37,19 @@ const axios = require('axios');
     `
     const result = await pool.query(searchMainQuery);
 
-    // while(randomWeather.length > 5){
-    //   let selected = result[0].splice(Math.floor(Math.random() * result[0].length),1)[0]
-    //   randomWeather.push(selected)
-    // }
-    return res.status(201).json({});
+    return res.status(201).json({
+      payload: {
+        weather: {
+          status: weatherCondition,
+          temperature: weatherTemp,
+        },
+        weatherPlace: result[0],
+        test : {
+
+        },
+        success: true,
+      }
+    });
     
   } catch(err) {
     console.log(err);

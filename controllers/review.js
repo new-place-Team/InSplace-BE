@@ -36,5 +36,4 @@ const postingReview = async(req, res) => {
 module.exports = {
   postingReview,
 }
-module.exports = router;
 
