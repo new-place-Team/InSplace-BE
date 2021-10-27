@@ -10,6 +10,7 @@ const axios = require('axios');
   weatherTemp = (data.main.temp -272).toString().substr(0,2); //현재 온도입니다.
   weatherCondition = data.weather[0].id; //현재 어떤 날씨 상태코드인지 가져옵니다.
   waetherString = weatherCondition.toString();
+  console.log(data);
   const date1 = new Date(1635307200000)
   console.log('datetest', date1)
   
@@ -28,14 +29,30 @@ const axios = require('axios');
   console.log(weatherCondition);
   
   try{
-    let randomWeather = [];
     const searchMainQuery = `
     SELECT *
     FROM Posts 
     WHERE weather_id IN(${weatherCondition}, 7)
-    ORDER BY rand() limit 6
+    AND post_id NOT IN(
+      SELECT post_id
+      FROM(
+        SELECT post_id
+        FROM Posts
+        ORDER BY like_cnt DESC limit 6
+      ) as tempPosts 
+    )
+    ORDER BY rand() limit 6 
     `
+    //좋아요에 존재하는 카드들은 보여주지 않음
+
+    const likeQuery = `
+    SELECT *
+    FROM Posts 
+    ORDER BY like_cnt DESC limit 6
+    `
+
     const result = await pool.query(searchMainQuery);
+    const likeResult = await pool.query(likeQuery);
 
     return res.status(201).json({
       payload: {
@@ -44,15 +61,13 @@ const axios = require('axios');
           temperature: weatherTemp,
         },
         weatherPlace: result[0],
-        test : {
-
-        },
+        likePlace: likeResult[0],
         success: true,
       }
     });
     
   } catch(err) {
-    console.log(err);
+    logger.error(`쿼리문을 실행할 때 오류가 발생했습니다 : ${err}`)
   }
 }
 module.exports = {searchingMain};
