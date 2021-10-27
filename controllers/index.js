@@ -31,9 +31,9 @@ const axios = require('axios');
     WHERE weather_id IN(${weatherCondition}, 7)
     `
     const result = await pool.query(searchMainQuery);
-    console.log(result);
-  } catch(err) {
     
+  } catch(err) {
+    console.log(err);
   }
 }
 searchingMain();
