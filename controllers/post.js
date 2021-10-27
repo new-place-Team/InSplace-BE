@@ -9,13 +9,12 @@ const addVisitedList = async (req, res) => {
     const payload = {
       success: true,
     };
-    res.status(200).json({ payload });
+    res.status(201).json({ payload });
   } catch (err) {
-    logger.error(`가본 장소 리스트 추가부분에서 에러:${err}`);
+    logger.error(`가본 장소 리스트 추가부분에서 에러 :${err}`);
     res.status(400).json({
       success: false,
-      errMsg: '가본 장소 리스트 추가부분에서 에러',
-      err: err,
+      errMsg: `가본 장소 리스트 추가부분에서 에러 :${err}`,
     });
   }
 };
@@ -28,11 +27,10 @@ const showDetailPost = async (req, res) => {
     const payload = { success: true, ...result[0] };
     res.status(200).json({ payload });
   } catch (err) {
-    logger.error(`상세페이지 찾는쿼리에서 에러 : ${err}`);
+    logger.error(`상세페이지 찾는쿼리에서 에러 :${err}`);
     res.status(400).json({
       success: false,
-      errMsg: '상세페이지 찾는 쿼리에서 에러',
-      err: err,
+      errMsg: `상세페이지 찾는 쿼리에서 에러 :${err}`,
     });
   }
 };

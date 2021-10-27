@@ -7,7 +7,7 @@ const getUsers = (email, nickname) => {
 const checkMBTI = (mbti) => {
   return `SELECT mbti_id 
     FROM Mbti 
-    WHERE description = "${mbti}"`;
+    WHERE mbti_id = "${mbti}"`;
 };
 
 const insertNewUser = (email, nickname, hashPassword, male_yn, mbti) => {
@@ -16,10 +16,10 @@ const insertNewUser = (email, nickname, hashPassword, male_yn, mbti) => {
     VALUES("${email}","${nickname}","${hashPassword}","${male_yn}","${mbti}")`;
 };
 
-const getHashedPassword = (email) => {
-  return `SELECT password, user_id, nickname 
+const getUserInformation = (email) => {
+  return `SELECT password, user_id, nickname, email 
     FROM Users 
     WHERE email = "${email}"`;
 };
 
-module.exports = { getUsers, checkMBTI, insertNewUser, getHashedPassword };
+module.exports = { getUsers, checkMBTI, insertNewUser, getUserInformation };

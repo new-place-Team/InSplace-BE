@@ -22,16 +22,17 @@ const validationUser = async (req, res, next) => {
     next();
   } catch (error) {
     const { message } = error;
-
+    let payload = {
+      success: false,
+    };
     if (message == '"email" must be a valid email') {
-      res
-        .status(400)
-        .json({ success: false, errMsg: '이메일 형식으로 작성해주세요' });
+      payload.errMsg = '이메일 형식으로 작성해주세요';
+      res.status(200).json({ payload });
     }
     if (message == '"password" length must be at least 4 characters long') {
-      res.status(400).json({
-        success: false,
-        errMsg: '비밀번호는 최소 4자 이상으로 작성해 주세요',
+      payload.errMsg = '비밀번호는 최소 4자 이상으로 작성해 주세요';
+      res.status(200).json({
+        payload,
       });
     }
   }
