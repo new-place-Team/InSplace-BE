@@ -59,23 +59,29 @@ const axios = require('axios');
     `
     //해당 쿼리문은 posts에 State 추가 후 수정 예정입니다
 
+    let user ={};
+
+     if(req.user){
+       user = req.user
+     }
+
     const result = await pool.query(searchMainQuery);
     const likeResult = await pool.query(likeQuery);
     const mdResult = await pool.query(mdQuery);
 
-    return res.status(201).json({
-      payload: {
-        weather: {
-          status: weatherCondition,
-          temperature: weatherTemp,
-        },
-        weatherPlace: result[0],
-        likePlace: likeResult[0],
-        pickPlace: mdResult[0],
-        user: req.user,
-        success: true,
-      }
-    });
+    let payload = {
+      weather: {
+        status: weatherCondition,
+        temperature: weatherTemp,
+      },
+      weatherPlace: result[0],
+      likePlace: likeResult[0],
+      pickPlace: mdResult[0],
+      user,
+      success: true,
+    }
+
+    return res.status(200).json({payload});
     
   } catch(err) {
     logger.error(`쿼리문을 실행할 때 오류가 발생했습니다 : ${err}`)
