@@ -52,8 +52,16 @@ const axios = require('axios');
     ORDER BY like_cnt DESC limit 6
     `
 
+    const mdQuery = `
+    SELECT *
+    FROM Posts 
+    ORDER BY like_cnt DESC limit 6
+    `
+    //해당 쿼리문은 posts에 State 추가 후 수정 예정입니다
+
     const result = await pool.query(searchMainQuery);
     const likeResult = await pool.query(likeQuery);
+    const mdResult = await pool.query(mdQuery);
 
     return res.status(201).json({
       payload: {
@@ -63,6 +71,8 @@ const axios = require('axios');
         },
         weatherPlace: result[0],
         likePlace: likeResult[0],
+        pickPlace: mdResult[0],
+        user: req.user,
         success: true,
       }
     });

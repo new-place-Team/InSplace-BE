@@ -17,7 +17,7 @@ const registUser = async (req, res) => {
       logger.error(`Email 중복검사 에러 : ${err}`);
       res
         .status(400)
-        .json({ success: false, errMSG: 'Email 중복검사 에러', err: err });
+        .json({ success: false, errMSG: `Email 중복검사 에러 :${err}`});
     }
   };
 
