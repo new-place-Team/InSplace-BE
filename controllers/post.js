@@ -17,11 +17,15 @@ const addVisitedList = (req, res) => {
 
 const showDetailPost = async (req, res) => {
   const { postId } = req.params;
-  const result = await pool.query(
-    `SELECT * FROM Posts INNER JOIN Categories ON Posts.category_id = Categories.category_id  WHERE post_id = ? `,
+  const [result] = await pool.query(
+    `SELECT title, post_images, post_loc_x, post_loc_y, description, address, address_short, post_desc, like_cnt FROM Posts 
+     INNER JOIN Categories 
+     ON Posts.category_id = Categories.category_id  
+     WHERE post_id = ? `,
     [postId]
   );
-  console.log(result[0]);
+  const payload = { ...result[0] };
+  res.status(200).json({ success: true, payload });
 };
 module.exports = {
   addVisitedList,
