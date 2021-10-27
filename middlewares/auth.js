@@ -26,7 +26,7 @@ const isAuth = async (req, res, next) => {
 
     const userID = decoded.user_id;
 
-    const data = await getUserInfo(userID);
+    const data = await getUserInfo(req, res, userID);
 
     req.user = data.rows.user_id;
     next();
@@ -58,7 +58,7 @@ const justCheckAuth = async (req, res, next) => {
   });
 };
 
-async function getUserInfo(userID) {
+async function getUserInfo(req, res, userID) {
   const query = `SELECT user_id FROM Users WHERE user_id = ?`;
   const params = [userID];
   try {
