@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
+
 const { justCheckAuth } = require('../middlewares/auth')
 const { searchMain, getResultPageOfCondition } = require('../controllers/searching');
 
@@ -7,6 +8,6 @@ const { searchMain, getResultPageOfCondition } = require('../controllers/searchi
 router.get('/', justCheckAuth, searchMain);
 
 /* 조건 결과 페이지 조회 라우터 */
-router.get('/condition', getResultPageOfCondition);
+router.get('/condition', justCheckAuth, getResultPageOfCondition);
 
 module.exports = router;

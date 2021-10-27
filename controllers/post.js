@@ -3,6 +3,7 @@ const { pool } = require('../models/index');
 /* 가본 장소 리스트에 추가 */
 const addVisitedList = async (req, res) => {
   try {
+    //장소 리스트에 추가해주기
     await pool.query(
       `INSERT INTO VisitedPosts
        (user_id, post_id)
