@@ -3,6 +3,7 @@ const router = express.Router();
 const userRouter = require('./user');
 const postRouter = require('./post');
 const searchingRouter = require('./searching');
+const adminRouter = require('./admin');
 require('dotenv').config();
 
 //swagger
@@ -47,6 +48,7 @@ router.get('./swagger.json', (req, res) => {
 router.use('/users', userRouter);
 router.use('/posts', postRouter);
 router.use('/search', searchingRouter);
+router.use('/admin', adminRouter);
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /* GET home page. */
