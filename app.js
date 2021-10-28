@@ -1,7 +1,22 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const compression = require('compression');
+app.use(compression());
 
+//CORS
+const cors = require('cors');
+const corsOptions = {
+  //cors 설정
+  origin: '*', // 전체 허용
+  methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
+  preflightContinue: false,
+
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
