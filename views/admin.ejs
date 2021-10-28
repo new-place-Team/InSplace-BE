@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <title>Admin</title>
+
+    <style>
+        .wrapper {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .table {
+            max-width: 100%;
+            white-space: nowrap;
+        }
+
+        th,
+        td {
+            border: 1px solid gray;
+        }
+    </style>
+    <script>
+        // 해당 포스트 정보를 객체로 반환
+        const getPostInfo = (idx) => {
+            console.log("응?");
+            const title = $(`#title${idx}`).val();
+            const address = $(`#address${idx}`).val();
+            const address_short = $(`#address_short${idx}`).val();
+            const contact_number = $(`#contact_number${idx}`).val();
+            const category_id = $(`#category_id${idx}`).val();
+            const post_images = $(`#post_images${idx}`).val();
+            const post_desc = $(`#post_desc${idx}`).val();
+            const post_loc_x = $(`#post_loc_x${idx}`).val();
+            const post_loc_y = $(`#post_loc_y${idx}`).val();
+            const like_cnt = $(`#like_cnt${idx}`).val();
+            const weather_id = $(`#weather_id${idx}`).val();
+            const inside_yn = $(`#inside_yn${idx}`).val();
+            const gender_id = $(`#gender_id${idx}`).val();
+            const member_id = $(`#member_id${idx}`).val();
+
+
+            return {
+                title,
+                address,
+                address_short,
+                contact_number,
+                category_id,
+                post_images,
+                post_desc,
+                post_loc_x,
+                post_loc_y,
+                like_cnt,
+                weather_id,
+                inside_yn,
+                gender_id,
+                member_id,
+            };
+
+        }
+
+        // post 수정버튼 눌렀을 때 호출
+        const editPost = (idx, postId) => {
+            const data = getPostInfo(idx);
+            $.ajax({
+                type: "patch",
+                url: `/admin/posts/${postId}`,
+                data,
+                success: function (response) {
+                    alert("수정이 완료 되었습니다.");
+                },
+                error: function (error) {
+                    console.log("error");
+                }
+            });
+        }
+
+        // post 삭제버튼 눌렀을 때 호출
+        const deletePost = (idx, postId) => {
+            if (!confirm("정말 삭제하시겠습니까?")) {
+                return;
+            }
+            $.ajax({
+                type: "delete",
+                url: `/admin/posts/${postId}`,
+                data: {},
+                success: function (response) {
+                    location.href = "/admin";
+                },
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div class="title-box">
+                <h3>Table: Posts</h3>
+            </div>
+            <div class="table-box">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">edit/delete</th>
+                            <% for(let i=0; i< columns.length; i++){ %>
+                                <th scope="col">
+                                    <%= columns[i] %>
+                                </th>
+                                <% } %>
+                                    <th scope="col">edit/delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for(let i=0; i< posts.length; i++){ %>
+                            <tr>
+                                <th scope="row">
+                                    <button type="button" onclick="editPost(<%=i%>, <%=posts[i].post_id %>)"
+                                        id="edit-btn<%=i%>" class="btn btn-dark">edit</button>
+                                    <span> / </span>
+                                    <button type="button" onclick="deletePost(<%=i%>, <%=posts[i].post_id %>)"
+                                        id="delete-btn<%=i%>" class="btn btn-warning">del</button>
+                                </th>
+                                <th scope="row">
+                                    <%=posts[i].post_id %>
+                                </th>
+                                <td>
+                                    <input id="title<%=i%>" type="text" value="<%=posts[i].title %>" />
+                                </td>
+                                <td>
+                                    <input id="address<%=i%>" type="text" value="<%=posts[i].address %>">
+                                </td>
+                                <td>
+                                    <input id="address_short<%=i%>" type="text" value="<%=posts[i].address_short %>">
+                                </td>
+                                <td>
+                                    <input id="contact_number<%=i%>" type="text" value="<%=posts[i].contact_number %>">
+                                </td>
+                                <td>
+                                    <input id="category_id<%=i%>" type="text" value="<%=posts[i].category_id %>">
+                                </td>
+                                <td>
+                                    <%=posts[i].category %>
+                                </td>
+                                <td>
+                                    <input id="post_images<%=i%>" type="text" value="<%=posts[i].post_images %>">
+                                </td>
+                                <td>
+                                    <input id="post_desc<%=i%>" type="text" value="<%=posts[i].post_desc %>">
+                                </td>
+                                <td>
+                                    <input id="post_loc_x<%=i%>" type="text" value="<%=posts[i].post_loc_x %>">
+                                </td>
+                                <td>
+                                    <input id="post_loc_y<%=i%>" type="text" value="<%=posts[i].post_loc_y %>">
+                                </td>
+                                <td>
+                                    <input id="like_cnt<%=i%>" style="width:100%" type="text"
+                                        value="<%=posts[i].like_cnt%>">
+                                </td>
+                                <td>
+                                    <input id="weather_id<%=i%>" style="width:100%" type="text"
+                                        value="<%=posts[i].weather_id %>">
+                                </td>
+                                <td>
+                                    <%=posts[i].weather %>
+                                </td>
+                                <td>
+                                    <input id="inside_yn<%=i%>" style="width:100%" type="text"
+                                        value="<%=posts[i].inside_yn %>">
+                                </td>
+                                <td>
+                                    <input id="gender_id<%=i%>" style="width:100%" type="text"
+                                        value="<%=posts[i].gender_id%>">
+                                </td>
+                                <td>
+                                    <%=posts[i].gender%>
+                                </td>
+                                <td>
+                                    <input id="member_id<%=i%>" style="width:100%" type="text"
+                                        value="<%=posts[i].member_id %>">
+                                </td>
+                                <td>
+                                    <%=posts[i].member %>
+                                </td>
+                                <td>
+                                    <%=posts[i].created_at %>
+                                </td>
+                                <th scope="row">
+                                    <button type="button" onclick="editPost(<%=i%>, <%=posts[i].post_id %>)"
+                                        id="edit-btn<%=i%>" class="btn btn-dark">edit</button>
+                                    <span> / </span>
+                                    <button type="button" onclick="deletePost(<%=i%>, <%=posts[i].post_id %>)"
+                                        id="delete-btn<%=i%>" class="btn btn-warning">del</button>
+                                </th>
+                            </tr>
+                            <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

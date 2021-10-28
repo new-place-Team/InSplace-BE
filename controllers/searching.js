@@ -99,7 +99,6 @@ const searchMain = async (req, res) => {
 const getResultPageOfCondition = async (req, res) => {
   console.log('user: ', req.user);
   const { weather, category, num, gender } = req.query;
-  logger.info(queryOfResultPageOfCondition);
   const params = [weather, category, num, gender];
   const connection = await pool.getConnection(async (conn) => conn);
   try {
