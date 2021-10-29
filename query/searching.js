@@ -23,8 +23,10 @@ const genderQuery = `SELECT description FROM Genders WHERE gender_id=?`;
   LIKE CONCAT('%', (${categoryQuery}), '%');
   `; */
 
+/* */
 const queryOfResultPageOfCondition = `
-  SELECT post_id, title, Weathers.description as weather, Categories.description as category, MemberCnt.description as memberCnt, Genders.description as gender
+  SELECT post_id, title, address_short, like_cnt, post_images, inside_yn,
+  Categories.description as category, permission_state
   FROM Posts 
   INNER JOIN Genders 
   ON Posts.gender_id = Genders.gender_id 
@@ -40,7 +42,7 @@ const queryOfResultPageOfCondition = `
   AND MemberCnt.description
   LIKE CONCAT('%', (${memberQuery}), '%')
   AND Genders.description 
-  LIKE CONCAT('%', (${genderQuery}), '%');
+  LIKE CONCAT('%', (${genderQuery}), '%')
   `;
 
 module.exports = {
