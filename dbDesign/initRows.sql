@@ -53,3 +53,4 @@ INSERT INTO MemberCnt(member_id, description) VALUES(2, "2명");
 INSERT INTO MemberCnt(member_id, description) VALUES(3, "4명 미만");
 INSERT INTO MemberCnt(member_id, description) VALUES(4, "4명 이상");
 INSERT INTO MemberCnt(member_id, description) VALUES(5, "1명, 2명, 4명 미만, 4명 이상");
+INSERT INTO MemberCnt(member_id, description) VALUES(6, "2명, 4명 미만");

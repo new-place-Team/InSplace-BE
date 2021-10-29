@@ -34,7 +34,10 @@ CREATE TABLE `Posts` (
   `inside_yn` boolean NOT NULL,
   `gender_id` integer NOT NULL,
   `member_id` integer NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `md_pick` boolean NOT NULL DEFAULT 0,
+  `source` varchar(20),
+  `admin` varchar(20)
 );
 
 
