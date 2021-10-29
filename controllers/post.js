@@ -30,6 +30,7 @@ const showDetailPost = async (req, res) => {
   //상세페이지 찾는 쿼리
   try {
     const [result] = await pool.query(findDetailPage(req.params.postId));
+
     const splitAddress = auditResult(result);
     //payload
     const payload = { success: true, ...splitAddress };
