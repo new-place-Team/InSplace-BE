@@ -2,18 +2,52 @@ const logger = require('../config/logger');
 const { pool } = require('../models/index');
 const { queryOfResultPageOfCondition } = require('../query/searching');
 
+/* image Text를 Array로 변환시키는 함수 */
+const convertImageToArray = (imgText) => {
+  const imgArr = imgText.split('&&');
+  return imgArr.slice(1);
+};
+
+/* 메인 이미지 한개만 가져오는 함수 */
+const getMainImage = (imgText) => {
+  const imgArr = imgText.split('&&');
+  let res = '';
+  if (imgArr.length >= 2) {
+    res = imgArr[1];
+  }
+  return res;
+};
 
 /* 조건 결과 페이지 조회  */
 const getResultPageOfCondition = async (req, res) => {
-  console.log('user: ', req.user);
   const { weather, category, num, gender } = req.query;
   const params = [weather, category, num, gender];
   const connection = await pool.getConnection(async (conn) => conn);
   try {
     const result = await connection.query(queryOfResultPageOfCondition, params);
+    const insidePlaces = [];
+    const outSidePlaces = [];
+
+    // 실내 실외 포스트 구분(최대 14개씩 받기)
+    for (let i = 0; i < result[0].length; i++) {
+      const insideSize = insidePlaces.length;
+      const outsideSize = outSidePlaces.length;
+
+      if (insideSize > 14 && outsideSize > 14) {
+        break;
+      }
+      result[0][i].post_images = getMainImage(result[0][i].post_images);
+      if (result[0][i].inside_yn === 1 && insideSize <= 14) {
+        insidePlaces.push(result[0][i]);
+      } else if (result[0][i].inside_yn === 0 && outsideSize <= 14) {
+        outSidePlaces.push(result[0][i]);
+      }
+    }
+
     let payload = {
       success: true,
-      posts: result[0],
+      insidePlaces,
+      outSidePlaces,
     };
     return res.status(200).json({
       payload,
