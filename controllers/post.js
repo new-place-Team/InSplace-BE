@@ -20,11 +20,19 @@ const addVisitedList = async (req, res) => {
 };
 
 const showDetailPost = async (req, res) => {
+  //주소를 &&로 잘라서 재구성하는 함수
+  const auditResult = (result) => {
+    let splitAddress = result[0];
+    splitAddress.post_images = result[0].post_images.split('&&').slice(1);
+    return splitAddress;
+  };
+
   //상세페이지 찾는 쿼리
   try {
     const [result] = await pool.query(findDetailPage(req.params.postId));
+    const splitAddress = auditResult(result);
     //payload
-    const payload = { success: true, ...result[0] };
+    const payload = { success: true, ...splitAddress };
     res.status(200).json({ payload });
   } catch (err) {
     logger.error(`상세페이지 찾는쿼리에서 에러 :${err}`);
