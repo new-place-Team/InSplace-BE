@@ -202,8 +202,15 @@
                                     <%=posts[i].member %>
                                 </td>
                                 <td>
-                                    <%=posts[i].created_at %>
+                                    <%=posts[i].md_pick %>
                                 </td>
+                                <td>
+                                    <%=posts[i].source %>
+                                </td>
+                                <td>
+                                    <%=posts[i].admin %>
+                                </td>
+
                                 <th scope="row">
                                     <button type="button" onclick="editPost(<%=i%>, <%=posts[i].post_id %>)"
                                         id="edit-btn<%=i%>" class="btn btn-dark">edit</button>

@@ -27,10 +27,6 @@ const getAdminPage = async (req, res) => {
     res.render('admin', { posts, columns });
   } catch (err) {
     logger.error(`Admin Page 불러오기 API에서 발생한 에러 ${err}`);
-    payload = {
-      success: false,
-      errMsg: `Admin Page 불러오기 API에서 발생한 에러 ${err}`,
-    };
     return res.status(400).render('admin', {
       success: false,
       errMsg: `Admin Page 불러오기 API에서 발생한 에러 ${err}`,
