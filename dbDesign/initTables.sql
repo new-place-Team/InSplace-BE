@@ -95,7 +95,7 @@ CREATE TABLE `Favorites` (
 -- weekday_yn -> 평일일 경우 1, 주말일 경우 0
 -- revisite_yn -> 재방문 의사가 있을 경우 1, 없을 경우 0
 CREATE TABLE `Reviews` (
-  `review_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
+  `review_id` integer PRIMARY KEY AUTO_INCREMENT,
   `post_id` integer NOT NULL,
   `review_images` varchar(255),
   `review_desc` varchar(255),
@@ -107,15 +107,23 @@ CREATE TABLE `Reviews` (
 
 -- MBTI 유형 별로 넣어 놓은 테이블(16가지)
 CREATE TABLE `Mbti` (
-  `mbti_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
+  `mbti_id` integer PRIMARY KEY AUTO_INCREMENT,
   `description` varchar(20) DEFAULT "Unknown"
 );
 
 -- WEATHERS 
 CREATE TABLE `Weathers` (
-  `weather_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
+  `weather_id` integer PRIMARY KEY AUTO_INCREMENT,
   `description` varchar(20)
 );
+
+-- 현재 날씨 테이블
+ CREATE TABLE `CurrentWeather` (
+  `cur_weather_id` integer PRIMARY KEY,
+  `weather_status` integer NOT NULL,
+  `weather_temp` varchar(20) NOT NULL,
+  `temp_diff` varchar(20) NOT NULL
+ )
 
 ALTER TABLE `ReviewLikes` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE `PostLikes` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
@@ -147,3 +155,4 @@ ALTER TABLE VisitedPosts CONVERT TO character SET utf8;
 ALTER TABLE Genders CONVERT TO character SET utf8;
 ALTER TABLE Weathers CONVERT TO character SET utf8;
 ALTER TABLE MemberCnt CONVERT TO character SET utf8;
+ALTER TABLE CurrentWeather CONVERT TO character SET utf8;
