@@ -8,7 +8,7 @@ const {
 } = require('../controllers/searching');
 
 /* 조건 결과 페이지 조회 라우터 */
-
+router.get('/condition', justCheckAuth, getResultPageOfCondition);
 /* 조건 결과 상세 페이지 조회(실내외 구분) */
 router.get('/page/:number/condition', getDetailPageOfInOutDoors);
 
