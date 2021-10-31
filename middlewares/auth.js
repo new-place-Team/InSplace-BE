@@ -27,7 +27,6 @@ const isAuth = async (req, res, next) => {
     const userID = decoded.user_id;
 
     const data = await getUserInfo(req, res, userID);
-
     req.user = data.rows.user_id;
     next();
   });
