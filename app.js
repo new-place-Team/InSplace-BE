@@ -30,7 +30,7 @@ app.use('/', require('./routes/index'));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   // next(createError(404));
-  res.send(404).send('404 NOT FOUND');
+  return res.send(404).send('404 NOT FOUND');
 });
 
 // error handler

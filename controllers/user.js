@@ -7,6 +7,7 @@ const {
   checkMBTI,
   insertNewUser,
   getUserInformation,
+  getUserInformationById,
 } = require('../query/user');
 const registUser = async (req, res, next) => {
   const { email, nickname, password } = req.user;
@@ -18,7 +19,7 @@ const registUser = async (req, res, next) => {
       const [result] = await pool.query(getUsers(email, ''));
       return result[0];
     } catch (err) {
-      next(customizedError(err, 400));
+      return next(customizedError(err, 400));
     }
   };
 
@@ -28,7 +29,7 @@ const registUser = async (req, res, next) => {
       const [result] = await pool.query(getUsers('', nickname));
       return result[0];
     } catch (err) {
-      next(customizedError(err, 400));
+      return next(customizedError(err, 400));
     }
   };
 
@@ -58,10 +59,10 @@ const registUser = async (req, res, next) => {
         return res.sendStatus(201);
       })
       .catch((err) => {
-        next(customizedError(err, 400));
+        return next(customizedError(err, 400));
       });
   } catch (err) {
-    next(customizedError(err, 400));
+    return next(customizedError(err, 400));
   }
 };
 
@@ -87,24 +88,42 @@ const authUser = async (req, res, next) => {
     //true면 로그인 성공
     if (comparePassword == true) {
       //jsontoken만들기
-      const token = jwt.sign(
-        { user_id, nickname, email: dbUserEmail },
-        process.env.SECRET_KEY,
-        {
-          expiresIn: '60m',
-        }
-      );
+      const token = jwt.sign({ user_id }, process.env.SECRET_KEY, {
+        expiresIn: '60m',
+      });
 
-      return res
-        .status(201)
-        .json({ token, nickname, mbti: description, userImage: user_image });
+      return res.status(201).json({
+        token,
+        nickname,
+        mbti: description,
+        userImage: user_image,
+        email: dbUserEmail,
+      });
     }
     //비밀번호가 틀려서 로그인 실패
 
-    next(customizedError('Email 혹은 Password가 틀렸습니다', 400));
+    return next(customizedError('Email 혹은 Password가 틀렸습니다', 400));
   } catch (err) {
-    console.log('캐치에러 케치애러', err);
-    next(customizedError(err, 400));
+    return next(customizedError(err, 400));
   }
 };
-module.exports = { registUser, authUser };
+
+const checkUser = async (req, res, next) => {
+  const authHeader = req.get('Authorization');
+  const token = authHeader.split(' ')[1];
+  try {
+    const result = jwt.verify(token, process.env.SECRET_KEY);
+    const [userInformation] = await pool.query(
+      getUserInformationById(result.user_id)
+    );
+
+    return res.status(200).json({ ...userInformation[0] });
+  } catch (err) {
+    if (err.message == 'jwt expired') {
+      return next(customizedError(err.message, 400));
+    }
+    return next(customizedError(err.message, 400));
+  }
+};
+
+module.exports = { registUser, authUser, checkUser };

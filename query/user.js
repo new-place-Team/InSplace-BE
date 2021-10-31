@@ -21,5 +21,13 @@ const getUserInformation = (email) => {
     FROM Users INNER JOIN Mbti ON Users.mbti_id = Mbti.mbti_id
     WHERE email = "${email}"`;
 };
-
-module.exports = { getUsers, checkMBTI, insertNewUser, getUserInformation };
+const getUserInformationById = (id) => {
+  return `SELECT email, nickname, user_image ,description FROM Users INNER JOIN Mbti ON Users.mbti_id = Mbti.mbti_id WHERE user_id = ${id} `;
+};
+module.exports = {
+  getUsers,
+  checkMBTI,
+  insertNewUser,
+  getUserInformation,
+  getUserInformationById,
+};
