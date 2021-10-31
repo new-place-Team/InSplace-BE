@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /:
+ * /main:
  *   get:
  *     security:
  *      - bearerAuth: []

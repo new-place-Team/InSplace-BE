@@ -37,25 +37,14 @@ const registUser = async (req, res) => {
         .json({ success: false, errMsg: `Nickname 중복검사 에러 :${err}` });
     }
   };
-  //기본 payload
-  let payload = {
-    success: true,
-  };
 
   //Email 중복검사
   if (await checkDuplicateOfEmail(email)) {
-    //함수를 불러와서 결과를 payload에 담아주기
-    payload.success = false;
-    payload.errMsg = '이메일이 이미 존재합니다';
-
-    return res.status(200).json({ payload });
+    return res.status(400).json({ errMsg: '이메일이 이미 존재합니다' });
   }
   //Nickname 중복검사
   if (await checkDuplicateOfNickname(nickname)) {
-    //함수를 불러와서 결과를 payload에 담아주기
-    payload.success = false;
-    payload.errMsg = '닉네임이 이미 존재합니다';
-    return res.status(200).json({ payload });
+    return res.status(400).json({ errMsg: '닉네임이 이미 존재합니다' });
   }
   //중복검사 통과
   try {
@@ -73,7 +62,7 @@ const registUser = async (req, res) => {
         insertNewUser(email, nickname, hashPassword, male_yn, data[0].mbti_id)
       )
       .then((data) => {
-        return res.status(201).json({ payload });
+        return res.sendStatus(201);
       })
       .catch((err) => {
         logger.error(`유저 회원가입부분에서 에러 발생 :${err}`);
@@ -84,7 +73,7 @@ const registUser = async (req, res) => {
       });
   } catch (err) {
     logger.error(`mbti, 비밀번호 Hash과정에서 에러 발생 :${err}`);
-    return res.status(400).json({
+    return res.status(500).json({
       success: false,
       errMsg: `mbti, 비밀번호 Hash과정에서 에러 발생 :${err}`,
     });
@@ -93,22 +82,19 @@ const registUser = async (req, res) => {
 
 const authUser = async (req, res) => {
   const { email, password } = req.body;
-  //기본 payload
-  let payload = {
-    success: true,
-  };
+
   try {
     //유저가 입력한 이메일로 해쉬된 비밀번호 가져오기
     const [userPasswordAndId] = await pool.query(getUserInformation(email));
+
     //해쉬된 비밀번호가 없는경우는 이메일이 없는경우이므로 로그인 실패
     if (userPasswordAndId.length == 0) {
-      payload.success = false;
-      payload.msg = '이메일 혹은 패스워드가 틀렸습니다.';
-
-      return res.status(200).json({ payload });
+      return res
+        .status(400)
+        .json({ msg: '이메일 혹은 패스워드가 틀렸습니다.' });
     }
 
-    const { user_id, nickname } = userPasswordAndId[0];
+    const { user_id, nickname, description, user_image } = userPasswordAndId[0];
     const dbUserEmail = userPasswordAndId[0].email;
     // 해쉬된 비밀번호와 유저가 입력한 비밀번호를 비교
     const comparePassword = await bcrypt.compare(
@@ -125,18 +111,17 @@ const authUser = async (req, res) => {
           expiresIn: '60m',
         }
       );
-      payload.token = token;
-      payload.nickname = nickname;
 
-      return res.status(201).json({ payload });
+      return res
+        .status(201)
+        .json({ token, nickname, mbti: description, userImage: user_image });
     }
     //비밀번호가 틀려서 로그인 실패
-    payload.success = false;
-    payload.msg = '이메일 혹은 패스워드가 틀렸습니다.';
-    return res.status(200).json({ payload });
+
+    return res.status(400).json({ msg: '이메일 혹은 패스워드가 틀렸습니다.' });
   } catch (err) {
     logger.error(`해쉬된 비밀번호 가지고오는 과정에서 에러 :${err}`);
-    return res.status(400).json({
+    return res.status(500).json({
       success: false,
       errMsg: `해쉬된 비밀번호 가지고 오는 과정에서 에러 :${err}`,
     });
