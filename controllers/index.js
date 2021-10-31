@@ -6,7 +6,7 @@ const searchMain = async (req, res) => {
   let weatherTemp = 0;
 
   const { data } = await axios.get(
-    'http://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=86a911705bccf5bb797d3d1ba9430709'
+    `http://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=${process.env.WEATHER_API}`
   );
   weatherTemp = (data.main.temp - 272).toString().substr(0, 2); //현재 온도입니다.
   weatherCondition = data.weather[0].id; //현재 어떤 날씨 상태코드인지 가져옵니다.

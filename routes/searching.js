@@ -5,6 +5,9 @@ const { justCheckAuth } = require('../middlewares/auth');
 const { getResultPageOfCondition } = require('../controllers/searching');
 
 /* 조건 결과 페이지 조회 라우터 */
-router.get('/condition', justCheckAuth, getResultPageOfCondition);
 
+router.get('/condition', justCheckAuth, getResultPageOfCondition);
+router.get('/page/:pageNumber/condition', (req, res) => {
+  console.log('hi');
+});
 module.exports = router;

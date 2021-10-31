@@ -6,13 +6,11 @@ const addVisitedList = async (req, res) => {
   try {
     //장소 리스트에 추가해주기
     await pool.query(addVisited(req.user, req.params.postId));
-    const payload = {
-      success: true,
-    };
-    res.status(201).json({ payload });
+
+    return res.sendStatus(201);
   } catch (err) {
     logger.error(`가본 장소 리스트 추가부분에서 에러 :${err}`);
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       errMsg: `가본 장소 리스트 추가부분에서 에러 :${err}`,
     });
@@ -32,12 +30,11 @@ const showDetailPost = async (req, res) => {
     const [result] = await pool.query(findDetailPage(req.params.postId));
 
     const splitAddress = auditResult(result);
-    //payload
-    const payload = { success: true, ...splitAddress };
-    res.status(200).json({ payload });
+
+    return res.status(200).json({ ...splitAddress });
   } catch (err) {
     logger.error(`상세페이지 찾는쿼리에서 에러 :${err}`);
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       errMsg: `상세페이지 찾는 쿼리에서 에러 :${err}`,
     });
