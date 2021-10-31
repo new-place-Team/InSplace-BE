@@ -1,10 +1,13 @@
+const logger = require('../config/logger');
 const axios = require('axios');
 const { pool } = require('../models/index');
+const { searchMainQuery, likeQuery, mdQuery} = require('../query/main');
+require('dotenv').config();
+
 
 const searchMain = async (req, res) => {
   let weatherCondition;
   let weatherTemp = 0;
-
   const { data } = await axios.get(
     `http://api.openweathermap.org/data/2.5/weather?q=Seoul&appid=${process.env.WEATHER_API}`
   );
@@ -29,53 +32,35 @@ const searchMain = async (req, res) => {
   const connection = await pool.getConnection(async (conn) => conn);
 
   try {
-    const searchMainQuery = `
-    SELECT *
-    FROM Posts 
-    WHERE weather_id IN(${weatherCondition}, 7)
-    AND post_id NOT IN(
-      SELECT post_id
-      FROM(
-        SELECT post_id
-        FROM Posts
-        ORDER BY like_cnt DESC limit 6
-      ) as tempPosts 
-    )
-    ORDER BY rand() limit 6 
-    `;
-    //좋아요에 존재하는 카드들은 보여주지 않음
-
-    const likeQuery = `
-    SELECT *
-    FROM Posts 
-    ORDER BY like_cnt DESC limit 6
-    `;
-
-    const mdQuery = `
-    SELECT *
-    FROM Posts 
-    ORDER BY like_cnt DESC limit 6
-    `;
-    //해당 쿼리문은 posts에 State 추가 후 수정 예정입니다
-
     let user = {};
 
     if (req.user) {
       user = req.user;
     }
 
-    const result = await connection.query(searchMainQuery);
-    const likeResult = await connection.query(likeQuery);
-    const mdResult = await connection.query(mdQuery);
+    const adjImg = (result) => {
+      let resultImg = result[0];
+      for(let i = 0 ; i < resultImg.length; i++){
+        resultImg[i].post_images = result[0][i].post_images.split('&&').slice(1)
+      }
+     return resultImg
+    };
+
+    const result = await connection.query(searchMainQuery(weatherCondition)); //날씨
+    const likeResult = await connection.query(likeQuery); //좋아요
+    const mdResult = await connection.query(mdQuery);// 관리자 추천
+    const adjResult = adjImg(result);
+    const adjLike = adjImg(likeResult);
+    const adjMd = adjImg(mdResult);
 
     let payload = {
       weather: {
         status: weatherCondition,
         temperature: weatherTemp,
       },
-      weatherPlace: result[0],
-      likePlace: likeResult[0],
-      pickPlace: mdResult[0],
+      weatherPlace: adjResult,
+      likePlace: adjLike,
+      pickPlace: adjMd,
       user,
       success: true,
     };
