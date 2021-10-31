@@ -24,9 +24,7 @@ const addLike = async (req, res) => {
     await connection.query(likeQuery, [userId, postId]);
     await connection.query(likeCntQuery, [postId]);
     await connection.commit(); // 적용
-    return res.status(201).json({
-      success: true,
-    });
+    return res.sendStatus(201);
   } catch (err) {
     /* Bad Request */
     logger.error('좋아요 추가 기능에서 발생한 예상치 못한 에러:', err);
