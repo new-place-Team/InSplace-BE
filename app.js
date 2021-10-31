@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const logger = require('./config/logger');
 const compression = require('compression');
 app.use(compression());
 
@@ -28,18 +29,14 @@ app.use('/', require('./routes/index'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+  // next(createError(404));
+  res.send(404).send('404 NOT FOUND');
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  logger.error(`${err.message}${err.stack}`);
+  return res.status(err.status).json({ errMsg: err.message });
 });
 
 module.exports = app;

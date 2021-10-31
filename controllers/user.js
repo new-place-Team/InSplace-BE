@@ -8,7 +8,7 @@ const {
   insertNewUser,
   getUserInformation,
 } = require('../query/user');
-const registUser = async (req, res) => {
+const registUser = async (req, res, next) => {
   const { email, nickname, password } = req.user;
   const { male_yn, mbti_id } = req.body;
 
@@ -18,10 +18,10 @@ const registUser = async (req, res) => {
       const [result] = await pool.query(getUsers(email, ''));
       return result[0];
     } catch (err) {
-      logger.error(`Email 중복검사 에러 :${err}`);
-      res
-        .status(400)
-        .json({ success: false, errMsg: `Email 중복검사 에러 :${err}` });
+      // logger.error(`Email 중복검사 에러 :${err}`);
+      // res
+      //   .status(400)
+      //   .json({ success: false, errMsg: `Email 중복검사 에러 :${err}` });
     }
   };
 
@@ -40,7 +40,9 @@ const registUser = async (req, res) => {
 
   //Email 중복검사
   if (await checkDuplicateOfEmail(email)) {
-    return res.status(400).json({ errMsg: '이메일이 이미 존재합니다' });
+    const err = new Error('이메일 중복검사 에러');
+    err.status = 400;
+    return next(err);
   }
   //Nickname 중복검사
   if (await checkDuplicateOfNickname(nickname)) {
