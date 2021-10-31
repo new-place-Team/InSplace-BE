@@ -1,7 +1,7 @@
-const logger = require('../config/logger');
 const { pool } = require('../models/index');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { customizedError } = require('../controllers/error');
 const {
   getUsers,
   checkMBTI,
@@ -18,10 +18,7 @@ const registUser = async (req, res, next) => {
       const [result] = await pool.query(getUsers(email, ''));
       return result[0];
     } catch (err) {
-      // logger.error(`Email 중복검사 에러 :${err}`);
-      // res
-      //   .status(400)
-      //   .json({ success: false, errMsg: `Email 중복검사 에러 :${err}` });
+      next(customizedError(err, 400));
     }
   };
 
@@ -31,28 +28,22 @@ const registUser = async (req, res, next) => {
       const [result] = await pool.query(getUsers('', nickname));
       return result[0];
     } catch (err) {
-      logger.error(`Nickname 중복검사 에러 : ${err}`);
-      res
-        .status(400)
-        .json({ success: false, errMsg: `Nickname 중복검사 에러 :${err}` });
+      next(customizedError(err, 400));
     }
   };
 
   //Email 중복검사
   if (await checkDuplicateOfEmail(email)) {
-    const err = new Error('이메일 중복검사 에러');
-    err.status = 400;
-    return next(err);
+    return customizedError('이메일이 이미 존재합니다', 400);
   }
   //Nickname 중복검사
   if (await checkDuplicateOfNickname(nickname)) {
-    return res.status(400).json({ errMsg: '닉네임이 이미 존재합니다' });
+    return customizedError('닉네임이 이미 존재합니다 중복검사 에러', 400);
   }
   //중복검사 통과
   try {
     //mbti id검사
     const [data] = await pool.query(checkMBTI(mbti_id));
-
     //비밀번호 암호화
     const hashPassword = await bcrypt.hash(
       password,
@@ -67,22 +58,14 @@ const registUser = async (req, res, next) => {
         return res.sendStatus(201);
       })
       .catch((err) => {
-        logger.error(`유저 회원가입부분에서 에러 발생 :${err}`);
-        return res.status(400).json({
-          success: false,
-          errMsg: `유저정보 등록과정에서 에러 발생 :${err}`,
-        });
+        next(customizedError(err, 400));
       });
   } catch (err) {
-    logger.error(`mbti, 비밀번호 Hash과정에서 에러 발생 :${err}`);
-    return res.status(500).json({
-      success: false,
-      errMsg: `mbti, 비밀번호 Hash과정에서 에러 발생 :${err}`,
-    });
+    next(customizedError(err, 400));
   }
 };
 
-const authUser = async (req, res) => {
+const authUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
@@ -91,9 +74,7 @@ const authUser = async (req, res) => {
 
     //해쉬된 비밀번호가 없는경우는 이메일이 없는경우이므로 로그인 실패
     if (userPasswordAndId.length == 0) {
-      return res
-        .status(400)
-        .json({ msg: '이메일 혹은 패스워드가 틀렸습니다.' });
+      return customizedError('Email 혹은 Password가 틀렸습니다', 400);
     }
 
     const { user_id, nickname, description, user_image } = userPasswordAndId[0];
@@ -120,13 +101,10 @@ const authUser = async (req, res) => {
     }
     //비밀번호가 틀려서 로그인 실패
 
-    return res.status(400).json({ msg: '이메일 혹은 패스워드가 틀렸습니다.' });
+    next(customizedError('Email 혹은 Password가 틀렸습니다', 400));
   } catch (err) {
-    logger.error(`해쉬된 비밀번호 가지고오는 과정에서 에러 :${err}`);
-    return res.status(500).json({
-      success: false,
-      errMsg: `해쉬된 비밀번호 가지고 오는 과정에서 에러 :${err}`,
-    });
+    console.log('캐치에러 케치애러', err);
+    next(customizedError(err, 400));
   }
 };
 module.exports = { registUser, authUser };
