@@ -27,10 +27,9 @@ const addLike = async (req, res) => {
     return res.sendStatus(201);
   } catch (err) {
     /* Bad Request */
-    logger.error('좋아요 추가 기능에서 발생한 예상치 못한 에러:', err);
+    const err = new Error('좋아요 추가 기능에서 발생한 Query 에러');
     await connection.rollback(); // 에러가 발생할 경우 원래 상태로 돌리기
     return res.status(400).json({
-      success: false,
       errMsg: `좋아요 추가 기능에서 발생한 예상치 못한 에러: ${err}`,
     });
   } finally {
@@ -60,15 +59,12 @@ const cancelLike = async (req, res) => {
     await connection.query(likeQuery, [userId, postId]);
     await connection.query(likeCntQuery, [postId]);
     await connection.commit(); // 적용
-    return res.status(201).json({
-      success: true,
-    });
+    return res.sendStatus(200);
   } catch (err) {
     /* Bad Request */
     logger.error('좋아요 취소 기능에서 발생한 예상치 못한 에러:', err);
     await connection.rollback(); // 에러가 발생할 경우 원래 상태로 돌리기
     return res.status(400).json({
-      success: false,
       errMsg: `좋아요 취소 기능에서 발생한 예상치 못한 에러: ${err}`,
     });
   } finally {
