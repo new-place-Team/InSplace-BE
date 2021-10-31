@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const { addLike, cancelLike } = require('../controllers/like');
+const { isAuth } = require('../middlewares/auth');
 
 /* Add Like API */
-router.post('/', addLike);
+router.post('/', isAuth, addLike);
 
 /* cancel Like API */
-router.delete('/', cancelLike);
+router.delete('/', isAuth, cancelLike);
 
 module.exports = router;
