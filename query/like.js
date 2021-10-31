@@ -22,9 +22,16 @@ const queryOfDecreasingLikeCnt = `
     WHERE post_id=?;
 `;
 
+const queryOfGettingLikeData = `
+    SELECT * 
+    FROM PostLikes 
+    WHERE user_id=? AND post_id=?
+`;
+
 module.exports = {
   queryOfAddingPostLikes,
   queryOfIncreasingLikeCnt,
   queryOfDeletingPostLikes,
   queryOfDecreasingLikeCnt,
+  queryOfGettingLikeData,
 };
