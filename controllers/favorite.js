@@ -3,6 +3,8 @@ const {
   queryOfAddingFavorite,
   queryOfDeletingFavorite,
   queryOfGettingFavoriteData,
+  queryOfIncreasingFavoriteCnt,
+  queryOfDecreasingFavoriteCnt,
 } = require('../query/favorite');
 const customizedError = require('./error');
 const schemas = require('../middlewares/validation');
@@ -33,15 +35,19 @@ const addFavorite = async (req, res, next) => {
     return next(customizedError(err, 500));
   }
   try {
-    const params = [userId, postId];
-    await connection.query(queryOfAddingFavorite, params);
+    // transaction 시작
+    await connection.beginTransaction();
+    await connection.query(queryOfAddingFavorite, [userId, postId]);
+    await connection.query(queryOfIncreasingFavoriteCnt, [postId]);
+    await connection.commit(); // 적용
     /* 찜목록 추가: Success */
     return res.sendStatus(201);
   } catch (err) {
-    /* 찜 목록 추가: Fail -> 예측하지 못한 에러  */
+    /* 찜목록 추가: Fail -> 예측하지 못한 에러 */
+    await connection.rollback(); // 에러가 발생할 경우 원래 상태로 돌리기
     return next(customizedError(err, 500));
   } finally {
-    await connection.release();
+    await connection.release(); // 연결 끊기
   }
 };
 /* 포스트 찜하기 삭제*/
@@ -72,13 +78,16 @@ const deleteFavorite = async (req, res, next) => {
   }
 
   try {
-    const params = [userId, postId];
-    await connection.query(queryOfDeletingFavorite, params);
+    await connection.beginTransaction(); // transaction 시작
+    await connection.query(queryOfDeletingFavorite, [userId, postId]);
+    await connection.query(queryOfDecreasingFavoriteCnt, [postId]);
+    await connection.commit(); // 적용
     /* 찜목록 삭제: Success */
     return res.sendStatus(200);
   } catch (err) {
-    /* 찜 목록 삭제: Fail -> 예측하지 못한 에러 */
-    return next(customizedError(err, 500));
+    /* 찜목록 삭제: Fail -> 예측하지 못한 에러 */
+    await connection.rollback();
+    return next(customizedError(err, 400));
   } finally {
     await connection.release();
   }

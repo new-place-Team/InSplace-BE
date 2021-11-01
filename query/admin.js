@@ -15,7 +15,7 @@ const editBtnQuery = `
   UPDATE Posts
   SET title=?, address=?, address_short=?, contact_number=?,
   category_id=?, post_images=?, post_desc=?, post_loc_x=?, post_loc_y=?,
-  like_cnt=?, weather_id=?, inside_yn=?, gender_id=?, member_id=?
+  favorite_cnt=?, weather_id=?, inside_yn=?, gender_id=?, member_id=?
   WHERE post_id=?;
 `;
 const deleteBtnQuery = `

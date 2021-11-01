@@ -25,7 +25,7 @@ const genderQuery = `SELECT description FROM Genders WHERE gender_id=?`;
 
 /* */
 const queryOfResultPageOfCondition = `
-  SELECT post_id, title, address_short, like_cnt, post_images, inside_yn,
+  SELECT post_id, title, address_short, favorite_cnt, post_images, inside_yn,
   Categories.description as category, permission_state
   FROM Posts 
   INNER JOIN Genders 
@@ -48,7 +48,7 @@ const queryOfResultPageOfCondition = `
 /* 조건 결과 상세 페이지 조회 쿼리(실내외 구분) */
 
 const queryOfDetailPageOfInOutDoors = `
-  SELECT post_id, title, address_short, like_cnt, post_images, Categories.description as category, permission_state
+  SELECT post_id, title, address_short, favorite_cnt, post_images, Categories.description as category, permission_state
   FROM Posts 
   INNER JOIN Genders 
   ON Posts.gender_id = Genders.gender_id 
