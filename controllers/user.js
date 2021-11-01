@@ -1,7 +1,7 @@
 const { pool } = require('../models/index');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { customizedError } = require('../controllers/error');
+const customizedError = require('../controllers/error');
 const {
   getUsers,
   checkMBTI,
@@ -10,7 +10,7 @@ const {
   getUserInformationById,
 } = require('../query/user');
 const registUser = async (req, res, next) => {
-  const { email, nickname, password, male_yn, mbti_id } = req.user;
+  const { email, nickname, password, maleYn, mbtiId } = req.user;
 
   // Email 중복 검사 함수 선언
   const checkDuplicateOfEmail = async (email) => {
@@ -43,7 +43,7 @@ const registUser = async (req, res, next) => {
   //중복검사 통과
   try {
     //mbti id검사
-    const [data] = await pool.query(checkMBTI(mbti_id));
+    const [data] = await pool.query(checkMBTI(mbtiId));
     //비밀번호 암호화
     const hashPassword = await bcrypt.hash(
       password,
@@ -52,7 +52,7 @@ const registUser = async (req, res, next) => {
     //유저 정보 저장
     pool
       .query(
-        insertNewUser(email, nickname, hashPassword, male_yn, data[0].mbti_id)
+        insertNewUser(email, nickname, hashPassword, maleYn, data[0].mbti_id)
       )
       .then((data) => {
         return res.sendStatus(201);

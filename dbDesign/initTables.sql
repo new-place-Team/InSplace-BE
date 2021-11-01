@@ -30,7 +30,7 @@ CREATE TABLE `Posts` (
   `post_desc` text,
   `post_loc_x` varchar(20) NOT NULL,
   `post_loc_y` varchar(20) NOT NULL,
-  `like_cnt` integer NOT NULL DEFAULT 0,
+  `favorite_cnt` integer NOT NULL DEFAULT 0,
   `weather_id` integer NOT NULL,
   `inside_yn` boolean NOT NULL,
   `gender_id` integer NOT NULL,
@@ -48,13 +48,6 @@ CREATE TABLE `Posts` (
 CREATE TABLE `Categories` (
   `category_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
   `description` varchar(20)
-);
-
--- Post Like Table
--- 해당 Post에 좋아요를 누를 경우 생성, 반대일 경우 삭제
-CREATE TABLE `PostLikes` (
-  `user_id` integer NOT NULL,
-  `post_id` integer NOT NULL
 );
 
 -- Review Like Table
@@ -129,7 +122,6 @@ CREATE TABLE `Weathers` (
 
 
 -- Foreign Key
-ALTER TABLE `PostLikes` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE `Favorites` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE `Reviews` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE `VisitedPosts` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
@@ -137,7 +129,6 @@ ALTER TABLE `ReviewLikes` ADD FOREIGN KEY (`review_id`) REFERENCES `Reviews` (`r
 
 
 ALTER TABLE `ReviewLikes` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`);
-ALTER TABLE `PostLikes` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`); 
 ALTER TABLE `Favorites` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`);
 ALTER TABLE `VisitedPosts` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`); 
 ALTER TABLE `Reviews` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`);
@@ -156,7 +147,6 @@ ALTER TABLE Posts CONVERT TO character SET utf8;
 ALTER TABLE Favorites CONVERT TO character SET utf8;
 ALTER TABLE Mbti CONVERT TO character SET utf8;
 ALTER TABLE ReviewLikes CONVERT TO character SET utf8;
-ALTER TABLE PostLikes CONVERT TO character SET utf8;
 ALTER TABLE Categories CONVERT TO character SET utf8;
 ALTER TABLE Reviews CONVERT TO character SET utf8;
 ALTER TABLE VisitedPosts CONVERT TO character SET utf8;
