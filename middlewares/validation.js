@@ -1,4 +1,4 @@
-const Joi = require('Joi');
+const Joi = require('joi');
 
 const schemas = Joi.object({
   userId: Joi.number().min(1).required(),
