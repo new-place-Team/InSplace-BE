@@ -8,7 +8,8 @@ CREATE TABLE `Users` (
   `password` varchar(40) NOT NULL,
   `male_yn` boolean NOT NULL,
   `mbti_id` integer NOT NULL,
-  `user_image` varchar(255)
+  `user_image` varchar(255),
+  `delete_yn` boolean NOT NULL DEFAULT 0
 );
 
 
@@ -97,11 +98,12 @@ CREATE TABLE `Favorites` (
 CREATE TABLE `Reviews` (
   `review_id` integer PRIMARY KEY AUTO_INCREMENT,
   `post_id` integer NOT NULL,
+  `user_id` integer NOT NULL, 
   `review_images` varchar(255),
   `review_desc` varchar(255),
   `weekday_yn` boolean NOT NULL,
   `revisit_yn` boolean NOT NULL,
-  `review_delete_yn` boolean,
+  `delete_yn` boolean NOT NULL DEFAULT 0,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -125,22 +127,28 @@ CREATE TABLE `Weathers` (
   `temp_diff` varchar(20) NOT NULL
  )
 
-ALTER TABLE `ReviewLikes` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-ALTER TABLE `PostLikes` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-ALTER TABLE `Favorites` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-ALTER TABLE `VisitedPosts` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
+-- Foreign Key
 ALTER TABLE `PostLikes` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-ALTER TABLE `ReviewLikes` ADD FOREIGN KEY (`review_id`) REFERENCES `Reviews` (`review_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-ALTER TABLE `Posts` ADD FOREIGN KEY (`gender_id`) REFERENCES `Genders` (`gender_id`);
 ALTER TABLE `Favorites` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-ALTER TABLE `Users` ADD FOREIGN KEY (`mbti_id`) REFERENCES `Mbti` (`mbti_id`);
 ALTER TABLE `Reviews` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
-ALTER TABLE `Posts` ADD FOREIGN KEY (`category_id`) REFERENCES `Categories` (`category_id`);
-
 ALTER TABLE `VisitedPosts` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `ReviewLikes` ADD FOREIGN KEY (`review_id`) REFERENCES `Reviews` (`review_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+
+ALTER TABLE `ReviewLikes` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`);
+ALTER TABLE `PostLikes` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`); 
+ALTER TABLE `Favorites` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`);
+ALTER TABLE `VisitedPosts` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`); 
+ALTER TABLE `Reviews` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`);
+
+
+ALTER TABLE `Users` ADD FOREIGN KEY (`mbti_id`) REFERENCES `Mbti` (`mbti_id`);
+ALTER TABLE `Posts` ADD FOREIGN KEY (`category_id`) REFERENCES `Categories` (`category_id`);
+ALTER TABLE `Posts` ADD FOREIGN KEY (`gender_id`) REFERENCES `Genders` (`gender_id`);
 ALTER TABLE `Posts` ADD FOREIGN KEY (`weather_id`) REFERENCES `Weathers` (`weather_id`);
 ALTER TABLE `Posts` ADD FOREIGN KEY (`member_id`) REFERENCES `MemberCnt` (`member_id`);
+
 
 -- Charset UTF-8 추가 
 ALTER TABLE Users CONVERT TO character SET utf8;
