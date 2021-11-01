@@ -27,4 +27,10 @@ FROM Posts
 ORDER BY like_cnt DESC limit 14
 `; // 해당쿼리는 수정 예정
 
-module.exports = { searchMainQuery, likeQuery, mdQuery};
+const weatherQuery = `
+SELECT *
+FROM CurrentWeather
+WHERE cur_weather_id = 0
+`; //데이터베이스에 저장된 날씨 가져오기
+
+module.exports = { searchMainQuery, likeQuery, mdQuery, weatherQuery};
