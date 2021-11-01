@@ -4,7 +4,7 @@ const {
   queryOfDeletingFavorite,
   queryOfGettingFavoriteData,
 } = require('../query/favorite');
-const { customizedError } = require('./error');
+const customizedError = require('./error');
 const schemas = require('../middlewares/validation');
 
 /* 포스트 찜하기 추가 */

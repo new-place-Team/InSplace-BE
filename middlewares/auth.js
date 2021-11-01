@@ -1,89 +1,68 @@
 const jwt = require('jsonwebtoken');
-const logger = require('../config/logger');
+const customizedError = require('../controllers/error');
 
-const { pool } = require('../models/index');
-
-const isAuth = async (req, res, next) => {
-  const authHeader = req.get('Authorization');
-
-  if (!(authHeader && authHeader.startsWith('Bearer'))) {
-    // 로그인 안했을 경우 들어와 짐.
-    return res
-      .status(401)
-      .json({ success: false, msg: '로그인이 필요합니다.' });
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  jwt.verify(token, process.env.SECRET_KEY, async (error, decoded) => {
-    // 해독하면서 에러가 발생한 경우
-    // 유효기간이 끝났을 때 여기로
-    if (error) {
-      return res
-        .status(401)
-        .json({ success: false, msg: '로그인 기간이 만료되었습니다.' });
-    }
-
-    const userID = decoded.user_id;
-
-    const data = await getUserInfo(req, res, userID);
-    req.user = data.rows.user_id;
-    next();
-  });
-};
-
-// 토큰이 있는 여부만 파악하고 토큰이 존재할 경우 user정보를 받기 위한 미들웨어
-const justCheckAuth = async (req, res, next) => {
-  const authHeader = req.get('Authorization');
-  if (!(authHeader && authHeader.startsWith('Bearer'))) {
-    // 로그인 안했을 경우 들어와 짐.
-    return next();
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  jwt.verify(token, process.env.SECRET_KEY, async (error, decoded) => {
-    // 해독하면서 에러가 발생한 경우
-    // 유효기간이 끝났을 때 여기로
-    if (error) {
-      return next();
-    }
-
-    // 존재하지 않는 회원인 경우+
-
-    const data = await getUserInfo(req, res, decoded.user_id);
-
-    req.user = data.rows.user_id;
-    next();
-  });
-};
-
-async function getUserInfo(req, res, userID) {
-  const query = `SELECT user_id FROM Users WHERE user_id = ?`;
-  const params = [userID];
+/*
+ * 로그인 권한이 없을 경우 내보내는 미들웨어
+ * 로그인 권한이 있을 경우, user_id 값을 넘김
+ */
+const isAuth = (req, res, next) => {
   try {
-    const [rows] = await pool.query(query, params);
+    const authHeader = req.get('Authorization');
 
-    if (rows[0]) {
-      return {
-        rows: rows[0],
-      };
-    } else {
-      const payload = {
-        success: true,
-        msg: '존재하지 않는 회원입니다.',
-      };
-      return res.status(200).json({ payload });
+    /* authHeader == undefined || Bearer로 시작하지 않는 경우 */
+    if (!(authHeader && authHeader.startsWith('Bearer'))) {
+      return next(
+        customizedError(
+          'Authorization이 undefined이거나 Bearer로 시작 되지 않습니다.',
+          400
+        )
+      );
     }
-  } catch (err) {
-    logger.error(`유저 정보를 가져오는 pool에서 에러 발생: ${err}`);
-    res.status(400).json({
-      success: false,
-      errMsg: '유저 정보를 가져오는 pool에서 에러 발생',
-      err: err,
+
+    const token = authHeader.split(' ')[1];
+    /* token값이 존재하지 않는 경우 */
+    if (!token) {
+      return next(customizedError('token값이 존재하지 않습니다.', 400));
+    }
+
+    jwt.verify(token, process.env.SECRET_KEY, async (error, decoded) => {
+      /* login 유효시간 만료 OR 유효한 Token값이 아닌 경우 */
+      if (error) {
+        return next(
+          'login 유효시간이 만료되었거나 유효한 token값이 아닙니다.',
+          401
+        );
+      }
+
+      req.user = decoded.user_id;
+      next();
     });
+  } catch (err) {
+    return next('isAuth Function에서 예측하지 못한 에러가 발생했습니다.', 500);
   }
-}
+};
+
+/*
+ * 로그인 권한이 없을 경우 그냥 내보냄
+ * 로그인 권한이 있을 경우, user_id 값을 넘김
+ */
+const justCheckAuth = (req, res, next) => {
+  try {
+    const authHeader = req.get('Authorization');
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token, process.env.SECRET_KEY, async (error, decoded) => {
+      /* login 유효시간 만료 OR 유효한 Token값이 아닌 경우 */
+      if (error) {
+        next();
+      }
+
+      req.user = decoded.user_id;
+      next();
+    });
+  } catch (err) {
+    next();
+  }
+};
 
 module.exports = {
   isAuth,

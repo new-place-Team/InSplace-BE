@@ -1,5 +1,5 @@
 const { pool } = require('../models/index');
-const { customizedError } = require('./error');
+const customizedError = require('./error');
 const {
   queryOfAddingPostLikes,
   queryOfIncreasingLikeCnt,
@@ -13,7 +13,6 @@ const schemas = require('../middlewares/validation');
 const addLike = async (req, res, next) => {
   const userId = req.user;
   const postId = req.params.postId;
-
   try {
     /* 유효성 검사: Success */
     await schemas.validateAsync({ userId, postId });
