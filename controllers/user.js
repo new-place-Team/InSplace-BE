@@ -10,9 +10,8 @@ const {
   getUserInformationById,
 } = require('../query/user');
 const registUser = async (req, res, next) => {
-  const { email, nickname, password } = req.user;
-  const { male_yn, mbti_id } = req.body;
-  console.log(email, nickname);
+  const { email, nickname, password, male_yn, mbti_id } = req.user;
+
   // Email 중복 검사 함수 선언
   const checkDuplicateOfEmail = async (email) => {
     try {
