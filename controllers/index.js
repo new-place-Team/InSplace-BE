@@ -8,12 +8,6 @@ const searchMain = async (req, res) => {
   let weatherResult;
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    let user = {};
-
-    if (req.user) {
-      user = req.user;
-    }
-
     const adjImg = (result) => {
       let resultImg = result[0];
       for (let i = 0; i < resultImg.length; i++) {
@@ -35,8 +29,7 @@ const searchMain = async (req, res) => {
     const adjResult = adjImg(result);
     const adjLike = adjImg(likeResult);
     const adjMd = adjImg(mdResult);
-
-    let payload = {
+    return res.status(200).json({ 
       weather: {
         status: weatherCondition,
         temperature: weatherTemp,
@@ -45,11 +38,7 @@ const searchMain = async (req, res) => {
       weatherPlace: adjResult,
       likePlace: adjLike,
       pickPlace: adjMd,
-      user,
-      success: true,
-    };
-
-    return res.status(200).json({ payload });
+     });
   } catch (err) {
     return next(customizedError(err, 400));
   } finally {
