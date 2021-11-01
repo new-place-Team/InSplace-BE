@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { customizedError } = require('../controllers/error');
+const customizedError = require('../controllers/error');
 const Schema = Joi.object({
   email: Joi.string()
     .email({
@@ -9,21 +9,21 @@ const Schema = Joi.object({
     .required(),
   nickname: Joi.string().required(),
   password: Joi.string().min(4).required(),
-  male_yn: Joi.number().integer().required(),
-  mbti_id: Joi.number().integer().required(),
+  maleYn: Joi.number().integer().required(),
+  mbtiId: Joi.number().integer().required(),
 });
 
 const validationUser = async (req, res, next) => {
-  const { email, nickname, password, male_yn, mbti_id } = req.body;
+  const { email, nickname, password, maleYn, mbtiId } = req.body;
   try {
     await Schema.validateAsync({
       email,
       nickname,
       password,
-      male_yn,
-      mbti_id,
+      maleYn,
+      mbtiId,
     });
-    req.user = { email, nickname, password, male_yn, mbti_id };
+    req.user = { email, nickname, password, maleYn, mbtiId };
     return next();
   } catch (error) {
     const { message } = error;
