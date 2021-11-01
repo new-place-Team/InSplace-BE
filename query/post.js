@@ -10,10 +10,19 @@ const findDetailPosts = (postID) => {
     WHERE post_id = "${postID}"`;
 };
 
+const checkVisitedUser = (userID, postID) => {
+  return `SELECT * FROM VisitedPosts WHERE user_id = "${userID}" AND post_id = "${postID}"`;
+};
+
 const findDetailReviews = (postID) => {
   return `SELECT user_Id AS userID, review_images AS reviewImages, review_desc AS reviewDesc, created_at AS createdAt FROM Reviews
   WHERE post_id = "${postID}" AND delete_yn = "0"
   ORDER BY created_at DESC 
   LIMIT 8`;
 };
-module.exports = { addVisited, findDetailPosts, findDetailReviews };
+module.exports = {
+  addVisited,
+  findDetailPosts,
+  findDetailReviews,
+  checkVisitedUser,
+};
