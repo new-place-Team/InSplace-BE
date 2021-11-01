@@ -2,13 +2,9 @@ const logger = require('../config/logger');
 const axios = require('axios');
 const { pool } = require('../models/index');
 const { searchMainQuery, likeQuery, mdQuery, weatherQuery } = require('../query/main');
-require('dotenv').config();
+const customizedError  = require('./error');
 
 const searchMain = async (req, res) => {
-  let weatherCondition;
-  let weatherTemp;
-  let weatherDiff;
-  let weatherInfo;
   let weatherResult;
   const connection = await pool.getConnection(async (conn) => conn);
   try {
@@ -28,12 +24,11 @@ const searchMain = async (req, res) => {
       return resultImg;
     };
     weatherResult = await connection.query(weatherQuery);
-    weatherInfo = weatherResult[0]
-    console.log(weatherInfo);
-    weatherCondition = weatherInfo[0].weather_status;
-    weatherTemp = weatherInfo[0].weather_temp;
-    weatherDiff = weatherInfo[0].temp_diff;
-    console.log(weatherCondition)
+    const weatherInfo = weatherResult[0] //날씨 조회
+    const weatherCondition = weatherInfo[0].weather_status; //날씨 상태 ID
+    const weatherTemp = weatherInfo[0].weather_temp; //현재 온도
+    const weatherDiff = weatherInfo[0].temp_diff; // 어제와 오늘 온도의 차이
+  
     const result = await connection.query(searchMainQuery(weatherCondition)); //날씨
     const likeResult = await connection.query(likeQuery); //좋아요
     const mdResult = await connection.query(mdQuery); // 관리자 추천
@@ -56,12 +51,7 @@ const searchMain = async (req, res) => {
 
     return res.status(200).json({ payload });
   } catch (err) {
-    logger.error(`쿼리문을 실행할 때 오류가 발생했습니다 :`, err);
-    payload = {
-      success: false,
-      errMsg: `쿼리문을 실행할 때 오류가 발생했습니다: ${err}`,
-    };
-    return res.status(400).json(payload);
+    return next(customizedError(err, 400));
   } finally {
     await connection.release();
   }
