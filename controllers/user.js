@@ -35,11 +35,11 @@ const registUser = async (req, res, next) => {
 
   //Email 중복검사
   if (await checkDuplicateOfEmail(email)) {
-    return customizedError('이메일이 이미 존재합니다', 400);
+    return next(customizedError('이메일이 이미 존재합니다', 400));
   }
   //Nickname 중복검사
   if (await checkDuplicateOfNickname(nickname)) {
-    return customizedError('닉네임이 이미 존재합니다 중복검사 에러', 400);
+    return next(customizedError('닉네임이 이미 존재합니다 중복검사 에러', 400));
   }
   //중복검사 통과
   try {
@@ -75,7 +75,7 @@ const authUser = async (req, res, next) => {
 
     //해쉬된 비밀번호가 없는경우는 이메일이 없는경우이므로 로그인 실패
     if (userPasswordAndId.length == 0) {
-      return customizedError('Email 혹은 Password가 틀렸습니다', 400);
+      return next(customizedError('Email 혹은 Password가 틀렸습니다', 400));
     }
 
     const { user_id, nickname, description, user_image } = userPasswordAndId[0];

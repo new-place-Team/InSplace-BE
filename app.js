@@ -35,7 +35,6 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
-  console.log(err);
   logger.error(`${err.stack}`);
   return res.status(err.status).json({ errMsg: err.message });
 });
