@@ -44,7 +44,7 @@ const searchMain = async (req, res, next) => {
       weatherPlace: adjResult,
       likePlace: adjLike,
       pickPlace: adjMd,
-    });
+     });
   } catch (err) {
     return next(customizedError(err, 400));
   } finally {
