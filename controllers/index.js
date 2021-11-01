@@ -1,9 +1,8 @@
 const logger = require('../config/logger');
 const axios = require('axios');
 const { pool } = require('../models/index');
-const { searchMainQuery, likeQuery, mdQuery} = require('../query/main');
+const { searchMainQuery, likeQuery, mdQuery } = require('../query/main');
 require('dotenv').config();
-
 
 const searchMain = async (req, res) => {
   let weatherCondition;
@@ -40,15 +39,17 @@ const searchMain = async (req, res) => {
 
     const adjImg = (result) => {
       let resultImg = result[0];
-      for(let i = 0 ; i < resultImg.length; i++){
-        resultImg[i].post_images = result[0][i].post_images.split('&&').slice(1)
+      for (let i = 0; i < resultImg.length; i++) {
+        resultImg[i].post_images = result[0][i].post_images
+          .split('&&')
+          .slice(1)[0];
       }
-     return resultImg
+      return resultImg;
     };
 
     const result = await connection.query(searchMainQuery(weatherCondition)); //날씨
     const likeResult = await connection.query(likeQuery); //좋아요
-    const mdResult = await connection.query(mdQuery);// 관리자 추천
+    const mdResult = await connection.query(mdQuery); // 관리자 추천
     const adjResult = adjImg(result);
     const adjLike = adjImg(likeResult);
     const adjMd = adjImg(mdResult);

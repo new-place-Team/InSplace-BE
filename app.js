@@ -29,7 +29,7 @@ app.use('/', require('./routes/index'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  return res.send(404).send('404 NOT FOUND');
+  return res.status(404).send('404 NOT FOUND');
 });
 
 // error handler
