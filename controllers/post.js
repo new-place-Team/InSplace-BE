@@ -38,6 +38,7 @@ const showDetailPost = async (req, res, next) => {
     resultSplitAddress.postImages = result[0].postImages.split('&&').slice(1);
     return { resultSplitAddress };
   };
+
   //리뷰 이미지들을 배열로 만들어주는 함수
   const splitReviewsImages = (detailReviews) => {
     const splitReviewsImages = detailReviews.map((data) => {
