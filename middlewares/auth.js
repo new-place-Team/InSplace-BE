@@ -49,8 +49,9 @@ const justCheckAuth = async (req, res, next) => {
       return next();
     }
 
-    // 존재하지 않는 회원인 경우
-    const data = await getUserInfo(userEmail, userNickname);
+    // 존재하지 않는 회원인 경우+
+
+    const data = await getUserInfo(req, res, decoded.user_id);
 
     req.user = data.rows.user_id;
     next();
@@ -62,6 +63,7 @@ async function getUserInfo(req, res, userID) {
   const params = [userID];
   try {
     const [rows] = await pool.query(query, params);
+
     if (rows[0]) {
       return {
         rows: rows[0],
