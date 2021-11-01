@@ -7,6 +7,8 @@ const app = require('../app');
 const debug = require('debug')('new-place-be:server');
 const http = require('http');
 const logger = require('../config/logger');
+const cron = require('node-cron');
+const { schedulingWeather } = require('../controllers/weatherScheduler');
 require('dotenv').config();
 
 /**
@@ -85,4 +87,7 @@ function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  cron.schedule('*/1 * * * *', function() {
+    schedulingWeather();
+  });
 }
