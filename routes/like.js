@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 const { addLike, cancelLike } = require('../controllers/like');
-const { isAuth, justCheckAuth } = require('../middlewares/auth');
+const { isAuth } = require('../middlewares/auth');
 
 /* Add Like API */
 router.post('/', isAuth, addLike);
