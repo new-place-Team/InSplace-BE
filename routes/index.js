@@ -20,9 +20,9 @@ if (process.env.NODE_ENV === 'production') {
 
 const swaggerDefinition = {
   info: {
-    title: 'new-place API',
+    title: 'Insplace API',
     version: '1.0.0',
-    description: 'new-place API 명세서',
+    description: 'In Seoul Place API 명세서',
   },
   host: host,
   basePath: '/',
