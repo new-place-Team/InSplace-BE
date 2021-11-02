@@ -5,7 +5,6 @@ const addVisited = (userID, postID) => {
 };
 const findDetailPosts = (postID, userID) => {
   return `
-
   SELECT 
   post_images AS postImages, contact_number AS contactNumber,
    post_loc_x, post_loc_y, description, address, title,
@@ -37,7 +36,7 @@ const checkVisitedUser = (userID, postID) => {
 const findDetailReviews = (postID, userID) => {
   return `
   SELECT 
-  Reviews.user_Id AS userID, review_images AS reviewImages, 
+  Reviews.user_Id AS userId, review_images AS reviewImages, 
   review_desc AS reviewDesc, created_at AS createdAt,
   
   CASE 

@@ -1,6 +1,10 @@
 const logger = require('../config/logger');
 const { pool } = require('../models/index');
-const { updateReviewDeleteYn } = require('../query/review');
+const {
+  updateReviewDeleteYn,
+  addReviewLikes,
+  updateReviewsLikeCnt,
+} = require('../query/review');
 const customizedError = require('../controllers/error');
 /* 리뷰 등록 함수 */
 
@@ -43,7 +47,28 @@ const deleteReview = async (req, res, next) => {
   }
 };
 
-const addReviewLike = (req, res, next) => {};
+const addReviewLike = async (req, res, next) => {
+  try {
+    const connection = await pool.getConnection(async (conn) => conn);
+    try {
+      connection.beginTransaction();
+      await connection.query(addReviewLikes(req.params.reviewId, req.user));
+      await connection.query(
+        updateReviewsLikeCnt(req.params.postId, req.params.reviewId, req.user)
+      );
+      await connection.commit();
+      connection.release();
+      return res.sendStatus(201);
+    } catch (err) {
+      await connection.rollback();
+      connection.release();
+      return next(customizedError(err.message, 500));
+    }
+  } catch (err) {
+    connection.release();
+    return next(customizedError(err.message, 500));
+  }
+};
 
 module.exports = {
   postingReview,
