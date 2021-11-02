@@ -33,6 +33,7 @@ const searchMain = async (req, res, next) => {
     const weatherCondition = weatherInfo[0].weather_status; //날씨 상태 ID
     const weatherTemp = weatherInfo[0].weather_temp; //현재 온도
     const weatherDiff = weatherInfo[0].temp_diff; // 어제와 오늘 온도의 차이
+    const weatherFe = weatherInfo[0].weather_status_fe
     const result = await connection.query(searchMainQuery(weatherCondition, user)); //날씨
     const likeResult = await connection.query(likeQuery); //좋아요
     const mdResult = await connection.query(mdQuery, user); // 관리자 추천
@@ -45,6 +46,7 @@ const searchMain = async (req, res, next) => {
         status: weatherCondition,
         temperature: weatherTemp,
         diff: weatherDiff,
+        frontWeather: weatherFe
       },
       weatherPlace: adjResult,
       likePlace: adjLike,
