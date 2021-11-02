@@ -1,5 +1,3 @@
-const logger = require('../config/logger');
-const axios = require('axios');
 const { pool } = require('../models/index');
 const {
   searchMainQuery,
@@ -27,7 +25,6 @@ const searchMain = async (req, res, next) => {
     const weatherCondition = weatherInfo[0].weather_status; //날씨 상태 ID
     const weatherTemp = weatherInfo[0].weather_temp; //현재 온도
     const weatherDiff = weatherInfo[0].temp_diff; // 어제와 오늘 온도의 차이
-
     const result = await connection.query(searchMainQuery(weatherCondition)); //날씨
     const likeResult = await connection.query(likeQuery); //좋아요
     const mdResult = await connection.query(mdQuery); // 관리자 추천
