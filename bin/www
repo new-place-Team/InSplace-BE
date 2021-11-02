@@ -11,7 +11,6 @@ const schedule = require('node-schedule');
 const { schedulingWeather } = require('../controllers/weatherScheduler');
 require('dotenv').config();
 
-
 /**
  * Get port from environment and store in Express.
  */
@@ -88,7 +87,8 @@ function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  schedule.scheduleJob('*/10 * * * *', function(){
+  schedule.scheduleJob('*/10 * * * *', function () {
+    schedulingWeather();
     logger.info('날씨 상태 업데이트 완료');
-  })
+  });
 }
