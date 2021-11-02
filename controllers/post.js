@@ -35,6 +35,7 @@ const showDetailPost = async (req, res, next) => {
   //주소를 &&로 잘라서 재구성하는 함수
   const splitPostAddress = (result) => {
     let resultSplitAddress = result[0];
+
     resultSplitAddress.postImages = result[0].postImages.split('&&').slice(1);
     return { resultSplitAddress };
   };

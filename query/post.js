@@ -4,7 +4,8 @@ const addVisited = (userID, postID) => {
     VALUES("${userID}","${postID}")`;
 };
 const findDetailPosts = (postID) => {
-  return `SELECT title, post_images, contact_number, post_loc_x, post_loc_y, description, address, address_short, post_desc, favorite_cnt FROM Posts 
+  return `SELECT title, post_images AS postImages, contact_number AS contactNumber, post_loc_x, post_loc_y, description, address,
+   address_short AS addressShort, post_desc AS postDesc, favorite_cnt AS favoriteCnt FROM Posts 
     INNER JOIN Categories 
     ON Posts.category_id = Categories.category_id  
     WHERE post_id = "${postID}"`;

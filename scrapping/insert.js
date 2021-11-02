@@ -9,7 +9,7 @@ const pool = mysql.createPool({
   database: 'new_place',
 });
 //정보들
-const loadAddress = '서울특별시 종로구 세종로 사직로 161';
+const loadAddress = '서울 용산구 이태원로27가길 50 3층';
 const storeName = '종로구 청계천';
 
 axios
