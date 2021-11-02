@@ -47,28 +47,30 @@ const isAuth = (req, res, next) => {
  * 로그인 권한이 있을 경우, user_id 값을 넘김
  */
 const justCheckAuth = (req, res, next) => {
-  const authHeader = req.get('Authorization');
-
-  /* authHeader == undefined || Bearer로 시작하지 않는 경우 */
-  if (!(authHeader && authHeader.startsWith('Bearer'))) {
-    return next();
-  }
-
-  const token = authHeader.split(' ')[1];
-  /* token값이 존재하지 않는 경우 */
-  if (!token) {
-    return next();
-  }
-
-  jwt.verify(token, process.env.SECRET_KEY, async (error, decoded) => {
-    /* login 유효시간 만료 OR 유효한 Token값이 아닌 경우 */
-    if (error) {
+  try {
+    const authHeader = req.get('Authorization');
+    /* authHeader == undefined || Bearer로 시작하지 않는 경우 */
+    if (!(authHeader && authHeader.startsWith('Bearer'))) {
+      return next();
+    }
+    const token = authHeader.split(' ')[1];
+    /* token값이 존재하지 않는 경우 */
+    if (!token) {
       return next();
     }
 
-    req.user = decoded.user_id;
-    next();
-  });
+    jwt.verify(token, process.env.SECRET_KEY, async (error, decoded) => {
+      /* login 유효시간 만료 OR 유효한 Token값이 아닌 경우 */
+      if (error) {
+        return next();
+      }
+
+      req.user = decoded.user_id;
+      return next();
+    });
+  } catch (err) {
+    return next();
+  }
 };
 
 module.exports = {
