@@ -1,10 +1,10 @@
 const logger = require('../config/logger');
-const { db } = require('../models/index');
+const { pool } = require('../models/index');
 const { updateReviewDeleteYn } = require('../query/review');
+const customizedError = require('../controllers/error');
 /* 리뷰 등록 함수 */
 
 const postingReview = async (req, res) => {
-  console.log(req.file);
   const postId = req.params.postId;
   const reviewImages = req.file.transforms[0].location;
   const { review_desc, revisit_yn } = req.body;
@@ -28,17 +28,25 @@ const postingReview = async (req, res) => {
   }
 };
 
-const deleteReview = async (req, res) => {
-  const result = await pool.query(
-    updateReviewDeleteYn(req.params.postId, req.params.reviewId)
-  );
-  if (result[0].changedRows == 0) {
-    return next(customizedError('이미 탈퇴된 회원입니다.', 400));
+const deleteReview = async (req, res, next) => {
+  try {
+    const result = await pool.query(
+      updateReviewDeleteYn(req.params.postId, req.params.reviewId, req.user)
+    );
+
+    if (result[0].changedRows == 0) {
+      return next(customizedError('이미 삭제된 리뷰입니다.', 400));
+    }
+    return res.sendStatus(200);
+  } catch (err) {
+    return next(customizedError(err.message, 500));
   }
-  return res.sendStatus(200);
 };
+
+const addReviewLike = (req, res, next) => {};
 
 module.exports = {
   postingReview,
   deleteReview,
+  addReviewLike,
 };
