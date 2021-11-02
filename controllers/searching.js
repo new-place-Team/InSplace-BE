@@ -80,8 +80,7 @@ const getResultPageOfCondition = async (req, res, next) => {
 
 /* 조건 결과 상세 페이지 조회(실내외 중 한개) */
 const getDetailPageOfInOutDoors = async (req, res, next) => {
-  // const userId = checkLoginUser(req.user);
-  const userId = 24;
+  const userId = checkLoginUser(req.user);
   const { weather, category, num, gender, inside } = req.query;
   const pageNum = req.params.number * 8;
   const params = [userId, weather, category, num, gender, inside, pageNum];
