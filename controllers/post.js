@@ -35,7 +35,6 @@ const showDetailPost = async (req, res, next) => {
   //주소를 &&로 잘라서 재구성하는 함수
   const splitPostAddress = (result) => {
     let resultSplitAddress = result[0];
-
     resultSplitAddress.postImages = result[0].postImages.split('&&').slice(1);
     return { resultSplitAddress };
   };
@@ -53,10 +52,11 @@ const showDetailPost = async (req, res, next) => {
   const findDetailPage = async () => {
     try {
       const [detailPosts] = await pool.query(
-        findDetailPosts(req.params.postId)
+        findDetailPosts(req.params.postId, req.user)
       );
+      console.log(detailPosts);
       const [detailReviews] = await pool.query(
-        findDetailReviews(req.params.postId)
+        findDetailReviews(req.params.postId, req.user)
       );
       if (detailPosts.length == 0) {
         return next(customizedError('포스트가 없습니다.', 400));
