@@ -3,30 +3,10 @@ const categoryQuery = `SELECT description FROM Categories WHERE category_id=?`;
 const memberQuery = `SELECT description FROM MemberCnt WHERE member_id=?`;
 const genderQuery = `SELECT description FROM Genders WHERE gender_id=?`;
 
-/* const queryOfResultPageOfCondition = `
-  SELECT *
-  FROM Posts 
-  INNER JOIN Genders 
-  ON Posts.gender_id = Genders.gender_id 
-  INNER JOIN Weathers
-  ON Posts.weather_id = Weathers.weather_id
-  INNER JOIN MemberCnt
-  ON Posts.member_id = MemberCnt.member_id
-  INNER JOIN Categories ON Posts.category_id = Categories.category_id
-  WHERE Genders.description 
-  LIKE CONCAT('%', (${genderQuery}), '%') 
-  AND Weathers.description
-  LIKE CONCAT('%', (${weatherQuery}), '%')
-  AND MemberCnt.description
-  LIKE CONCAT('%', (${memberQuery}), '%')
-  AND Categories.description
-  LIKE CONCAT('%', (${categoryQuery}), '%');
-  `; */
-
-/* */
 const queryOfResultPageOfCondition = `
-  SELECT post_id, title, address_short, favorite_cnt, post_images, inside_yn,
-  Categories.description as category, permission_state
+  SELECT Posts.post_id AS postId, title, address_short AS addressShort, favorite_cnt AS favoriteCnt, post_images AS postImage, inside_yn AS insideYN,
+  Categories.description AS category, permission_state AS permissionState, 
+  CASE WHEN Favorites.user_id = ? THEN 1 ELSE 0 END AS favoriteState 
   FROM Posts 
   INNER JOIN Genders 
   ON Posts.gender_id = Genders.gender_id 
@@ -35,6 +15,7 @@ const queryOfResultPageOfCondition = `
   INNER JOIN MemberCnt
   ON Posts.member_id = MemberCnt.member_id
   INNER JOIN Categories ON Posts.category_id = Categories.category_id
+  LEFT JOIN Favorites ON Posts.post_id = Favorites.post_id
   WHERE  Weathers.description
   LIKE CONCAT('%', (${weatherQuery}), '%')
   AND Categories.description
@@ -48,7 +29,8 @@ const queryOfResultPageOfCondition = `
 /* 조건 결과 상세 페이지 조회 쿼리(실내외 구분) */
 
 const queryOfDetailPageOfInOutDoors = `
-  SELECT post_id, title, address_short, favorite_cnt, post_images, Categories.description as category, permission_state
+  SELECT Posts.post_id AS postId, title, address_short AS addressShort, favorite_cnt AS favoriteCnt, post_images AS postImage, Categories.description AS category, permission_state AS permissionState,
+  CASE WHEN Favorites.user_id = ? THEN 1 ELSE 0 END AS favoriteState 
   FROM Posts 
   INNER JOIN Genders 
   ON Posts.gender_id = Genders.gender_id 
@@ -57,6 +39,7 @@ const queryOfDetailPageOfInOutDoors = `
   INNER JOIN MemberCnt
   ON Posts.member_id = MemberCnt.member_id
   INNER JOIN Categories ON Posts.category_id = Categories.category_id
+  LEFT JOIN Favorites ON Posts.post_id = Favorites.post_id
   WHERE  Weathers.description
   LIKE CONCAT('%', (${weatherQuery}), '%')
   AND Categories.description
