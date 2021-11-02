@@ -51,15 +51,18 @@ const showDetailPost = async (req, res, next) => {
   //포스트와 리뷰들을 조회하는 함수
   const findDetailPage = async () => {
     try {
+      console.log(req.user);
       const [detailPosts] = await pool.query(
-        findDetailPosts(req.params.postId)
+        findDetailPosts(req.params.postId, req.user)
       );
+
       const [detailReviews] = await pool.query(
-        findDetailReviews(req.params.postId)
+        findDetailReviews(req.params.postId, req.user)
       );
       if (detailPosts.length == 0) {
         return next(customizedError('포스트가 없습니다.', 400));
       }
+      console.log(detailPosts);
       return {
         detailPosts,
         detailReviews,

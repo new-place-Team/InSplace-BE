@@ -5,9 +5,10 @@ const showDetailRouter = require('./detail');
 const favoriteRouter = require('./favorite');
 const addVisited = require('./visited');
 const { addVisitedList } = require('../controllers/post');
+const { justCheckAuth } = require('../middlewares/auth');
 
 router.use('/:postId/reviews', reviewRouter);
-router.use('/:postId', showDetailRouter);
+router.use('/:postId', justCheckAuth, showDetailRouter);
 router.use('/:postId/visited', addVisited);
 router.use('/:postId/favorites', favoriteRouter);
 
