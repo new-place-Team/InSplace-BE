@@ -8,7 +8,7 @@ const findDetailPosts = (postID, userID) => {
 
   SELECT 
   post_images AS postImages, contact_number AS contactNumber,
-   post_loc_x, post_loc_y, description, address, 
+   post_loc_x, post_loc_y, description, address, title,
    address_short AS addressShort, post_desc AS postDesc, favorite_cnt AS favoriteCnt,
    CASE WHEN Favorites.user_id = "${userID}"
    THEN 1
@@ -39,6 +39,7 @@ const findDetailReviews = (postID, userID) => {
   SELECT 
   Reviews.user_Id AS userID, review_images AS reviewImages, 
   review_desc AS reviewDesc, created_at AS createdAt,
+  
   CASE 
   WHEN ReviewLikes.user_id = "${userID}"
   THEN 1
