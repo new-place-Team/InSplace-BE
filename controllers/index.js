@@ -25,7 +25,7 @@ const searchMain = async (req, res, next) => {
   if(req.user){
     user = req.user
   }
-
+  
   try {
     
     weatherResult = await connection.query(weatherQuery);
