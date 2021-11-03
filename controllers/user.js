@@ -139,4 +139,21 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registUser, authUser, checkUser, deleteUser };
+/* 찜목록 조회 */
+const getFavoritesPosts = (req, res, next) => {
+  console.log('getFavorites Posts');
+};
+
+/* 가본 리스트 조회 */
+const getVisitedPosts = (req, res, next) => {
+  console.log('getVisitedPosts');
+};
+
+module.exports = {
+  registUser,
+  authUser,
+  checkUser,
+  deleteUser,
+  getFavoritesPosts,
+  getVisitedPosts,
+};
