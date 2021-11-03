@@ -9,6 +9,8 @@ const {
   getUserInformation,
   getUserInformationById,
   updateUserDeleteYn,
+  getUserFavoriteQuery,
+  getUserVisitedQuery
 } = require('../query/user');
 const registUser = async (req, res, next) => {
   const { email, nickname, password, maleYn, mbtiId } = req.user;
@@ -139,4 +141,58 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registUser, authUser, checkUser, deleteUser };
+const showFavorite = async (req, res) => {
+  const userId = req.user;
+
+  const adjImg = (result) => {
+    let resultImg = result[0];
+    for (let i = 0; i < resultImg.length; i++) {
+      resultImg[i].post_images = result[0][i].post_images
+        .split('&&')
+        .slice(1)[0];
+    }
+    return resultImg;
+  };
+  
+  try{ 
+    if(!req.user !== req.params.userId ){
+      return next(customizedError('잘못된 접근입니다', 400)); //현재 로그인 한 사람의 아이디와 파라미터 값이 틀릴때
+    }
+    const result = await pool.query(getUserFavoriteQuery(req.params.userId));
+    const favoriteList = adjImg(result);
+    return res.status(200).json({
+      favoriteList
+    });
+  } catch (err) {
+    return next(customizedError(err.message, 500));
+  }
+}
+
+const showVisited = async (req, res) => {
+  const userId = req.user;
+
+  const adjImg = (result) => {
+    let resultImg = result[0];
+    for (let i = 0; i < resultImg.length; i++) {
+      resultImg[i].post_images = result[0][i].post_images
+        .split('&&')
+        .slice(1)[0];
+    }
+    return resultImg;
+  };
+  
+  try{ 
+    if(!req.user !== req.params.userId ){
+      return next(customizedError('잘못된 접근입니다', 400)); //현재 로그인 한 사람의 아이디와 파라미터 값이 틀릴때
+    }
+    const result = await pool.query(getUserVisitedQuery(req.params.userId));
+    const visitedList = adjImg(result);
+    return res.status(200).json({
+      visitedList
+    });
+  } catch (err) {
+    return next(customizedError(err.message, 500));
+  }
+}
+
+module.exports = { registUser, authUser, checkUser, deleteUser, showFavorite, showVisited };
