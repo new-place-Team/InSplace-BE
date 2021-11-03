@@ -94,8 +94,4 @@ function onListening() {
       logger.info('날씨 상태 업데이트 완료');
     });
   }
-  // schedule.scheduleJob('*/10 * * * *', function () {
-  //   schedulingWeather();
-  //   logger.info('날씨 상태 업데이트 완료');
-  // });
 }

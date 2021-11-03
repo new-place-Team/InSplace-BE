@@ -25,7 +25,7 @@
  *     security:
  *      - bearerAuth: []
  *     tags:
- *      - Postuser
+ *      - Post
  *     summary: 가본 장소 리스트에 추가
  *     parameters:
  *       - name: id
