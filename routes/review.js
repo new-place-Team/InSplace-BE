@@ -22,5 +22,6 @@ router.post('/:reviewId/likes', isAuth, addReviewLike);
 router.post('/', isAuth, upload.array('reviewImages', 3), registReview);
 
 /* 리뷰 수정 라우터 */
-router.put('/:reviewId', modifyReview);
+router.put('/:reviewId', isAuth, upload.array('reviewImages', 3), modifyReview);
+
 module.exports = router;
