@@ -36,8 +36,8 @@ const getUserFavoriteQuery = (userID) => {
   LEFT JOIN Favorites
   ON Posts.post_id = Favorites.post_id
   WHERE Favorites.user_id = ${userID}
-  `
-}
+  `;
+};
 
 const getUserVisitedQuery = (userID) => {
   return `
@@ -46,8 +46,22 @@ const getUserVisitedQuery = (userID) => {
   LEFT JOIN VisitedPosts
   ON Posts.post_id = VisitedPosts.post_id
   WHERE VisitedPosts.user_id = ${userID}
-  `
-}
+  `;
+};
+const getKakaoUser = (userKakaoId) => {
+  return `
+  SELECT user_id, nickname, user_image, description ,email FROM Users  
+  LEFT JOIN Mbti ON Users.mbti_id = Mbti.mbti_id
+  WHERE kakao_id = ${userKakaoId}
+  `;
+};
+
+const insertNewUserforKakao = (kakaoId, userImage, nickname) => {
+  return `INSERT INTO Users 
+  ( kakao_id, user_image, nickname, kakao_yn) 
+  VALUES(${kakaoId},"${userImage}","${nickname}", 1)`;
+};
+
 module.exports = {
   getUsers,
   checkMBTI,
@@ -56,5 +70,7 @@ module.exports = {
   getUserInformationById,
   updateUserDeleteYn,
   getUserFavoriteQuery,
-  getUserVisitedQuery
+  getUserVisitedQuery,
+  getKakaoUser,
+  insertNewUserforKakao,
 };

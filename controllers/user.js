@@ -1,8 +1,18 @@
 const { pool } = require('../models/index');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
 const customizedError = require('../controllers/error');
 const {
+  getKakaoToken,
+  getKakaoUserInformation,
+} = require('../KakaoCall/kakaoLoginApi');
+const {
+  checkDuplicateOfNickname,
+  checkKakaoUserAndLogin,
+} = require('../KakaoCall/kakaoFunction');
+const {
+  insertNewUserforKakao,
   getUsers,
   checkMBTI,
   insertNewUser,
@@ -10,10 +20,11 @@ const {
   getUserInformationById,
   updateUserDeleteYn,
   getUserFavoriteQuery,
-  getUserVisitedQuery
+  getUserVisitedQuery,
+  getKakaoUser,
 } = require('../query/user');
 const registUser = async (req, res, next) => {
-  const { email, nickname, password, maleYn, mbtiId } = req.user;
+  const { email, nickname, password, maleYN, mbtiId } = req.user;
 
   // Email 중복 검사 함수 선언
   const checkDuplicateOfEmail = async (email) => {
@@ -55,7 +66,7 @@ const registUser = async (req, res, next) => {
     //유저 정보 저장
     pool
       .query(
-        insertNewUser(email, nickname, hashPassword, maleYn, data[0].mbti_id)
+        insertNewUser(email, nickname, hashPassword, maleYN, data[0].mbti_id)
       )
       .then((data) => {
         return res.sendStatus(201);
@@ -141,7 +152,6 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-
 const getFavoritesPosts = async (req, res, next) => {
   const userId = req.user;
 
@@ -154,20 +164,20 @@ const getFavoritesPosts = async (req, res, next) => {
     }
     return resultImg;
   };
-  
-  try{ 
+
+  try {
     // if(!req.user !== req.params.userId ){
     //   return next(customizedError('잘못된 접근입니다', 400)); //현재 로그인 한 사람의 아이디와 파라미터 값이 틀릴때
     // }
     const result = await pool.query(getUserFavoriteQuery(req.params.userId));
     const favoriteList = adjImg(result);
     return res.status(200).json({
-      favoriteList
+      favoriteList,
     });
   } catch (err) {
     return next(customizedError(err.message, 500));
   }
-}
+};
 
 const getVisitedPosts = async (req, res, next) => {
   const userId = req.user;
@@ -181,21 +191,58 @@ const getVisitedPosts = async (req, res, next) => {
     }
     return resultImg;
   };
-  
-  try{ 
-    if(!req.user !== req.params.userId ){
+
+  try {
+    if (!req.user !== req.params.userId) {
       return next(customizedError('잘못된 접근입니다', 400)); //현재 로그인 한 사람의 아이디와 파라미터 값이 틀릴때
     }
     const result = await pool.query(getUserVisitedQuery(req.params.userId));
     const visitedList = adjImg(result);
     return res.status(200).json({
-      visitedList
+      visitedList,
     });
   } catch (err) {
     return next(customizedError(err.message, 500));
   }
-}
+};
 
+const kakaoLogin = async (req, res, next) => {
+  try {
+    // await getKakaoToken()
+    const getKakaoUserResult = await getKakaoUserInformation();
+
+    const {
+      id: kakaoUserId,
+      properties: { nickname, profile_image },
+    } = getKakaoUserResult.data;
+
+    //kakao user가 있으면 로그인 시켜주는 함수
+    if ((await checkKakaoUserAndLogin(kakaoUserId, next, res)) == true) {
+      return;
+    }
+
+    //Nickname 중복검사
+    if (await checkDuplicateOfNickname(nickname, next)) {
+      return next(
+        customizedError('닉네임이 이미 존재합니다 중복검사 에러', 400)
+      );
+    }
+
+    //중복검사 통과
+    try {
+      //유저 정보 저장
+      await pool.query(
+        insertNewUserforKakao(kakaoUserId, profile_image, nickname)
+      );
+
+      return await checkKakaoUserAndLogin(kakaoUserId, next, res);
+    } catch (err) {
+      return next(customizedError(err, 400));
+    }
+  } catch (err) {
+    return next(customizedError(err, 500));
+  }
+};
 
 module.exports = {
   registUser,
@@ -204,5 +251,5 @@ module.exports = {
   deleteUser,
   getFavoritesPosts,
   getVisitedPosts,
+  kakaoLogin,
 };
-
