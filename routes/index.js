@@ -4,6 +4,7 @@ const userRouter = require('./user');
 const postRouter = require('./post');
 const searchingRouter = require('./searching');
 const adminRouter = require('./admin');
+const weatherRotuer = require('./weatherInfo');
 const { searchMain } = require('../controllers/index');
 const { justCheckAuth } = require('../middlewares/auth');
 require('dotenv').config();
@@ -51,6 +52,7 @@ router.use('/users', userRouter);
 router.use('/posts', postRouter);
 router.use('/search', searchingRouter);
 router.use('/admin', adminRouter);
+router.use('/weather', weatherRotuer);
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /* GET main page. */
