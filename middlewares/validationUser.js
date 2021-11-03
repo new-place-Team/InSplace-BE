@@ -11,21 +11,21 @@ const Schema = Joi.object({
   password: Joi.string()
     .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/)
     .required(),
-  maleYn: Joi.number().integer().required(),
+  maleYN: Joi.number().integer().required(),
   mbtiId: Joi.number().integer().required(),
 });
 
 const validationUser = async (req, res, next) => {
-  const { email, nickname, password, maleYn, mbtiId } = req.body;
+  const { email, nickname, password, maleYN, mbtiId } = req.body;
   try {
     await Schema.validateAsync({
       email,
       nickname,
       password,
-      maleYn,
+      maleYN,
       mbtiId,
     });
-    req.user = { email, nickname, password, maleYn, mbtiId };
+    req.user = { email, nickname, password, maleYN, mbtiId };
     return next();
   } catch (error) {
     const { message } = error;
