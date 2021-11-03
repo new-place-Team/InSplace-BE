@@ -9,7 +9,7 @@ const queryOfResultPageOfCondition = `
   CASE WHEN Favorites.user_id = ? THEN 1 ELSE 0 END AS favoriteState 
   FROM Posts 
   INNER JOIN Genders 
-  ON Posts.gender_id = Genders.gender_id 
+  ON Posts.gender_id = Genders.gender_id
   INNER JOIN Weathers
   ON Posts.weather_id = Weathers.weather_id
   INNER JOIN MemberCnt
@@ -52,7 +52,20 @@ const queryOfDetailPageOfInOutDoors = `
   AND inside_yn=?
   LIMIT 1, ?;
 `;
+
+const queryOfResultPageOfTotal = `
+  SELECT Posts.post_id AS postId, title, address_short AS addressShort, favorite_cnt AS favoriteCnt, post_images AS postImage,
+  Categories.description AS category, permission_state AS permissionState,
+  CASE WHEN Favorites.user_id =? THEN 1 ELSE 0 END AS favoriteState
+  FROM Posts
+  LEFT JOIN Categories ON Posts.category_id = Categories.category_id
+  LEFT JOIN Favorites ON Posts.post_id = Favorites.post_id
+  WHERE title LIKE CONCAT('%', ?, '%')
+  OR post_desc LIKE CONCAT('%', ?, '%')
+  LIMIT 1, ?;
+`;
 module.exports = {
   queryOfResultPageOfCondition,
   queryOfDetailPageOfInOutDoors,
+  queryOfResultPageOfTotal,
 };

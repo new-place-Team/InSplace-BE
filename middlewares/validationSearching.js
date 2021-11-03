@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const schemaOfResultPageofCondition = Joi.object({
+const schemasOfResultPageofCondition = Joi.object({
   userId: Joi.number().required(),
   weather: Joi.number().min(1).max(3).required(),
   category: Joi.number().min(1).max(5).required(),
@@ -8,7 +8,7 @@ const schemaOfResultPageofCondition = Joi.object({
   gender: Joi.number().min(1).max(3).required(),
 });
 
-const schemaOfDetailPageOfInOutDoors = Joi.object({
+const schemasOfDetailPageOfInOutDoors = Joi.object({
   userId: Joi.number().required(),
   weather: Joi.number().min(1).max(3).required(),
   category: Joi.number().min(1).max(5).required(),
@@ -18,7 +18,14 @@ const schemaOfDetailPageOfInOutDoors = Joi.object({
   pageNum: Joi.number().min(1).required(),
 });
 
+const schemasOfResultPageofTotal = Joi.object({
+  userId: Joi.number().required(),
+  result: Joi.string().min(1).required(),
+  pageNum: Joi.number().min(1).required(),
+});
+
 module.exports = {
-  schemaOfResultPageofCondition,
-  schemaOfDetailPageOfInOutDoors,
+  schemasOfResultPageofCondition,
+  schemasOfDetailPageOfInOutDoors,
+  schemasOfResultPageofTotal,
 };
