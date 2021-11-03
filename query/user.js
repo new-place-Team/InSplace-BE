@@ -28,6 +28,26 @@ const getUserInformationById = (id) => {
 const updateUserDeleteYn = (userID) => {
   return `UPDATE Users SET delete_yn = 1 WHERE user_id="${userID}"`;
 };
+
+const getUserFavoriteQuery = (userID) => {
+  return `
+  SELECT DISTINCT Posts.post_id, Posts.title, Posts.category_id, Posts.post_images
+  FROM Posts 
+  LEFT JOIN Favorites
+  ON Posts.post_id = Favorites.post_id
+  WHERE Favorites.user_id = ${userID}
+  `
+}
+
+const getUserVisitedQuery = (userID) => {
+  return `
+  SELECT DISTINCT Posts.post_id, Posts.title, Posts.category_id, Posts.post_images
+  FROM Posts 
+  LEFT JOIN VisitedPosts
+  ON Posts.post_id = VisitedPosts.post_id
+  WHERE VisitedPosts.user_id = ${userID}
+  `
+}
 module.exports = {
   getUsers,
   checkMBTI,
@@ -35,4 +55,6 @@ module.exports = {
   getUserInformation,
   getUserInformationById,
   updateUserDeleteYn,
+  getUserFavoriteQuery,
+  getUserVisitedQuery
 };
