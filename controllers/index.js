@@ -35,7 +35,7 @@ const searchMain = async (req, res, next) => {
     const weatherDiff = weatherInfo[0].temp_diff; // 어제와 오늘 온도의 차이
     const weatherFe = weatherInfo[0].weather_status_fe
     const result = await connection.query(searchMainQuery(weatherCondition, user)); //날씨
-    const likeResult = await connection.query(likeQuery); //좋아요
+    const likeResult = await connection.query(likeQuery(user)); //좋아요
     const mdResult = await connection.query(mdQuery, user); // 관리자 추천
     const adjResult = adjImg(result);
     const adjLike = adjImg(likeResult);
