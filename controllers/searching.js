@@ -66,7 +66,7 @@ const getResultPageOfCondition = async (req, res, next) => {
     for (let i = 0; i < result[0].length; i++) {
       const insideSize = insidePlaces.length;
       const outsideSize = outSidePlaces.length;
-      if (insideSize > 14 && outsideSize > 14) {
+      if (insideSize > 16 && outsideSize > 16) {
         break;
       }
       result[0][i].postImage = getMainImage(result[0][i].postImage);
@@ -91,7 +91,7 @@ const getResultPageOfCondition = async (req, res, next) => {
 const getDetailPageOfInOutDoors = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const { weather, category, num, gender, inside } = req.query;
-  const pageNum = req.params.number * 8;
+  const pageNum = req.params.number * 16;
   const params = [userId, weather, category, num, gender, inside, pageNum];
 
   /* 유효성 검사 */
