@@ -5,7 +5,10 @@ const {
   queryOfDetailPageOfInOutDoors,
 } = require('../query/searching');
 const customizedError = require('./error');
-const schemas = require('../middlewares/validationSearching');
+const {
+  schemaOfDetailPageOfInOutDoors,
+  schemaOfResultPageofCondition,
+} = require('../middlewares/validationSearching');
 
 /* image Text를 Array로 변환시키는 함수 */
 const convertImageToArray = (imgText) => {
@@ -43,7 +46,13 @@ const getResultPageOfCondition = async (req, res, next) => {
 
   /* 유효성 검사 */
   try {
-    await schemas.validateAsync({ userId, weather, category, num, gender });
+    await schemaOfResultPageofCondition.validateAsync({
+      userId,
+      weather,
+      category,
+      num,
+      gender,
+    });
   } catch (err) {
     return next(customizedError(err, 400));
   }
@@ -80,15 +89,14 @@ const getResultPageOfCondition = async (req, res, next) => {
 
 /* 조건 결과 상세 페이지 조회(실내외 중 한개) */
 const getDetailPageOfInOutDoors = async (req, res, next) => {
-  // const userId = checkLoginUser(req.user);
-  const userId = 24;
+  const userId = checkLoginUser(req.user);
   const { weather, category, num, gender, inside } = req.query;
   const pageNum = req.params.number * 8;
   const params = [userId, weather, category, num, gender, inside, pageNum];
 
   /* 유효성 검사 */
   try {
-    await schemas.validateAsync({
+    await schemaOfDetailPageOfInOutDoors.validateAsync({
       userId,
       weather,
       category,

@@ -29,7 +29,8 @@ const queryOfResultPageOfCondition = `
 /* 조건 결과 상세 페이지 조회 쿼리(실내외 구분) */
 
 const queryOfDetailPageOfInOutDoors = `
-  SELECT Posts.post_id AS postId, title, address_short AS addressShort, favorite_cnt AS favoriteCnt, post_images AS postImage, Categories.description AS category, permission_state AS permissionState,
+  SELECT Posts.post_id AS postId, title, address_short AS addressShort, favorite_cnt AS favoriteCnt, post_images AS postImage,
+  Categories.description AS category, permission_state AS permissionState,
   CASE WHEN Favorites.user_id = ? THEN 1 ELSE 0 END AS favoriteState 
   FROM Posts 
   INNER JOIN Genders 

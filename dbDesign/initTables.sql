@@ -80,6 +80,7 @@ CREATE TABLE `MemberCnt` (
 -- 찜한 Post 목록들
 -- 해당 Post를 찜할 경우 생성, 반대일 경우 삭제
 CREATE TABLE `Favorites` (
+  `favorite_id` integer PRIMARY KEY AUTO_INCREMENT,
   `user_id` integer NOT NULL,
   `post_id` integer NOT NULL
 );
@@ -115,6 +116,7 @@ CREATE TABLE `Weathers` (
 -- 현재 날씨 테이블
  CREATE TABLE `CurrentWeather` (
   `cur_weather_id` integer PRIMARY KEY,
+  `weather_status_fe` integer NOT NULL,
   `weather_status` integer NOT NULL,
   `weather_temp` varchar(20) NOT NULL,
   `temp_diff` varchar(20) NOT NULL

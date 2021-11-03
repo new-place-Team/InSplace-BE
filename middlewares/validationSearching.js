@@ -1,6 +1,14 @@
 const Joi = require('joi');
 
-const schemas = Joi.object({
+const schemaOfResultPageofCondition = Joi.object({
+  userId: Joi.number().required(),
+  weather: Joi.number().min(1).max(3).required(),
+  category: Joi.number().min(1).max(5).required(),
+  num: Joi.number().min(1).max(4).required(),
+  gender: Joi.number().min(1).max(3).required(),
+});
+
+const schemaOfDetailPageOfInOutDoors = Joi.object({
   userId: Joi.number().required(),
   weather: Joi.number().min(1).max(3).required(),
   category: Joi.number().min(1).max(5).required(),
@@ -10,4 +18,7 @@ const schemas = Joi.object({
   pageNum: Joi.number().min(1).required(),
 });
 
-module.exports = schemas;
+module.exports = {
+  schemaOfResultPageofCondition,
+  schemaOfDetailPageOfInOutDoors,
+};
