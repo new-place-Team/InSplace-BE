@@ -31,7 +31,7 @@ const updateUserDeleteYn = (userID) => {
 
 const getUserFavoriteQuery = (userID) => {
   return `
-  SELECT DISTINCT Posts.post_id, Posts.title, Posts.category_id, Posts.post_images
+  SELECT DISTINCT Posts.post_id AS postId, Posts.title, Posts.category_id AS categoryId, Posts.post_images AS postImage
   FROM Posts 
   LEFT JOIN Favorites
   ON Posts.post_id = Favorites.post_id
@@ -41,7 +41,7 @@ const getUserFavoriteQuery = (userID) => {
 
 const getUserVisitedQuery = (userID) => {
   return `
-  SELECT DISTINCT Posts.post_id, Posts.title, Posts.category_id, Posts.post_images
+  SELECT DISTINCT Posts.post_id AS postId, Posts.title, Posts.category_id AS categoryId, Posts.post_images AS postImage
   FROM Posts 
   LEFT JOIN VisitedPosts
   ON Posts.post_id = VisitedPosts.post_id
