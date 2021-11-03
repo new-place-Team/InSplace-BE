@@ -8,6 +8,7 @@ const {
   insertNewUser,
   getUserInformation,
   getUserInformationById,
+  updateUserDeleteYn,
 } = require('../query/user');
 const registUser = async (req, res, next) => {
   const { email, nickname, password, maleYn, mbtiId } = req.user;
@@ -92,6 +93,7 @@ const authUser = async (req, res, next) => {
       });
 
       return res.status(201).json({
+        userId: user_id,
         token,
         nickname,
         mbti: description,
@@ -125,4 +127,16 @@ const checkUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registUser, authUser, checkUser };
+const deleteUser = async (req, res, next) => {
+  try {
+    const result = await pool.query(updateUserDeleteYn(req.params.userId));
+    if (result[0].changedRows == 0) {
+      return next(customizedError('이미 탈퇴된 회원입니다.', 400));
+    }
+    return res.sendStatus(200);
+  } catch (err) {
+    return next(customizedError(err.message, 500));
+  }
+};
+
+module.exports = { registUser, authUser, checkUser, deleteUser };

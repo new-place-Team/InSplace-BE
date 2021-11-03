@@ -62,7 +62,7 @@ const showDetailPost = async (req, res, next) => {
       if (detailPosts.length == 0) {
         return next(customizedError('포스트가 없습니다.', 400));
       }
-      console.log(detailPosts);
+
       return {
         detailPosts,
         detailReviews,

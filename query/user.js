@@ -22,7 +22,11 @@ const getUserInformation = (email) => {
     WHERE email = "${email}"`;
 };
 const getUserInformationById = (id) => {
-  return `SELECT email, nickname, user_image ,description FROM Users INNER JOIN Mbti ON Users.mbti_id = Mbti.mbti_id WHERE user_id = ${id} `;
+  return `SELECT user_id AS userId, email, nickname, user_image ,description FROM Users INNER JOIN Mbti ON Users.mbti_id = Mbti.mbti_id WHERE user_id = ${id} `;
+};
+
+const updateUserDeleteYn = (userID) => {
+  return `UPDATE Users SET delete_yn = 1 WHERE user_id="${userID}"`;
 };
 module.exports = {
   getUsers,
@@ -30,4 +34,5 @@ module.exports = {
   insertNewUser,
   getUserInformation,
   getUserInformationById,
+  updateUserDeleteYn,
 };

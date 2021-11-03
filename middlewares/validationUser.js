@@ -7,8 +7,10 @@ const Schema = Joi.object({
       tlds: { allow: ['com', 'net'] },
     })
     .required(),
-  nickname: Joi.string().required(),
-  password: Joi.string().min(4).required(),
+  nickname: Joi.string().min(2).max(12).required(),
+  password: Joi.string()
+    .regex(/^[a-zA-Z0-9]{8,16}$/)
+    .required(),
   maleYn: Joi.number().integer().required(),
   mbtiId: Joi.number().integer().required(),
 });
