@@ -38,6 +38,17 @@ const checkLoginUser = (target) => {
   return userId;
 };
 
+/* 토탈 결과 페이지 조회 */
+const getResultPageOfTotal = async (req, res, next) => {
+  logger.info('토탈 결과 페이지 조회');
+  const userId = checkLoginUser(req.user);
+  const pageNum = req.params.number; // Pages Number
+  const result = req.query.result; // Searching Result
+  console.log(`userId: ${userId}, pageNum: ${pageNum}, result: ${result}`);
+
+  res.sendStatus(200);
+};
+
 /* 조건 결과 페이지 조회  */
 const getResultPageOfCondition = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
@@ -133,4 +144,5 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
 module.exports = {
   getResultPageOfCondition,
   getDetailPageOfInOutDoors,
+  getResultPageOfTotal,
 };

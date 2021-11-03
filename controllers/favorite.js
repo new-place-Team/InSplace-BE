@@ -9,10 +9,23 @@ const {
 const customizedError = require('./error');
 const schemas = require('../middlewares/validation');
 
+/* 로그인한 유저인지 검사 */
+const isMatchingUserIds = (userId, targetUserId) => {
+  if (userId === targetUserId) {
+    return true;
+  }
+  return false;
+};
+
 /* 포스트 찜하기 추가 */
 const addFavorite = async (req, res, next) => {
   const userId = req.user;
   const postId = req.params.postId;
+
+  /* 로그인 한 유저와 입력 받은 userId가 다른 경우 */
+  if (!isMatchingUserIds(userId, Number(req.params.userId))) {
+    return next(customizedError('잘못된 접근 입니다.', 400));
+  }
 
   try {
     /* 유효성 검사: Success */
@@ -54,6 +67,11 @@ const addFavorite = async (req, res, next) => {
 const deleteFavorite = async (req, res, next) => {
   const postId = req.params.postId;
   const userId = req.user;
+
+  /* 로그인 한 유저와 입력 받은 userId가 다른 경우 */
+  if (!isMatchingUserIds(userId, Number(req.params.userId))) {
+    return next(customizedError('잘못된 접근 입니다.', 400));
+  }
 
   try {
     /* 유효성 검사: Success */
