@@ -141,7 +141,8 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-const showFavorite = async (req, res) => {
+
+const getFavoritesPosts = async (req, res, next) => {
   const userId = req.user;
 
   const adjImg = (result) => {
@@ -155,9 +156,9 @@ const showFavorite = async (req, res) => {
   };
   
   try{ 
-    if(!req.user !== req.params.userId ){
-      return next(customizedError('잘못된 접근입니다', 400)); //현재 로그인 한 사람의 아이디와 파라미터 값이 틀릴때
-    }
+    // if(!req.user !== req.params.userId ){
+    //   return next(customizedError('잘못된 접근입니다', 400)); //현재 로그인 한 사람의 아이디와 파라미터 값이 틀릴때
+    // }
     const result = await pool.query(getUserFavoriteQuery(req.params.userId));
     const favoriteList = adjImg(result);
     return res.status(200).json({
@@ -168,7 +169,7 @@ const showFavorite = async (req, res) => {
   }
 }
 
-const showVisited = async (req, res) => {
+const getVisitedPosts = async (req, res, next) => {
   const userId = req.user;
 
   const adjImg = (result) => {
@@ -195,4 +196,13 @@ const showVisited = async (req, res) => {
   }
 }
 
-module.exports = { registUser, authUser, checkUser, deleteUser, showFavorite, showVisited };
+
+module.exports = {
+  registUser,
+  authUser,
+  checkUser,
+  deleteUser,
+  getFavoritesPosts,
+  getVisitedPosts,
+};
+

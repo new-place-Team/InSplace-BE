@@ -9,7 +9,7 @@ const Schema = Joi.object({
     .required(),
   nickname: Joi.string().min(2).max(12).required(),
   password: Joi.string()
-    .regex(/^[a-zA-Z0-9]{8,16}$/)
+    .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/)
     .required(),
   maleYn: Joi.number().integer().required(),
   mbtiId: Joi.number().integer().required(),
