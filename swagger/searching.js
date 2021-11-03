@@ -1,5 +1,34 @@
 /**
  * @swagger
+ * /search/pages/{number}/total?result={result}:
+ *   get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *      - Search
+ *     summary: 토탈 결과 페이지 조회
+ *     parameters:
+ *       - name: number
+ *         in: path
+ *         required: true
+ *         default: 1
+ *         schema:
+ *           type: Number
+ *           description: 페이지 수
+ *       - name: result
+ *         in: query
+ *         required: true
+ *         default: "역삼동 카페"
+ *         schema:
+ *           type: string
+ *           description: 검색어
+ *     responses:
+ *       '200':
+ *         description: 데이터 불러오기 성공
+ *       '400':
+ *         description: Bad Request
+ *       '500':
+ *         description: Internal Server Error(백엔드 문제)
  * /search/condition?weather={weather}&category={category}&num={num}&gender={gender}:
  *   get:
  *     security:
@@ -43,7 +72,7 @@
  *         description: Bad Request
  *       '500':
  *         description: Internal Server Error(백엔드 문제)
- * /search/page/{number}/condition?weather={weather}&category={category}&num={num}&gender={gender}&inside={inside}:
+ * /search/pages/{number}/condition?weather={weather}&category={category}&num={num}&gender={gender}&inside={inside}:
  *   get:
  *     security:
  *      - bearerAuth: []
