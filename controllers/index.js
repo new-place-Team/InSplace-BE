@@ -15,7 +15,7 @@ const searchMain = async (req, res, next) => {
   const adjImg = (result) => {
     let resultImg = result[0];
     for (let i = 0; i < resultImg.length; i++) {
-      resultImg[i].post_images = result[0][i].post_images
+      resultImg[i].postImages = result[0][i].postImages
         .split('&&')
         .slice(1)[0];
     }
@@ -25,7 +25,7 @@ const searchMain = async (req, res, next) => {
   if(req.user){
     user = req.user
   }
-  
+
   try {
     
     weatherResult = await connection.query(weatherQuery);

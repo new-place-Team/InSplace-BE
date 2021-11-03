@@ -1,6 +1,21 @@
 const searchMainQuery = (weatherCondition, user) => {
   return `
-  SELECT DISTINCT Posts.post_id, Posts.title, Posts.address, Posts.address_short, Posts.contact_number, Posts.category_id, Posts.post_images, Posts.post_desc, Posts.post_loc_x, Posts.post_loc_y, Posts.favorite_cnt, Posts.weather_id, Posts.inside_yn, Posts.gender_id, Posts.member_id, 
+SELECT DISTINCT
+  Posts.post_id AS postId, 
+  Posts.title, 
+  Posts.address, 
+  Posts.address_short AS addressShort, 
+  Posts.contact_number AS contactNumber, 
+  Posts.category_id AS categoryId, 
+  Posts.post_images AS postImages,
+  Posts.post_desc AS PostDesc,
+  Posts.post_loc_x AS postLocationX, 
+  Posts.post_loc_y AS postLocationY, 
+  Posts.favorite_cnt AS favoriteCnt, 
+  Posts.weather_id AS weatherId, 
+  Posts.inside_yn AS insideYN, 
+  Posts.gender_id AS genderId, 
+  Posts.member_id AS MemberId, 
 	CASE 
 		WHEN Favorites.user_Id = ${user} THEN true 
 		ELSE false 
@@ -31,7 +46,22 @@ WHERE weather_id IN(${weatherCondition}, 7)
 
 const likeQuery = (user) => {
   return `
-SELECT DISTINCT Posts.post_id, Posts.title, Posts.address, Posts.address_short, Posts.contact_number, Posts.category_id, Posts.post_images, Posts.post_desc, Posts.post_loc_x, Posts.post_loc_y, Posts.favorite_cnt, Posts.weather_id, Posts.inside_yn, Posts.gender_id, Posts.member_id, 
+SELECT DISTINCT
+  Posts.post_id AS postId, 
+	Posts.title, 
+	Posts.address, 
+  Posts.address_short AS addressShort, 
+  Posts.contact_number AS contactNumber, 
+  Posts.category_id AS categoryId, 
+  Posts.post_images AS postImages,
+  Posts.post_desc AS PostDesc,
+  Posts.post_loc_x AS postLocationX, 
+  Posts.post_loc_y AS postLocationY, 
+  Posts.favorite_cnt AS favoriteCnt, 
+  Posts.weather_id AS weatherId, 
+  Posts.inside_yn AS insideYN, 
+  Posts.gender_id AS genderId, 
+  Posts.member_id AS MemberId, 
 	CASE 
 		WHEN Favorites.user_Id = ${user} THEN true 
 		ELSE false 
@@ -50,15 +80,30 @@ ORDER BY favorite_cnt DESC limit 14
 
 const mdQuery = (user) => { 
   return `
-  SELECT DISTINCT Posts.post_id, Posts.title, Posts.address, Posts.address_short, Posts.contact_number, Posts.category_id, Posts.post_images, Posts.post_desc, Posts.post_loc_x, Posts.post_loc_y, Posts.favorite_cnt, Posts.weather_id, Posts.inside_yn, Posts.gender_id, Posts.member_id, 
+SELECT DISTINCT
+  Posts.post_id AS postId, 
+	Posts.title, 
+	Posts.address, 
+  Posts.address_short AS addressShort, 
+  Posts.contact_number AS contactNumber, 
+  Posts.category_id AS categoryId, 
+  Posts.post_images AS postImages,
+  Posts.post_desc AS PostDesc,
+  Posts.post_loc_x AS postLocationX, 
+  Posts.post_loc_y AS postLocationY, 
+  Posts.favorite_cnt AS favoriteCnt, 
+  Posts.weather_id AS weatherId, 
+  Posts.inside_yn AS insideYN, 
+  Posts.gender_id AS genderId, 
+  Posts.member_id AS MemberId, 
     CASE 
       WHEN Favorites.user_Id = ${user} THEN true 
       ELSE false 
       END as 'favoriteState'
-  FROM Posts 
-  LEFT JOIN Favorites
-  ON Posts.post_id = Favorites.post_id
-  WHERE Posts.md_pick = 1
+FROM Posts 
+LEFT JOIN Favorites
+ON Posts.post_id = Favorites.post_id
+WHERE Posts.md_pick = 1
 `; 
 }// 해당쿼리는 수정 예정
 
