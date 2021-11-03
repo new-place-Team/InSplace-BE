@@ -62,7 +62,7 @@ const addReviewLike = async (req, res, next) => {
     } catch (err) {
       await connection.rollback();
       connection.release();
-      return next(customizedError(err.message, 500));
+      return next(customizedError(err.message, 400));
     }
   } catch (err) {
     connection.release();
