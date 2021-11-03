@@ -1,4 +1,3 @@
-const logger = require('../config/logger');
 const { pool } = require('../models/index');
 const {
   updateReviewDeleteYn,
@@ -8,7 +7,10 @@ const {
   queryOfModifyingReview,
 } = require('../query/review');
 const customizedError = require('../controllers/error');
-const schemas = require('../middlewares/validationReview');
+const {
+  schemasOfRegistingReview,
+  schemasOfModifyingReview,
+} = require('../middlewares/validationReview');
 require('dotenv').config();
 
 /* 이미지 배열을 DB저장할 수 있는 텍스트로 변환 */
@@ -16,7 +18,7 @@ const convertImageArrToText = (imgArr) => {
   const baseUrlSize = process.env.IMG_BASE_URL.length;
   let imgText = '';
   /* 아무 이미지도 없는 경우 */
-  if (imgArr.length == 0) {
+  if (imgArr.length === 0) {
     return imgText;
   }
   for (let i = 0; i < imgArr.length; i++) {
@@ -43,16 +45,17 @@ const convertImageTextToArr = (imgText) => {
   }
   return imgArr;
 };
-
 /* 리뷰 등록 미들웨어 */
 const registReview = async (req, res, next) => {
   const postId = req.params.postId;
   const userId = req.user;
   const { reviewDesc, weekdayYN, revisitYN } = req.body;
+
   const reviewImages = convertImageArrToText(req.files);
+
   /* 유효성 검사 */
   try {
-    await schemas.validateAsync({
+    await schemasOfRegistingReview.validateAsync({
       postId,
       userId,
       reviewImages,
@@ -138,13 +141,11 @@ const modifyReview = async (req, res, next) => {
   const { postId, reviewId } = req.params;
   const userId = req.user;
   const { reviewDesc, weekdayYN, revisitYN } = req.body;
-  /* mocking 데이터를 통해 테스트 중 */
-  const reviewImages = 'mocking1.png&&mocking2.png&&mocking3.png';
-  // const reviewImages = req.file.transforms[0].location;
+  const reviewImages = convertImageArrToText(req.files);
 
   /* 유효성 검사 */
   try {
-    await schemas.validateAsync({
+    await schemasOfModifyingReview.validateAsync({
       reviewId,
       postId,
       userId,
@@ -156,6 +157,7 @@ const modifyReview = async (req, res, next) => {
   } catch (err) {
     return next(customizedError(err, 400));
   }
+
   const params = [
     reviewImages,
     reviewDesc,
@@ -169,11 +171,15 @@ const modifyReview = async (req, res, next) => {
   const connection = await pool.getConnection(async (conn) => conn);
   try {
     const result = await connection.query(queryOfModifyingReview, params);
-    console.log('result of update query:', result);
-    /* review 등록: Success */
+    /* 변경된 것이 없는 경우 */
+    if (result[0].changedRows == 0) {
+      return next(customizedError('수정된 데이터가 없습니다.', 400));
+    }
+
+    /* review 수정: Success */
     return res.sendStatus(201);
   } catch (err) {
-    /* review 등록: Fail */
+    /* review 수정: Fail */
     /* Internal Server Error(예상 못한 에러 발생) */
     return next(customizedError(err, 500));
   } finally {
