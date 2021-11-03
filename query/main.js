@@ -1,6 +1,6 @@
 const searchMainQuery = (weatherCondition, user) => {
   return `
-  SELECT Posts.post_id, Posts.title, Posts.address, Posts.address_short, Posts.contact_number, Posts.category_id, Posts.post_images, Posts.post_desc, Posts.post_loc_x, Posts.post_loc_y, Posts.favorite_cnt, Posts.weather_id, Posts.inside_yn, Posts.gender_id, Posts.member_id, 
+  SELECT DISTINCT Posts.post_id, Posts.title, Posts.address, Posts.address_short, Posts.contact_number, Posts.category_id, Posts.post_images, Posts.post_desc, Posts.post_loc_x, Posts.post_loc_y, Posts.favorite_cnt, Posts.weather_id, Posts.inside_yn, Posts.gender_id, Posts.member_id, 
 	CASE 
 		WHEN Favorites.user_Id = ${user} THEN true 
 		ELSE false 
