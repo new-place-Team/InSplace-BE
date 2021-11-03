@@ -10,7 +10,7 @@ const {
   getUserInformationById,
   updateUserDeleteYn,
   getUserFavoriteQuery,
-  getUserVisitedQuery
+  getUserVisitedQuery,
 } = require('../query/user');
 const registUser = async (req, res, next) => {
   const { email, nickname, password, maleYn, mbtiId } = req.user;
@@ -141,7 +141,6 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-
 const getFavoritesPosts = async (req, res, next) => {
   const userId = req.user;
 
@@ -154,20 +153,20 @@ const getFavoritesPosts = async (req, res, next) => {
     }
     return resultImg;
   };
-  
-  try{ 
+
+  try {
     // if(!req.user !== req.params.userId ){
     //   return next(customizedError('잘못된 접근입니다', 400)); //현재 로그인 한 사람의 아이디와 파라미터 값이 틀릴때
     // }
     const result = await pool.query(getUserFavoriteQuery(req.params.userId));
     const favoriteList = adjImg(result);
     return res.status(200).json({
-      favoriteList
+      favoriteList,
     });
   } catch (err) {
     return next(customizedError(err.message, 500));
   }
-}
+};
 
 const getVisitedPosts = async (req, res, next) => {
   const userId = req.user;
@@ -181,21 +180,20 @@ const getVisitedPosts = async (req, res, next) => {
     }
     return resultImg;
   };
-  
-  try{ 
-    if(!req.user !== req.params.userId ){
+
+  try {
+    if (!req.user !== req.params.userId) {
       return next(customizedError('잘못된 접근입니다', 400)); //현재 로그인 한 사람의 아이디와 파라미터 값이 틀릴때
     }
     const result = await pool.query(getUserVisitedQuery(req.params.userId));
     const visitedList = adjImg(result);
     return res.status(200).json({
-      visitedList
+      visitedList,
     });
   } catch (err) {
     return next(customizedError(err.message, 500));
   }
-}
-
+};
 
 module.exports = {
   registUser,
@@ -205,4 +203,3 @@ module.exports = {
   getFavoritesPosts,
   getVisitedPosts,
 };
-
