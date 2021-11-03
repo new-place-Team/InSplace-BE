@@ -25,7 +25,7 @@ const searchMain = async (req, res, next) => {
   if(req.user){
     user = req.user
   }
-
+  
   try {
     
     weatherResult = await connection.query(weatherQuery);
@@ -36,7 +36,7 @@ const searchMain = async (req, res, next) => {
     const weatherFe = weatherInfo[0].weather_status_fe
     const result = await connection.query(searchMainQuery(weatherCondition, user)); //날씨
     const likeResult = await connection.query(likeQuery(user)); //좋아요
-    const mdResult = await connection.query(mdQuery, user); // 관리자 추천
+    const mdResult = await connection.query(mdQuery(user)); // 관리자 추천
     const adjResult = adjImg(result);
     const adjLike = adjImg(likeResult);
     const adjMd = adjImg(mdResult);

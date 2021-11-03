@@ -8,6 +8,7 @@ const {
   queryOfModifyingReview,
 } = require('../query/review');
 const customizedError = require('../controllers/error');
+const schemas = require('../middlewares/validationReview');
 require('dotenv').config();
 
 /* 이미지 배열을 DB저장할 수 있는 텍스트로 변환 */
@@ -43,7 +44,7 @@ const convertImageTextToArr = (imgText) => {
   return imgArr;
 };
 
-/* 리뷰 등록 함수 */
+/* 리뷰 등록 미들웨어 */
 const registReview = async (req, res, next) => {
   const postId = req.params.postId;
   const userId = req.user;
@@ -92,7 +93,7 @@ const registReview = async (req, res, next) => {
   }
 };
 
-/* 리뷰 삭제 함수 */
+/* 리뷰 삭제 미들웨어 */
 const deleteReview = async (req, res, next) => {
   try {
     const result = await pool.query(
@@ -132,7 +133,7 @@ const addReviewLike = async (req, res, next) => {
   }
 };
 
-/* 리뷰 수정 함수 */
+/* 리뷰 수정 미들웨어 */
 const modifyReview = async (req, res, next) => {
   const { postId, reviewId } = req.params;
   const userId = req.user;

@@ -87,8 +87,11 @@ function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  // schedule.scheduleJob('*/10 * * * *', function () {
-  //   schedulingWeather();
-  //   logger.info('날씨 상태 업데이트 완료');
-  // });
+
+  if (process.env.NODE_ENV === 'production') {
+    schedule.scheduleJob('*/10 * * * *', function () {
+      schedulingWeather();
+      logger.info('날씨 상태 업데이트 완료');
+    });
+  }
 }
