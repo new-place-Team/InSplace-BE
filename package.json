@@ -7,7 +7,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "^7.15.0",
     "app-root-path": "^3.0.0",
     "aws-sdk": "^2.1013.0",
     "axios": "^0.24.0",
