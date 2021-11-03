@@ -20,18 +20,18 @@
  *            password:
  *              type: string
  *              description: 비밀번호
- *            male_yn:
+ *            maleYN:
  *              type: number
  *              description: 성별 여부
- *            mbti_id:
+ *            mbtiId:
  *              type: number
  *              description: mbti 고유번호
  *           example:
  *             email: "najongsi@gmail.com"
  *             nickname: "developerwan"
  *             password: "asdasd"
- *             male_yn: 1
- *             mbti_id: 2
+ *             maleYN: 1
+ *             mbtiId: 2
  *     responses:
  *       '201':
  *         description: 회원 등록 성공
@@ -58,8 +58,8 @@
  *               type: string
  *               description: 유저 비밀번호
  *           example:
- *             email: "najongsi@gmail.com"
- *             password: "asdasd"
+ *             email: "najongsi@naver.com"
+ *             password: "asdasd123"
  *     responses:
  *       '201':
  *         description: 로그인 성공
@@ -112,6 +112,14 @@
  *     tags:
  *      - User
  *     summary: 찜한 포스트 조회
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         default: 4
+ *         schema:
+ *           type: Number
+ *           description: 해당 유저 고유 아이디
  *     responses:
  *       '200':
  *         description: 데이터 불러오기 성공
@@ -124,6 +132,14 @@
  *     tags:
  *      - User
  *     summary: 가본 리스트 조회
+ *     parameters:
+ *       - name: userId
+ *         in: path
+ *         required: true
+ *         default: 4
+ *         schema:
+ *           type: Number
+ *           description: 해당 유저 고유 아이디
  *     responses:
  *       '200':
  *         description: 데이터 불러오기 성공

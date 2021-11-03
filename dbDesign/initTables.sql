@@ -97,6 +97,7 @@ CREATE TABLE `Reviews` (
   `review_desc` varchar(255),
   `weekday_yn` boolean NOT NULL,
   `revisit_yn` boolean NOT NULL,
+  `r_weather_id` integer NOT NULL,
   `delete_yn` boolean NOT NULL DEFAULT 0,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
 );
@@ -122,6 +123,14 @@ CREATE TABLE `Weathers` (
   `temp_diff` varchar(20) NOT NULL
  )
 
+-- REVIEW WEATHER TABLE
+ CREATE TABLE `ReviewWeathers` (
+  `r_weather_id` integer PRIMARY KEY,
+  `description` varchar(20)
+ )
+
+ 
+
 
 -- Foreign Key
 ALTER TABLE `Favorites` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
@@ -134,13 +143,14 @@ ALTER TABLE `ReviewLikes` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_
 ALTER TABLE `Favorites` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`);
 ALTER TABLE `VisitedPosts` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`); 
 ALTER TABLE `Reviews` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`);
-
+ALTER TABLE `Reviews` ADD FOREIGN KEY (`r_weather_id`) REFERENCES `ReviewWeathers` (`r_weather_id`);
 
 ALTER TABLE `Users` ADD FOREIGN KEY (`mbti_id`) REFERENCES `Mbti` (`mbti_id`);
 ALTER TABLE `Posts` ADD FOREIGN KEY (`category_id`) REFERENCES `Categories` (`category_id`);
 ALTER TABLE `Posts` ADD FOREIGN KEY (`gender_id`) REFERENCES `Genders` (`gender_id`);
 ALTER TABLE `Posts` ADD FOREIGN KEY (`weather_id`) REFERENCES `Weathers` (`weather_id`);
 ALTER TABLE `Posts` ADD FOREIGN KEY (`member_id`) REFERENCES `MemberCnt` (`member_id`);
+
 
 
 -- Charset UTF-8 추가 
@@ -156,3 +166,4 @@ ALTER TABLE Genders CONVERT TO character SET utf8;
 ALTER TABLE Weathers CONVERT TO character SET utf8;
 ALTER TABLE MemberCnt CONVERT TO character SET utf8;
 ALTER TABLE CurrentWeather CONVERT TO character SET utf8;
+ALTER TABLE ReviewWeathers CONVERT TO character SET utf8;
