@@ -50,7 +50,7 @@ const convertImageTextToArr = (imgText) => {
 const registReview = async (req, res, next) => {
   const postId = req.params.postId;
   const userId = req.user;
-  const { reviewDesc, rWeatherId, weekdayYN, revisitYN } = req.body;
+  const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
 
   const reviewImages = convertImageArrToText(req.files);
 
@@ -63,7 +63,7 @@ const registReview = async (req, res, next) => {
       reviewDesc,
       weekdayYN,
       revisitYN,
-      rWeatherId,
+      weather,
     });
   } catch (err) {
     return next(customizedError(err, 400));
@@ -75,7 +75,7 @@ const registReview = async (req, res, next) => {
     reviewDesc,
     weekdayYN,
     revisitYN,
-    rWeatherId,
+    weather,
   ];
 
   const connection = await pool.getConnection(async (conn) => conn);
@@ -87,14 +87,28 @@ const registReview = async (req, res, next) => {
         customizedError('review 데이터가 추가 되지 않았습니다.', 400)
       );
     }
+    const reviewId = result[0].insertId;
     const paramsOfGettingReview = [userId, reviewId, postId];
     result = await connection.query(
-      quertOfGettingReview,
+      queryOfGettingReview,
       paramsOfGettingReview
     );
-    console.log('result:', result);
+    result = result[0][0];
     res.status(201).json({
-      result,
+      postId: result.postId,
+      reviewId: result.reviewId,
+      userImage: result.userImage,
+      nickname: result.nickname,
+      gender: result.gender,
+      mbti: result.mbti,
+      reviewImages: convertImageTextToArr(result.reviewImages),
+      reviewDesc: result.reviewDesc,
+      weather: result.weather,
+      weekdayYN: result.weekdayYN,
+      revisitYN: result.revisitYN,
+      likeCnt: result.likeCnt,
+      likeState: 0,
+      createdAt: result.createdAt,
     });
   } catch (err) {
     /* review 등록: Fail */
@@ -149,7 +163,7 @@ const addReviewLike = async (req, res, next) => {
 const modifyReview = async (req, res, next) => {
   const { postId, reviewId } = req.params;
   const userId = req.user;
-  const { reviewDesc, weekdayYN, revisitYN, rWeatherId } = req.body;
+  const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
   const reviewImages = convertImageArrToText(req.files);
 
   /* 유효성 검사 */
@@ -162,7 +176,7 @@ const modifyReview = async (req, res, next) => {
       reviewDesc,
       weekdayYN,
       revisitYN,
-      rWeatherId,
+      weather,
     });
   } catch (err) {
     return next(customizedError(err, 400));
@@ -173,7 +187,7 @@ const modifyReview = async (req, res, next) => {
     reviewDesc,
     weekdayYN,
     revisitYN,
-    rWeatherId,
+    weather,
     reviewId,
     userId,
     postId,
@@ -195,7 +209,7 @@ const modifyReview = async (req, res, next) => {
       reviewDesc,
       weekdayYN: Number(weekdayYN),
       revisitYN: Number(revisitYN),
-      rWeatherId: Number(rWeatherId),
+      weather: Number(weather),
     });
   } catch (err) {
     /* review 수정: Fail */

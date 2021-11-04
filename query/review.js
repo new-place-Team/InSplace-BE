@@ -17,7 +17,7 @@ const updateReviewsLikeCnt = (postId, reviewId, userId) => {
 };
 
 const queryOfRegistingReview = `
-    INSERT INTO 
+    INSERT INTO
     Reviews(post_id, user_id, review_images, review_desc, weekday_yn, revisit_yn, r_weather_id)
     VALUES(?, ?, ?, ?, ?, ?, ?);
 `;

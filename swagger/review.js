@@ -39,7 +39,7 @@
  *         default: 1
  *         type: Number
  *         description: 재방문 1 반대 0
- *       - name: rWeatherId
+ *       - name: weather
  *         in: formData
  *         default: 1
  *         type: Number
@@ -99,7 +99,7 @@
  *         default: 1
  *         type: Number
  *         description: 재방문 1 반대 0
- *       - name: rWeatherId
+ *       - name: weather
  *         in: formData
  *         default: 1
  *         type: Number
