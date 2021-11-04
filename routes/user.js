@@ -22,7 +22,7 @@ router.post('/register', validationUser, registUser);
 router.post('/auth', authUser);
 
 //카카오 로그인
-router.post('/kakao/auth', kakaoLogin);
+router.get('/kakao/auth', kakaoLogin);
 
 /* 로그인 체크 */
 router.post('/check/auth', checkUser);
