@@ -38,16 +38,23 @@ const findDetailReviews = (postID, userID) => {
   SELECT 
   Reviews.user_Id AS userId, review_images AS reviewImages, 
   review_desc AS reviewDesc, created_at AS createdAt,
-  
+  like_cnt AS likeCnt,
+  description,
   CASE 
   WHEN ReviewLikes.user_id = "${userID}"
   THEN 1
   ELSE 0
-  END AS likeStatus
+  END AS likeStatus,
+  CASE
+  WHEN weekday_yn = 1
+  THEN '주말'
+  ELSE '평일'
+  END AS '주말여부'
   FROM Reviews
-  LEFT JOIN ReviewLikes
-  ON
+  LEFT JOIN ReviewLikes ON
   Reviews.review_id = ReviewLikes.review_id AND ReviewLikes.user_id = "${userID}"
+  INNER JOIN ReviewWeathers ON
+  Reviews.r_weather_id = ReviewWeathers.r_weather_id
   WHERE post_id ="${postID}" AND delete_yn = "0"
   ORDER BY created_at DESC 
   LIMIT 8

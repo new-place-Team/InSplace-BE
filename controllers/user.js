@@ -208,6 +208,7 @@ const getVisitedPosts = async (req, res, next) => {
 
 const kakaoLogin = async (req, res, next) => {
   try {
+    //사용자 정보를 데이터베이스에 넣어주는 함수
     const insertUser = async (genderNumber) => {
       await pool.query(
         insertNewUserforKakao(
@@ -218,7 +219,6 @@ const kakaoLogin = async (req, res, next) => {
         )
       );
     };
-
     let genderNumber = '';
 
     //인가코드로 토큰 받아오기
