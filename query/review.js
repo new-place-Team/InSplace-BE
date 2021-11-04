@@ -47,7 +47,7 @@ const queryOfGettingReview = `
   ON Users.mbti_id = Mbti.mbti_id
   WHERE Reviews.user_id=? and review_id=? and post_id=?;
 `;
-/* , */
+
 module.exports = {
   updateReviewDeleteYn,
   addReviewLikes,

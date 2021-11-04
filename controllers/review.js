@@ -87,7 +87,15 @@ const registReview = async (req, res, next) => {
         customizedError('review 데이터가 추가 되지 않았습니다.', 400)
       );
     }
-    result = await connection.query();
+    const paramsOfGettingReview = [userId, reviewId, postId];
+    result = await connection.query(
+      quertOfGettingReview,
+      paramsOfGettingReview
+    );
+    console.log('result:', result);
+    res.status(201).json({
+      result,
+    });
   } catch (err) {
     /* review 등록: Fail */
     /* Internal Server Error(예상 못한 에러 발생) */
