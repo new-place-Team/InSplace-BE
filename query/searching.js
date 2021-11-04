@@ -4,7 +4,8 @@ const memberQuery = `SELECT description FROM MemberCnt WHERE member_id=?`;
 const genderQuery = `SELECT description FROM Genders WHERE gender_id=?`;
 
 const queryOfResultPageOfCondition = `
-  SELECT Posts.post_id AS postId, title, address_short AS addressShort, favorite_cnt AS favoriteCnt, post_images AS postImage, inside_yn AS insideYN,
+  SELECT Posts.post_id AS postId, title, address_short AS addressShort,
+  favorite_cnt AS favoriteCnt, post_images AS postImage, inside_yn AS insideYN,
   Categories.description AS category, permission_state AS permissionState, 
   CASE WHEN Favorites.user_id = ? THEN 1 ELSE 0 END AS favoriteState 
   FROM Posts 

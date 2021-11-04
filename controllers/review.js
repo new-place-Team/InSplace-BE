@@ -88,12 +88,13 @@ const registReview = async (req, res, next) => {
       );
     }
     const reviewId = result[0].insertId;
-    const paramsOfGettingReview = [userId, reviewId, postId];
+    const paramsOfGettingReview = [userId, userId, reviewId, postId];
     result = await connection.query(
       queryOfGettingReview,
       paramsOfGettingReview
     );
     result = result[0][0];
+    /* review 등록: Success */
     res.status(201).json({
       postId: result.postId,
       reviewId: result.reviewId,
@@ -107,7 +108,7 @@ const registReview = async (req, res, next) => {
       weekdayYN: result.weekdayYN,
       revisitYN: result.revisitYN,
       likeCnt: result.likeCnt,
-      likeState: 0,
+      likeState: result.likeState,
       createdAt: result.createdAt,
     });
   } catch (err) {
@@ -195,21 +196,34 @@ const modifyReview = async (req, res, next) => {
 
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    const result = await connection.query(queryOfModifyingReview, params);
+    let result = await connection.query(queryOfModifyingReview, params);
     /* 변경된 것이 없는 경우 */
     if (result[0].changedRows == 0) {
       return next(customizedError('수정된 데이터가 없습니다.', 400));
     }
 
+    const paramsOfGettingReview = [userId, userId, reviewId, postId];
+    result = await connection.query(
+      queryOfGettingReview,
+      paramsOfGettingReview
+    );
+    result = result[0][0];
     /* review 수정: Success */
     return res.status(201).json({
-      postId: Number(postId),
-      userId,
-      reviewImages: convertImageTextToArr(reviewImages),
-      reviewDesc,
-      weekdayYN: Number(weekdayYN),
-      revisitYN: Number(revisitYN),
-      weather: Number(weather),
+      postId: result.postId,
+      reviewId: result.reviewId,
+      userImage: result.userImage,
+      nickname: result.nickname,
+      gender: result.gender,
+      mbti: result.mbti,
+      reviewImages: convertImageTextToArr(result.reviewImages),
+      reviewDesc: result.reviewDesc,
+      weather: result.weather,
+      weekdayYN: result.weekdayYN,
+      revisitYN: result.revisitYN,
+      likeCnt: result.likeCnt,
+      likeState: result.likeState,
+      createdAt: result.createdAt,
     });
   } catch (err) {
     /* review 수정: Fail */
