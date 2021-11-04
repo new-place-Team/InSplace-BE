@@ -1,7 +1,7 @@
 const axios = require('axios');
 const qs = require('qs');
 
-const getKakaoToken = async () => {
+const getKakaoToken = async (code) => {
   const result = await axios({
     method: 'POST',
     url: 'https://kauth.kakao.com/oauth/token',
@@ -11,20 +11,19 @@ const getKakaoToken = async () => {
     data: qs.stringify({
       grant_type: 'authorization_code',
       redirect_uri: 'http://localhost:3000/users/kakao/auth',
-      client_id: 'b4112f96ef8a195cd7961a3676d0d674',
-      code: '40pQMUI52xpp0OiE1sqdHO_3l6dSXxTDasmW0oJ7n-slVsVGLZTiaiFrlQNP5z6Cq3xfMwopcNEAAAF85V2LIg',
+      client_id: process.env.KAKAO_REST_KEY, //env파일로
+      code: '7ejtF-BkjkJaOaHiNSWVyNagv-GQitsThIYZ_Vti2l7v53R93HA1rXvDrbp5Kq0l0FIIDAo9dBEAAAF86KMuew',
     }),
   });
   return result;
 };
 
-const getKakaoUserInformation = async () => {
+const getKakaoUserInformation = async (token) => {
   const result = await axios({
     method: 'GET',
     url: 'https://kapi.kakao.com/v2/user/me',
     headers: {
-      Authorization:
-        'Bearer a9ZdTWdwvpLse0KcuNxvsThYwg9xGLsjCioEkgopyWAAAAF85V4TIg',
+      Authorization: `Bearer ${token}`,
     },
   });
   return result;

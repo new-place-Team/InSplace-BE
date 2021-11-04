@@ -208,8 +208,11 @@ const getVisitedPosts = async (req, res, next) => {
 
 const kakaoLogin = async (req, res, next) => {
   try {
-    // await getKakaoToken()
-    const getKakaoUserResult = await getKakaoUserInformation();
+    const success = await getKakaoToken(req.body.code);
+
+    const getKakaoUserResult = await getKakaoUserInformation(
+      success.data.access_token
+    );
 
     const {
       id: kakaoUserId,
@@ -234,7 +237,6 @@ const kakaoLogin = async (req, res, next) => {
       await pool.query(
         insertNewUserforKakao(kakaoUserId, profile_image, nickname)
       );
-
       return await checkKakaoUserAndLogin(kakaoUserId, next, res);
     } catch (err) {
       return next(customizedError(err, 400));
