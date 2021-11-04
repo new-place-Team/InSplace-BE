@@ -18,13 +18,13 @@ const updateReviewsLikeCnt = (postId, reviewId, userId) => {
 
 const queryOfRegistingReview = `
     INSERT INTO 
-    Reviews(post_id, user_id, review_images, review_desc, weekday_yn, revisit_yn)
-    VALUES(?, ?, ?, ?, ?, ?);
+    Reviews(post_id, user_id, review_images, review_desc, weekday_yn, revisit_yn, r_weather_id)
+    VALUES(?, ?, ?, ?, ?, ?, ?);
 `;
 
 const queryOfModifyingReview = `
   UPDATE Reviews 
-  SET review_images=?, review_desc=?, weekday_yn=?, revisit_yn=?
+  SET review_images=?, review_desc=?, weekday_yn=?, revisit_yn=?, r_weather_id=?
   WHERE review_id=? and user_id=? and post_id=?
 `;
 

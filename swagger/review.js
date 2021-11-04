@@ -39,6 +39,11 @@
  *         default: 1
  *         type: Number
  *         description: 재방문 1 반대 0
+ *       - name: rWeatherId
+ *         in: formData
+ *         default: 1
+ *         type: Number
+ *         description: 날씨 1~ 5번 중 한 가지
  *     responses:
  *       '201':
  *         description: Review 데이터 추가 성공
@@ -94,6 +99,11 @@
  *         default: 1
  *         type: Number
  *         description: 재방문 1 반대 0
+ *       - name: rWeatherId
+ *         in: formData
+ *         default: 1
+ *         type: Number
+ *         description: 날씨 1~ 5번 중 한 가지
  *     responses:
  *       '201':
  *         description: Review 데이터 수정 성공
