@@ -83,7 +83,7 @@
  *       - name: number
  *         in: path
  *         required: true
- *          description: 페이지 수
+ *         description: 페이지 수
  *         default: 1
  *         schema:
  *           type: Number
