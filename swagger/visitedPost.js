@@ -1,6 +1,6 @@
 /**
  * @swagger
- * users/{userId}/posts/{postId}/visitedPosts:
+ * /users/{userId}/posts/{postId}/visitedPosts:
  *   post:
  *     security:
  *      - bearerAuth: []
