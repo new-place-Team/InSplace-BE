@@ -7,7 +7,7 @@ const schemasOfRegistingReview = Joi.object({
   reviewDesc: Joi.string(),
   weekdayYN: Joi.number().min(0).max(1).required(),
   revisitYN: Joi.number().min(0).max(1).required(),
-  rWeatherId: Joi.number().min(1).max(5).required(),
+  weather: Joi.number().min(1).max(5).required(),
 });
 
 const schemasOfModifyingReview = Joi.object({
@@ -18,7 +18,7 @@ const schemasOfModifyingReview = Joi.object({
   reviewDesc: Joi.string(),
   weekdayYN: Joi.number().min(0).max(1).required(),
   revisitYN: Joi.number().min(0).max(1).required(),
-  rWeatherId: Joi.number().min(1).max(5).required(),
+  weather: Joi.number().min(1).max(5).required(),
 });
 
 module.exports = {
