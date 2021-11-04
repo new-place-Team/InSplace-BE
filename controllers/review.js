@@ -13,7 +13,6 @@ const {
   schemasOfModifyingReview,
 } = require('../middlewares/validationReview');
 require('dotenv').config();
-
 /* 이미지 배열을 DB저장할 수 있는 텍스트로 변환 */
 const convertImageArrToText = (imgArr) => {
   const baseUrlSize = process.env.IMG_BASE_URL.length;
@@ -46,6 +45,27 @@ const convertImageTextToArr = (imgText) => {
   }
   return imgArr;
 };
+
+/* post 데이터 가공 */
+const getPostData = (result) => {
+  return (post = {
+    postId: result.postId,
+    reviewId: result.reviewId,
+    userImage: result.userImage,
+    nickname: result.nickname,
+    gender: result.gender,
+    mbti: result.mbti,
+    reviewImages: convertImageTextToArr(result.reviewImages),
+    reviewDesc: result.reviewDesc,
+    weather: result.weather,
+    weekdayYN: result.weekdayYN,
+    revisitYN: result.revisitYN,
+    likeCnt: result.likeCnt,
+    likeState: result.likeState,
+    createdAt: result.createdAt,
+  });
+};
+
 /* 리뷰 등록 미들웨어 */
 const registReview = async (req, res, next) => {
   const postId = req.params.postId;
@@ -96,20 +116,7 @@ const registReview = async (req, res, next) => {
     result = result[0][0];
     /* review 등록: Success */
     res.status(201).json({
-      postId: result.postId,
-      reviewId: result.reviewId,
-      userImage: result.userImage,
-      nickname: result.nickname,
-      gender: result.gender,
-      mbti: result.mbti,
-      reviewImages: convertImageTextToArr(result.reviewImages),
-      reviewDesc: result.reviewDesc,
-      weather: result.weather,
-      weekdayYN: result.weekdayYN,
-      revisitYN: result.revisitYN,
-      likeCnt: result.likeCnt,
-      likeState: result.likeState,
-      createdAt: result.createdAt,
+      post: getPostData(result),
     });
   } catch (err) {
     /* review 등록: Fail */
@@ -210,20 +217,7 @@ const modifyReview = async (req, res, next) => {
     result = result[0][0];
     /* review 수정: Success */
     return res.status(201).json({
-      postId: result.postId,
-      reviewId: result.reviewId,
-      userImage: result.userImage,
-      nickname: result.nickname,
-      gender: result.gender,
-      mbti: result.mbti,
-      reviewImages: convertImageTextToArr(result.reviewImages),
-      reviewDesc: result.reviewDesc,
-      weather: result.weather,
-      weekdayYN: result.weekdayYN,
-      revisitYN: result.revisitYN,
-      likeCnt: result.likeCnt,
-      likeState: result.likeState,
-      createdAt: result.createdAt,
+      post: getPostData(result),
     });
   } catch (err) {
     /* review 수정: Fail */
