@@ -12,7 +12,7 @@ const getKakaoToken = async (code) => {
       grant_type: 'authorization_code',
       redirect_uri: 'http://localhost:3000/users/kakao/auth',
       client_id: process.env.KAKAO_REST_KEY, //env파일로
-      code: '7ejtF-BkjkJaOaHiNSWVyNagv-GQitsThIYZ_Vti2l7v53R93HA1rXvDrbp5Kq0l0FIIDAo9dBEAAAF86KMuew',
+      code,
     }),
   });
   return result;

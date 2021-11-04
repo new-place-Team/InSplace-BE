@@ -208,18 +208,42 @@ const getVisitedPosts = async (req, res, next) => {
 
 const kakaoLogin = async (req, res, next) => {
   try {
-    const success = await getKakaoToken(req.body.code);
+    const insertUser = async (genderNumber) => {
+      await pool.query(
+        insertNewUserforKakao(
+          kakaoUserId,
+          profile_image,
+          nickname,
+          genderNumber
+        )
+      );
+    };
 
+    let genderNumber = '';
+
+    //인가코드로 토큰 받아오기
+    // const success = await getKakaoToken(
+    //   'JZTFr9Ui8RliljdE4Rmrz-R3K9Zeha8fa_yVxTNpyCLq9E7zFMJ1UZ5v7TSwUOaz94SeMgorDR8AAAF86MGWDA'
+    // );
+
+    //받아온 카카오 토큰으로 유저정보 가져오기
     const getKakaoUserResult = await getKakaoUserInformation(
-      success.data.access_token
+      '_GELb7uE5-UVklI-zarEXsb7zuy6S9sJOzl3Ogo9dZoAAAF86MKIwA' // success.data.access_token
     );
 
     const {
       id: kakaoUserId,
       properties: { nickname, profile_image },
+      kakao_account: { gender },
     } = getKakaoUserResult.data;
 
-    //kakao user가 있으면 로그인 시켜주는 함수
+    if (gender == 'male') {
+      genderNumber = 1;
+    } else if (gender == 'female') {
+      genderNumber = 0;
+    }
+
+    //기존 카카오 계정이 있으면 로그인 시켜주는 함수
     if ((await checkKakaoUserAndLogin(kakaoUserId, next, res)) == true) {
       return;
     }
@@ -234,9 +258,13 @@ const kakaoLogin = async (req, res, next) => {
     //중복검사 통과
     try {
       //유저 정보 저장
-      await pool.query(
-        insertNewUserforKakao(kakaoUserId, profile_image, nickname)
-      );
+      //카카오 유저가 성별을 제공했을 경우
+      if (genderNumber == 0 || 1) {
+        await insertUser(genderNumber);
+        return await checkKakaoUserAndLogin(kakaoUserId, next, res);
+      }
+      //카카오 유저가 성별을 제공 안했을 경우
+      await insertUser('');
       return await checkKakaoUserAndLogin(kakaoUserId, next, res);
     } catch (err) {
       return next(customizedError(err, 400));

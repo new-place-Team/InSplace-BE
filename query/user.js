@@ -56,10 +56,17 @@ const getKakaoUser = (userKakaoId) => {
   `;
 };
 
-const insertNewUserforKakao = (kakaoId, userImage, nickname) => {
-  return `INSERT INTO Users 
-  ( kakao_id, user_image, nickname, kakao_yn) 
-  VALUES(${kakaoId},"${userImage}","${nickname}", 1)`;
+const insertNewUserforKakao = (kakaoId, userImage, nickname, gender) => {
+  if (gender == '') {
+    return `
+    INSERT INTO Users 
+    (kakao_id, user_image, nickname, kakao_yn) 
+    VALUES(${kakaoId},"${userImage}","${nickname}", 1)`;
+  }
+  return `
+  INSERT INTO Users 
+  (kakao_id, user_image, nickname, kakao_yn, male_yn) 
+  VALUES(${kakaoId},"${userImage}","${nickname}", 1, ${gender})`;
 };
 
 module.exports = {
