@@ -4,12 +4,14 @@ const {
   queryOfRegistingReview,
   queryOfGettingReview,
   queryOfModifyingReview,
+  queryOfGettingReviewsByOrder,
 } = require('../query/review');
 
 const customizedError = require('../controllers/error');
 const {
   schemasOfRegistingReview,
   schemasOfModifyingReview,
+  schemasOfGettingReviews,
 } = require('../middlewares/validationReview');
 require('dotenv').config();
 /* 이미지 배열을 DB저장할 수 있는 텍스트로 변환 */
@@ -202,8 +204,90 @@ const modifyReview = async (req, res, next) => {
     await connection.release();
   }
 };
+
+/* 최신순으로 리뷰 가져오기 */
+const getReviewByLatest = async (req, res, next) => {
+  const postId = req.params.postId;
+  const pageNum = req.params.num * 16;
+  let userId = 0;
+  /* 로그인 한 유저인 경우 userId, 아닌 경우 0 */
+  if (req.user) {
+    userId = req.user;
+  }
+
+  /* 유효성 검사 */
+  try {
+    await schemasOfGettingReviews.validateAsync({
+      userId,
+      pageNum,
+      postId,
+    });
+  } catch (err) {
+    return next(customizedError(err, 400));
+  }
+  const connection = await pool.getConnection(async (conn) => conn);
+  try {
+    let reviews = await connection.query(
+      queryOfGettingReviewsByOrder(postId, userId, pageNum, 'created_at')
+    );
+    reviews = reviews[0];
+    /* 이미지 배열로 변환 */
+    for (let i = 0; i < reviews.length; i++) {
+      reviews[i].reviewImages = convertImageTextToArr(reviews[i].reviewImages);
+    }
+    res.status(200).json({
+      reviews,
+    });
+  } catch (err) {
+    return next(customizedError(err, 500));
+  } finally {
+    await connection.release();
+  }
+};
+
+/* 추천순으로 리뷰 가져오기 */
+const getReviewByLike = async (req, res, next) => {
+  const postId = req.params.postId;
+  const pageNum = Number(req.params.num);
+  let userId = 0;
+  /* 로그인 한 유저인 경우 userId, 아닌 경우 0 */
+  if (req.user) {
+    userId = req.user;
+  }
+
+  /* 유효성 검사 */
+  try {
+    await schemasOfGettingReviews.validateAsync({
+      userId,
+      pageNum,
+      postId,
+    });
+  } catch (err) {
+    return next(customizedError(err, 400));
+  }
+  const connection = await pool.getConnection(async (conn) => conn);
+  try {
+    let reviews = await connection.query(
+      queryOfGettingReviewsByOrder(postId, userId, pageNum, 'like_cnt')
+    );
+    reviews = reviews[0];
+    /* 이미지 배열로 변환 */
+    for (let i = 0; i < reviews.length; i++) {
+      reviews[i].reviewImages = convertImageTextToArr(reviews[i].reviewImages);
+    }
+    res.status(200).json({
+      reviews,
+    });
+  } catch (err) {
+    return next(customizedError(err, 500));
+  } finally {
+    await connection.release();
+  }
+};
 module.exports = {
   registReview,
   modifyReview,
   deleteReview,
+  getReviewByLatest,
+  getReviewByLike,
 };

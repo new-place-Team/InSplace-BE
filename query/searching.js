@@ -54,7 +54,7 @@ const queryOfDetailPageOfInOutDoors = `
   AND Genders.description 
   LIKE CONCAT('%', (${genderQuery}), '%')
   AND inside_yn=?
-  LIMIT 1, ?;
+  LIMIT ?, 16;
 `;
 
 const queryOfResultPageOfTotal = `
@@ -67,7 +67,7 @@ const queryOfResultPageOfTotal = `
   LEFT JOIN Favorites ON Posts.post_id = Favorites.post_id
   WHERE title LIKE CONCAT('%', ?, '%')
   OR post_desc LIKE CONCAT('%', ?, '%')
-  LIMIT 1, ?;
+  LIMIT ?, 16;
 `;
 module.exports = {
   queryOfResultPageOfCondition,

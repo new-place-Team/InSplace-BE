@@ -25,8 +25,15 @@ const schemasOfReviewLike = Joi.object({
   userId: Joi.number().min(1).required(),
   reviewId: Joi.number().min(1).required(),
 });
+
+const schemasOfGettingReviews = Joi.object({
+  userId: Joi.number().required(),
+  pageNum: Joi.number().min(1).required(),
+  postId: Joi.number().min(1).required(),
+});
 module.exports = {
   schemasOfRegistingReview,
   schemasOfModifyingReview,
   schemasOfReviewLike,
+  schemasOfGettingReviews,
 };

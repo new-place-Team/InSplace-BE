@@ -4,9 +4,11 @@ const {
   registReview,
   modifyReview,
   deleteReview,
+  getReviewByLatest,
+  getReviewByLike,
 } = require('../controllers/review');
 const upload = require('../controllers/imgUpload');
-const { isAuth } = require('../middlewares/auth');
+const { isAuth, justCheckAuth } = require('../middlewares/auth');
 const reviewLikeRouter = require('./reviewLike');
 
 router.use('/:reviewId/likes', reviewLikeRouter);
@@ -20,4 +22,8 @@ router.post('/', isAuth, upload.array('reviewImages', 3), registReview);
 /* 리뷰 수정 라우터 */
 router.put('/:reviewId', isAuth, upload.array('reviewImages', 3), modifyReview);
 
+/* 리뷰 리스트 (최신순) 라우터 */
+router.get('/pages/:num/orders/latest', justCheckAuth, getReviewByLatest);
+/* 리뷰 리스트 (추천순) 라우터 */
+router.get('/pages/:num/orders/likes', justCheckAuth, getReviewByLike);
 module.exports = router;

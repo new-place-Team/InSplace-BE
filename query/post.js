@@ -56,7 +56,7 @@ const findDetailReviews = (postID, userID) => {
   WHEN ReviewLikes.user_id = "${userID}"
   THEN 1
   ELSE 0
-  END AS likeStatus,
+  END AS likeState,
   created_at AS createdAt
   FROM Reviews
   LEFT JOIN ReviewLikes ON

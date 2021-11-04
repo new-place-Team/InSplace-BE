@@ -44,7 +44,7 @@ const checkLoginUser = (target) => {
 const getResultPageOfTotal = async (req, res, next) => {
   logger.info('토탈 결과 페이지 조회');
   const userId = Number(checkLoginUser(req.user));
-  const pageNum = Number(req.params.number) * 16; // Pages Number
+  const pageNum = (Number(req.params.number) - 1) * 16; // Pages Number
   const result = req.query.result; // Searching Result
 
   /* 유효성 검사 */
@@ -102,7 +102,7 @@ const getResultPageOfCondition = async (req, res, next) => {
     const result = await connection.query(queryOfResultPageOfCondition, params);
     const insidePlaces = [];
     const outSidePlaces = [];
-    // 실내 실외 포스트 구분(최대 14개씩 받기)
+    // 실내 실외 포스트 구분(최대 16개씩 받기)
     for (let i = 0; i < result[0].length; i++) {
       const insideSize = insidePlaces.length;
       const outsideSize = outSidePlaces.length;
@@ -131,7 +131,7 @@ const getResultPageOfCondition = async (req, res, next) => {
 const getDetailPageOfInOutDoors = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const { weather, category, num, gender, inside } = req.query;
-  const pageNum = req.params.number * 16;
+  const pageNum = (Number(req.params.number) - 1) * 16;
   const params = [userId, weather, category, num, gender, inside, pageNum];
 
   /* 유효성 검사 */

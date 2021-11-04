@@ -143,7 +143,7 @@
  *         description: 로그인 권한이 없을 경우
  *       '500':
  *         description: Internal Server Error(서버쪽 문제)
- * /posts/{postId}/reviews/pages/{num}/order/1:
+ * /posts/{postId}/reviews/pages/{num}/orders/latest:
  *   get:
  *     security:
  *      - bearerAuth: []
@@ -172,7 +172,7 @@
  *         description: Bad Request
  *       '500':
  *         description: Internal Server Error(서버쪽 문제)
- * /posts/{postId}/reviews/pages/{num}/order/2:
+ * /posts/{postId}/reviews/pages/{num}/orders/likes:
  *   get:
  *     security:
  *      - bearerAuth: []
