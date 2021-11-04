@@ -3,6 +3,7 @@ const router = express.Router({ mergeParams: true });
 const favoriteRouter = require('./favorite');
 const visitedRouter = require('./visited');
 const validationUser = require('../middlewares/validationUser');
+const validationModifyUser = require('../middlewares/validationModifyUser');
 const {
   getFavoritesPosts,
   getVisitedPosts,
@@ -11,9 +12,12 @@ const {
   checkUser,
   deleteUser,
   kakaoLogin,
+  modifyUser,
 } = require('../controllers/user');
 
 const { isAuth } = require('../middlewares/auth');
+const upload = require('../controllers/imgUpload');
+const userUpload = require('../controllers/userImgUpload')
 
 /* 회원 가입 */
 
@@ -41,5 +45,8 @@ router.use('/:userId/posts/:postId/favorites', favoriteRouter);
 
 /* visited Post API로 이동 (추가삭제기능) */
 router.use('/:userId/posts/:postId/visitedPosts', visitedRouter);
+
+/* 유저 정보 수정 */
+router.put('/:userId', isAuth, userUpload.single('userImage'), validationModifyUser, modifyUser);
 
 module.exports = router;

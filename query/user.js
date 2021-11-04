@@ -69,6 +69,21 @@ const insertNewUserforKakao = (kakaoId, userImage, nickname, gender) => {
   VALUES(${kakaoId},"${userImage}","${nickname}", 1, ${gender})`;
 };
 
+const modifyUserQuery = (userId, nickname, mbtiId, email, userImage) => {
+  if(userImage === 'null'){
+    return `
+    UPDATE Users
+    SET email='${email}', nickname='${nickname}', mbti_id=${mbtiId}
+    WHERE user_Id = ${userId}
+    `
+  }
+  return `
+    UPDATE Users
+    SET email='${email}', nickname='${nickname}', mbti_id=${mbtiId}, user_image='${userImage}'
+    WHERE user_id = ${userId}
+    `
+}
+
 module.exports = {
   getUsers,
   checkMBTI,
@@ -80,4 +95,5 @@ module.exports = {
   getUserVisitedQuery,
   getKakaoUser,
   insertNewUserforKakao,
+  modifyUserQuery,
 };
