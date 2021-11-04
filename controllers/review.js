@@ -4,6 +4,7 @@ const {
   addReviewLikes,
   updateReviewsLikeCnt,
   queryOfRegistingReview,
+  queryOfGettingReview,
   queryOfModifyingReview,
 } = require('../query/review');
 const customizedError = require('../controllers/error');
@@ -49,7 +50,7 @@ const convertImageTextToArr = (imgText) => {
 const registReview = async (req, res, next) => {
   const postId = req.params.postId;
   const userId = req.user;
-  const { reviewDesc, weekdayYN, revisitYN } = req.body;
+  const { reviewDesc, rWeatherId, weekdayYN, revisitYN } = req.body;
 
   const reviewImages = convertImageArrToText(req.files);
 
@@ -62,6 +63,7 @@ const registReview = async (req, res, next) => {
       reviewDesc,
       weekdayYN,
       revisitYN,
+      rWeatherId,
     });
   } catch (err) {
     return next(customizedError(err, 400));
@@ -73,20 +75,19 @@ const registReview = async (req, res, next) => {
     reviewDesc,
     weekdayYN,
     revisitYN,
+    rWeatherId,
   ];
 
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    await connection.query(queryOfRegistingReview, params);
-    /* review 등록: Success */
-    return res.status(201).json({
-      postId: Number(postId),
-      userId,
-      reviewImages: convertImageTextToArr(reviewImages),
-      reviewDesc,
-      weekdayYN: Number(weekdayYN),
-      revisitYN: Number(revisitYN),
-    });
+    let result = await connection.query(queryOfRegistingReview, params);
+    /* 추가 되지 않은 경우 */
+    if (result[0].affectedRows === 0) {
+      return next(
+        customizedError('review 데이터가 추가 되지 않았습니다.', 400)
+      );
+    }
+    result = await connection.query();
   } catch (err) {
     /* review 등록: Fail */
     /* Internal Server Error(예상 못한 에러 발생) */
@@ -140,7 +141,7 @@ const addReviewLike = async (req, res, next) => {
 const modifyReview = async (req, res, next) => {
   const { postId, reviewId } = req.params;
   const userId = req.user;
-  const { reviewDesc, weekdayYN, revisitYN } = req.body;
+  const { reviewDesc, weekdayYN, revisitYN, rWeatherId } = req.body;
   const reviewImages = convertImageArrToText(req.files);
 
   /* 유효성 검사 */
@@ -153,6 +154,7 @@ const modifyReview = async (req, res, next) => {
       reviewDesc,
       weekdayYN,
       revisitYN,
+      rWeatherId,
     });
   } catch (err) {
     return next(customizedError(err, 400));
@@ -163,6 +165,7 @@ const modifyReview = async (req, res, next) => {
     reviewDesc,
     weekdayYN,
     revisitYN,
+    rWeatherId,
     reviewId,
     userId,
     postId,
@@ -177,7 +180,15 @@ const modifyReview = async (req, res, next) => {
     }
 
     /* review 수정: Success */
-    return res.sendStatus(201);
+    return res.status(201).json({
+      postId: Number(postId),
+      userId,
+      reviewImages: convertImageTextToArr(reviewImages),
+      reviewDesc,
+      weekdayYN: Number(weekdayYN),
+      revisitYN: Number(revisitYN),
+      rWeatherId: Number(rWeatherId),
+    });
   } catch (err) {
     /* review 수정: Fail */
     /* Internal Server Error(예상 못한 에러 발생) */
