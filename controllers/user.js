@@ -222,13 +222,11 @@ const kakaoLogin = async (req, res, next) => {
     let genderNumber = '';
 
     //인가코드로 토큰 받아오기
-    // const success = await getKakaoToken(
-    //   'JZTFr9Ui8RliljdE4Rmrz-R3K9Zeha8fa_yVxTNpyCLq9E7zFMJ1UZ5v7TSwUOaz94SeMgorDR8AAAF86MGWDA'
-    // );
+    const success = await getKakaoToken(req.body.code);
 
     //받아온 카카오 토큰으로 유저정보 가져오기
     const getKakaoUserResult = await getKakaoUserInformation(
-      '_GELb7uE5-UVklI-zarEXsb7zuy6S9sJOzl3Ogo9dZoAAAF86MKIwA' // success.data.access_token
+      success.data.access_token
     );
 
     const {
