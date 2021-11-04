@@ -3,11 +3,13 @@ const { pool } = require('../models/index');
 const {
   queryOfResultPageOfCondition,
   queryOfDetailPageOfInOutDoors,
+  queryOfResultPageOfTotal,
 } = require('../query/searching');
 const customizedError = require('./error');
 const {
-  schemaOfDetailPageOfInOutDoors,
-  schemaOfResultPageofCondition,
+  schemasOfDetailPageOfInOutDoors,
+  schemasOfResultPageofCondition,
+  schemasOfResultPageofTotal,
 } = require('../middlewares/validationSearching');
 
 /* image Text를 Array로 변환시키는 함수 */
@@ -41,12 +43,39 @@ const checkLoginUser = (target) => {
 /* 토탈 결과 페이지 조회 */
 const getResultPageOfTotal = async (req, res, next) => {
   logger.info('토탈 결과 페이지 조회');
-  const userId = checkLoginUser(req.user);
-  const pageNum = req.params.number; // Pages Number
+  const userId = Number(checkLoginUser(req.user));
+  const pageNum = Number(req.params.number) * 16; // Pages Number
   const result = req.query.result; // Searching Result
-  console.log(`userId: ${userId}, pageNum: ${pageNum}, result: ${result}`);
 
-  res.sendStatus(200);
+  /* 유효성 검사 */
+  try {
+    await schemasOfResultPageofTotal.validateAsync({
+      userId,
+      result,
+      pageNum,
+    });
+  } catch (err) {
+    return next(customizedError(err, 400));
+  }
+
+  const params = [userId, result, result, pageNum];
+  const connection = await pool.getConnection(async (conn) => conn);
+  try {
+    const data = await connection.query(queryOfResultPageOfTotal, params);
+
+    let posts = data[0];
+    // 메인 이미지만 가져오기
+    for (let i = 0; i < posts.length; i++) {
+      posts[i].postImage = getMainImage(posts[i].postImage);
+    }
+    return res.status(200).json({
+      posts,
+    });
+  } catch (err) {
+    return next(customizedError(err, 500));
+  } finally {
+    await connection.release();
+  }
 };
 
 /* 조건 결과 페이지 조회  */
@@ -57,7 +86,7 @@ const getResultPageOfCondition = async (req, res, next) => {
 
   /* 유효성 검사 */
   try {
-    await schemaOfResultPageofCondition.validateAsync({
+    await schemasOfResultPageofCondition.validateAsync({
       userId,
       weather,
       category,
@@ -107,7 +136,7 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
 
   /* 유효성 검사 */
   try {
-    await schemaOfDetailPageOfInOutDoors.validateAsync({
+    await schemasOfDetailPageOfInOutDoors.validateAsync({
       userId,
       weather,
       category,
