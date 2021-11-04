@@ -4,6 +4,7 @@ const {
   addReviewLikes,
   updateReviewsLikeCnt,
   queryOfRegistingReview,
+  queryOfGettingReview,
   queryOfModifyingReview,
 } = require('../query/review');
 const customizedError = require('../controllers/error');
@@ -79,17 +80,14 @@ const registReview = async (req, res, next) => {
 
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    await connection.query(queryOfRegistingReview, params);
-    /* review 등록: Success */
-    return res.status(201).json({
-      postId: Number(postId),
-      userId,
-      reviewImages: convertImageTextToArr(reviewImages),
-      reviewDesc,
-      weekdayYN: Number(weekdayYN),
-      revisitYN: Number(revisitYN),
-      rWeatherId: Number(rWeatherId),
-    });
+    let result = await connection.query(queryOfRegistingReview, params);
+    /* 추가 되지 않은 경우 */
+    if (result[0].affectedRows === 0) {
+      return next(
+        customizedError('review 데이터가 추가 되지 않았습니다.', 400)
+      );
+    }
+    result = await connection.query();
   } catch (err) {
     /* review 등록: Fail */
     /* Internal Server Error(예상 못한 에러 발생) */

@@ -40,31 +40,31 @@
  *       - name: weather
  *         in: query
  *         required: true
- *         default: 2
+ *         description: 1 - 맑음 | 2-  비 | 3- 눈
+ *         default: 1
  *         schema:
  *           type: weather
- *           description: 날씨 고유 번호
  *       - name: category
  *         in: query
  *         required: true
+ *         description: 1 - 여행 | 2 - 맛집 | 3 - 카페 | 4 - 예술 | 5 - 액티비티
  *         default: 3
  *         schema:
  *           type: category
- *           description: 카테고리 고유 번호
  *       - name: num
  *         in: query
  *         required: true
+ *         description: 1 - 1명 | 2 - 2명 | 3 - 4명 미만 | 4 - 4명 이상
  *         default: 1
  *         schema:
  *           type: Number
- *           description: 인원 수 고유 번호
  *       - name: gender
  *         in: query
  *         required: true
+ *         description: 1 - 남자끼리| 2 - 여자끼리| 3 - 혼성
  *         default: 3
  *         schema:
  *           type: Number
- *           description: 성별 고유 번호
  *     responses:
  *       '200':
  *         description: 데이터 불러오기 성공
@@ -83,45 +83,45 @@
  *       - name: number
  *         in: path
  *         required: true
+ *          description: 페이지 수
  *         default: 1
  *         schema:
  *           type: Number
- *           description: 페이지 수
  *       - name: weather
  *         in: query
  *         required: true
+ *         description: 1 - 맑음 | 2-  비 | 3- 눈
  *         default: 2
  *         schema:
  *           type: weather
- *           description: 날씨 고유 번호
  *       - name: category
  *         in: query
  *         required: true
+ *         description: 1 - 여행 | 2 - 맛집 | 3 - 카페 | 4 - 예술 | 5 - 액티비티
  *         default: 3
  *         schema:
  *           type: category
- *           description: 카테고리 고유 번호
  *       - name: num
  *         in: query
  *         required: true
+ *         description: 1 - 1명 | 2 - 2명 | 3 - 4명 미만 | 4 - 4명 이상
  *         default: 1
  *         schema:
  *           type: Number
- *           description: 인원 수 고유 번호
  *       - name: gender
  *         in: query
  *         required: true
+ *         description: 1 - 남자끼리| 2 - 여자끼리| 3 - 혼성
  *         default: 3
  *         schema:
  *           type: Number
- *           description: 성별 고유 번호
  *       - name: inside
  *         in: query
  *         required: true
+ *         description: 실내 - 1 | 실외 - 0
  *         default: 1
  *         schema:
  *           type: Number
- *           description: 실내인지 실외인지 여부
  *     responses:
  *       '200':
  *         description: 데이터 불러오기 성공

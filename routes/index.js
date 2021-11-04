@@ -23,7 +23,13 @@ const swaggerDefinition = {
   info: {
     title: 'Insplace API',
     version: '1.0.0',
-    description: 'In Seoul Place API 명세서',
+    description: `
+     In Seoul Place API 명세서
+     category -> 1: 여행 / 2: 맛집 / 3: 카페 / 4: 예술 / 5: 액티비티
+     gender -> 1: 남자끼리 / 2: 여자끼리 / 3: 혼성
+     weather -> 1: 맑음 / 2: 비 / 3: 눈
+     member -> 1: 1명 / 2: 2명 / 3: 4명 미만 / 4: 4명 이상
+    `,
   },
   host: host,
   basePath: '/',
