@@ -6,6 +6,7 @@ const addVisited = (userID, postID) => {
 const findDetailPosts = (postID, userID) => {
   return `
   SELECT 
+  Posts.post_id,
   post_images AS postImages, contact_number AS contactNumber,
    post_loc_x, post_loc_y, description, address, title,
    address_short AS addressShort, post_desc AS postDesc, favorite_cnt AS favoriteCnt,
@@ -25,7 +26,6 @@ const findDetailPosts = (postID, userID) => {
    LEFT JOIN VisitedPosts
    ON Posts.post_id = VisitedPosts.post_id AND VisitedPosts.user_id="${userID}"
    WHERE Posts.post_id = "${postID}"
-
 `;
 };
 
@@ -36,28 +36,40 @@ const checkVisitedUser = (userID, postID) => {
 const findDetailReviews = (postID, userID) => {
   return `
   SELECT 
-  Reviews.user_Id AS userId, review_images AS reviewImages, 
-  review_desc AS reviewDesc, created_at AS createdAt,
+  Reviews.user_Id AS userId, 
+  Reviews.review_id AS reviewId,
+  Users.user_image AS userImage,
+  nickname,
+  CASE
+  WHEN Users.male_yn = 1
+  THEN '남자'
+  ELSE '여자'
+  END AS 'gender',
+  Mbti.description AS mbti,
+  review_images AS reviewImages, 
+  review_desc AS reviewDesc, 
+  ReviewWeathers.description AS weather,
+  weekday_yn AS weekdayYN,
+  revisit_yn AS revisitYN,
   like_cnt AS likeCnt,
-  description,
   CASE 
   WHEN ReviewLikes.user_id = "${userID}"
   THEN 1
   ELSE 0
   END AS likeStatus,
-  CASE
-  WHEN weekday_yn = 1
-  THEN '주말'
-  ELSE '평일'
-  END AS '주말여부'
+  created_at AS createdAt
   FROM Reviews
   LEFT JOIN ReviewLikes ON
   Reviews.review_id = ReviewLikes.review_id AND ReviewLikes.user_id = "${userID}"
   INNER JOIN ReviewWeathers ON
   Reviews.r_weather_id = ReviewWeathers.r_weather_id
-  WHERE post_id ="${postID}" AND delete_yn = "0"
+  INNER JOIN Users ON
+  Reviews.user_id = Users.user_id 
+  INNER JOIN Mbti ON
+  Mbti.mbti_id = Users.mbti_id
+  WHERE post_id ="${postID}" AND Reviews.delete_yn = "0"
   ORDER BY created_at DESC 
-  LIMIT 8
+  LIMIT 16
 `;
 };
 module.exports = {

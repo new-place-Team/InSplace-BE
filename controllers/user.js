@@ -209,11 +209,16 @@ const getVisitedPosts = async (req, res, next) => {
 const kakaoLogin = async (req, res, next) => {
   try {
     //사용자 정보를 데이터베이스에 넣어주는 함수
-    const insertUser = async (genderNumber) => {
+    const insertUser = async (genderNumber, profile_image) => {
+      let stateProfile_image = profile_image;
+      if (profile_image == undefined) {
+        stateProfile_image == null;
+      }
+
       await pool.query(
         insertNewUserforKakao(
           kakaoUserId,
-          profile_image,
+          stateProfile_image,
           nickname,
           genderNumber
         )
@@ -258,11 +263,11 @@ const kakaoLogin = async (req, res, next) => {
       //유저 정보 저장
       //카카오 유저가 성별을 제공했을 경우
       if (genderNumber == 0 || 1) {
-        await insertUser(genderNumber);
+        await insertUser(genderNumber, profile_image);
         return await checkKakaoUserAndLogin(kakaoUserId, next, res);
       }
       //카카오 유저가 성별을 제공 안했을 경우
-      await insertUser('');
+      await insertUser('', profile_image);
       return await checkKakaoUserAndLogin(kakaoUserId, next, res);
     } catch (err) {
       return next(customizedError(err, 400));
