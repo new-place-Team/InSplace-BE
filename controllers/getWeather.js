@@ -6,7 +6,6 @@ const getWeatherInfo = async (req, res, next) => {
   try {
     const result = await pool.query(weatherQuery);
     const weahterInfo = result[0]
-    console.log(weahterInfo)
     return res.status(200).json({
       weahterInfo
     })
