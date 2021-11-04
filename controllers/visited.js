@@ -74,10 +74,10 @@ const deleteVisitedPosts = async (req, res, next) => {
 
   try {
     await connection.query(queryOfDeletingVisitedPost, [userId, postId]);
-    /* 찜목록 삭제: Success */
+    /* 가본 리스트에서 삭제: Success */
     return res.sendStatus(200);
   } catch (err) {
-    /* 찜목록 삭제: Fail -> 예측하지 못한 에러 */
+    /* 가본 리스트에서 삭제: Fail -> 예측하지 못한 에러 */
     return next(customizedError(err, 400));
   } finally {
     await connection.release();

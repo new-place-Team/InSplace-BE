@@ -1,12 +1,11 @@
 const { pool } = require('../models/index');
 const {
   updateReviewDeleteYn,
-  addReviewLikes,
-  updateReviewsLikeCnt,
   queryOfRegistingReview,
   queryOfGettingReview,
   queryOfModifyingReview,
 } = require('../query/review');
+
 const customizedError = require('../controllers/error');
 const {
   schemasOfRegistingReview,
@@ -143,30 +142,6 @@ const deleteReview = async (req, res, next) => {
   }
 };
 
-/* 리뷰 좋아요 추가  */
-const addReviewLike = async (req, res, next) => {
-  try {
-    const connection = await pool.getConnection(async (conn) => conn);
-    try {
-      connection.beginTransaction();
-      await connection.query(addReviewLikes(req.params.reviewId, req.user));
-      await connection.query(
-        updateReviewsLikeCnt(req.params.postId, req.params.reviewId, req.user)
-      );
-      await connection.commit();
-      connection.release();
-      return res.sendStatus(201);
-    } catch (err) {
-      await connection.rollback();
-      connection.release();
-      return next(customizedError(err.message, 400));
-    }
-  } catch (err) {
-    connection.release();
-    return next(customizedError(err.message, 500));
-  }
-};
-
 /* 리뷰 수정 미들웨어 */
 const modifyReview = async (req, res, next) => {
   const { postId, reviewId } = req.params;
@@ -231,5 +206,4 @@ module.exports = {
   registReview,
   modifyReview,
   deleteReview,
-  addReviewLike,
 };
