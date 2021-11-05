@@ -16,7 +16,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 // 배포용 및 로컬용 host 나누기
 let host = `localhost:${process.env.PORT}`;
 if (process.env.NODE_ENV === 'production') {
-  host = process.env.DB_HOST;
+  host = process.env.HOST;
 }
 
 const swaggerDefinition = {

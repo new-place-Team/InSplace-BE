@@ -3,13 +3,15 @@
 -- User Table
 CREATE TABLE `Users` (
   `user_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
-  `email` varchar(255) UNIQUE NOT NULL,
+  `kakao_id` integer UNIQUE, 
+  `email` varchar(255) UNIQUE,
   `nickname` varchar(255) UNIQUE NOT NULL,
   `password` varchar(40) NOT NULL,
-  `male_yn` boolean NOT NULL,
+  `male_yn` boolean,
   `mbti_id` integer NOT NULL,
   `user_image` varchar(255),
-  `delete_yn` boolean NOT NULL DEFAULT 0
+  `delete_yn` boolean NOT NULL DEFAULT 0,
+  `kakao_yn` boolean NOT NULL DEFAULT 0
 );
 
 
@@ -39,7 +41,7 @@ CREATE TABLE `Posts` (
   `md_pick` boolean NOT NULL DEFAULT 0,
   `permission_state` integer NOT NULL DEFAULT 2,
   `source` varchar(20),
-  `admin` varchar(20),
+  `admin` varchar(20)
 );
 
 
@@ -121,13 +123,13 @@ CREATE TABLE `Weathers` (
   `weather_status` integer NOT NULL,
   `weather_temp` varchar(20) NOT NULL,
   `temp_diff` varchar(20) NOT NULL
- )
+ );
 
 -- REVIEW WEATHER TABLE
  CREATE TABLE `ReviewWeathers` (
   `r_weather_id` integer PRIMARY KEY,
   `description` varchar(20)
- )
+ );
 
  
 
