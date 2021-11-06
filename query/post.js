@@ -6,7 +6,7 @@ const addVisited = (userID, postID) => {
 const findDetailPosts = (postID, userID) => {
   return `
   SELECT 
-  Posts.post_id AD postId,
+  Posts.post_id AS postId,
   post_images AS postImages, contact_number AS contactNumber,
   post_loc_x AS postLocationX, post_loc_y AS postLocationY ,description, address, title,
    address_short AS addressShort, post_desc AS postDesc, favorite_cnt AS favoriteCnt,
