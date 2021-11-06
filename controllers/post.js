@@ -1,10 +1,5 @@
 const { pool } = require('../models/index');
-const {
-  addVisited,
-  findDetailPosts,
-  findDetailReviews,
-  checkVisitedUser,
-} = require('../query/post');
+const { findDetailPosts, findDetailReviews } = require('../query/post');
 const customizedError = require('../controllers/error');
 
 const showDetailPost = async (req, res, next) => {
