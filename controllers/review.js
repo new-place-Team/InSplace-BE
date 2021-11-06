@@ -5,6 +5,7 @@ const {
   queryOfGettingReview,
   queryOfModifyingReview,
   queryOfGettingReviewsByOrder,
+  queryOfGettingWritingPageOfReview,
 } = require('../query/review');
 
 const customizedError = require('../controllers/error');
@@ -285,10 +286,43 @@ const getReviewByLike = async (req, res, next) => {
     await connection.release();
   }
 };
+
+const adjImg = (resultImg) => {
+  resultImg.postImage = resultImg.postImage.split('&&').slice(1)[0];
+  return resultImg.postImage;
+};
+
+/* review 작성 페이지 조회 */
+const getWritingPageOfReview = async (req, res, next) => {
+  const postId = req.params.postId;
+
+  /* 유효성 검사 */
+  const connection = await pool.getConnection(async (conn) => conn);
+  try {
+    let result = await connection.query(queryOfGettingWritingPageOfReview, [
+      postId,
+    ]);
+
+    result = result[0][0];
+    return res.status(200).json({
+      post: {
+        postId: result.postId,
+        postImage: adjImg(result),
+        category: result.category,
+        title: result.title,
+      },
+    });
+  } catch (err) {
+    return next(customizedError(err, 500));
+  } finally {
+    await connection.release();
+  }
+};
 module.exports = {
   registReview,
   modifyReview,
   deleteReview,
   getReviewByLatest,
   getReviewByLike,
+  getWritingPageOfReview,
 };
