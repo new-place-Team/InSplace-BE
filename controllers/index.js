@@ -39,6 +39,7 @@ const searchMain = async (req, res, next) => {
     const adjResult = adjImg(result);
     const adjLike = adjImg(likeResult);
     const adjMd = adjImg(mdResult);
+    const test = 0;
 
     return res.status(200).json({
       weather: {
