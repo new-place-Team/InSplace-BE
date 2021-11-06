@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon --experimental-modules ./bin/www",
+    "start": "pm2 start ./bin/www -i 0",
+    "dev": "nodemon ./bin/www",
     "test": "jest"
   },
   "dependencies": {

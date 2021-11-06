@@ -22,7 +22,7 @@ const {
   getUserFavoriteQuery,
   getUserVisitedQuery,
   getKakaoUser,
-  modifyUserQuery
+  modifyUserQuery,
 } = require('../query/user');
 const registUser = async (req, res, next) => {
   const { email, nickname, password, maleYN, mbtiId } = req.user;
@@ -281,18 +281,21 @@ const kakaoLogin = async (req, res, next) => {
 const modifyUser = async (req, res, next) => {
   const userId = parseInt(req.params.userId);
   const userInfo = req.user;
-  if(userInfo !== userId){
+  if (userInfo !== userId) {
     return next(customizedError('잘못된 접근입니다', 400));
   }
-  const { email, nickname, mbtiId} = req.body;
-  const userImage = (req.file === undefined ? 'null' : req.file.transforms[0].location);
-  try{
-    const result = await pool.query(modifyUserQuery(userId, nickname, mbtiId, email, userImage));
-    return res.sendStatus(200)
-  } catch(err) {
-    return next(customizedError(err, 500))
+  const { email, nickname, mbtiId } = req.body;
+  const userImage =
+    req.file === undefined ? 'null' : req.file.transforms[0].location;
+  try {
+    const result = await pool.query(
+      modifyUserQuery(userId, nickname, mbtiId, email, userImage)
+    );
+    return res.sendStatus(200);
+  } catch (err) {
+    return next(customizedError(err, 500));
   }
-}
+};
 
 module.exports = {
   registUser,
