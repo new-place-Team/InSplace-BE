@@ -24,6 +24,7 @@ const {
   getKakaoUser,
   modifyUserQuery,
 } = require('../query/user');
+
 const registUser = async (req, res, next) => {
   const { email, nickname, password, maleYN, mbtiId } = req.user;
 
@@ -64,8 +65,10 @@ const registUser = async (req, res, next) => {
       password,
       parseInt(process.env.HASH_SALT)
     );
+    console.log(hashPassword);
     //유저 정보 저장
     pool
+
       .query(
         insertNewUser(email, nickname, hashPassword, maleYN, data[0].mbti_id)
       )
@@ -94,11 +97,13 @@ const authUser = async (req, res, next) => {
 
     const { user_id, nickname, description, user_image } = userPasswordAndId[0];
     const dbUserEmail = userPasswordAndId[0].email;
+
     // 해쉬된 비밀번호와 유저가 입력한 비밀번호를 비교
     const comparePassword = await bcrypt.compare(
       password,
       userPasswordAndId[0].password
     );
+    console.log(comparePassword);
     //true면 로그인 성공
     if (comparePassword == true) {
       //jsontoken만들기

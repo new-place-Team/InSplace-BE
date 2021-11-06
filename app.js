@@ -39,3 +39,5 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
+
+//배토되랍도리ㅏㅈㅂ도리ㅏㅁ너리ㅑㅏㅁ너ㅣㅏㄹㄴㄷ머
