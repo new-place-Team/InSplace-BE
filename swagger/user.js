@@ -105,44 +105,4 @@
  *         description: 로그인 권한이 없을 경우
  *       '500':
  *         description: Internal Server Error(서버쪽 문제)
- * /users/{userId}/favorites:
- *   get:
- *     security:
- *      - bearerAuth: []
- *     tags:
- *      - User
- *     summary: 찜한 포스트 조회
- *     parameters:
- *       - name: userId
- *         in: path
- *         required: true
- *         default: 4
- *         schema:
- *           type: Number
- *           description: 해당 유저 고유 아이디
- *     responses:
- *       '200':
- *         description: 데이터 불러오기 성공
- *       '400':
- *         description: Bad Request
- * /users/{userId}/visitedPosts:
- *   get:
- *     security:
- *      - bearerAuth: []
- *     tags:
- *      - User
- *     summary: 가본 리스트 조회
- *     parameters:
- *       - name: userId
- *         in: path
- *         required: true
- *         default: 4
- *         schema:
- *           type: Number
- *           description: 해당 유저 고유 아이디
- *     responses:
- *       '200':
- *         description: 데이터 불러오기 성공
- *       '400':
- *         description: Bad Request
  */

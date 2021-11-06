@@ -20,6 +20,8 @@ INSERT INTO Mbti(description) values("ESTJ");
 INSERT INTO Mbti(description) values("ESFJ");
 INSERT INTO Mbti(description) values("ENFJ");
 INSERT INTO Mbti(description) values("ENTJ");
+INSERT INTO Mbti(description) values("모름");
+
 
 -- Genders Table
 INSERT INTO Genders(gender_id, description) VALUES(1, "남자끼리");
