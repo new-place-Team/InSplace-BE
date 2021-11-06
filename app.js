@@ -4,7 +4,9 @@ const path = require('path');
 const logger = require('./config/logger');
 const compression = require('compression');
 app.use(compression());
-console.log('ㅎㅇㅎㅇㅎㅇ');
+console.log('hi');
+console.log('bye');
+console.log('good');
 //CORS
 const cors = require('cors');
 const corsOptions = {
