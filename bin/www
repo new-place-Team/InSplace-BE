@@ -83,6 +83,7 @@ function onError(error) {
  */
 
 function onListening() {
+  console.log('hi');
   logger.info(`${process.env.PORT}번 포트로 서버가 켜졌습니다.`);
   const addr = server.address();
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;

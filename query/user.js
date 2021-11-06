@@ -22,7 +22,7 @@ const getUserInformation = (email) => {
     WHERE email = "${email}"`;
 };
 const getUserInformationById = (id) => {
-  return `SELECT user_id AS userId, email, nickname, userImage ,description FROM Users INNER JOIN Mbti ON Users.mbti_id = Mbti.mbti_id WHERE user_id = ${id} `;
+  return `SELECT user_id AS userId, email, nickname, user_image ,description FROM Users INNER JOIN Mbti ON Users.mbti_id = Mbti.mbti_id WHERE user_id = ${id} `;
 };
 
 const updateUserDeleteYn = (userID) => {
@@ -70,19 +70,19 @@ const insertNewUserforKakao = (kakaoId, userImage, nickname, gender) => {
 };
 
 const modifyUserQuery = (userId, nickname, mbtiId, email, userImage) => {
-  if(userImage === 'null'){
+  if (userImage === 'null') {
     return `
     UPDATE Users
     SET email='${email}', nickname='${nickname}', mbti_id=${mbtiId}
     WHERE user_Id = ${userId}
-    `
+    `;
   }
   return `
     UPDATE Users
     SET email='${email}', nickname='${nickname}', mbti_id=${mbtiId}, user_image='${userImage}'
     WHERE user_id = ${userId}
-    `
-}
+    `;
+};
 
 module.exports = {
   getUsers,
