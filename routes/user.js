@@ -17,7 +17,7 @@ const {
 
 const { isAuth } = require('../middlewares/auth');
 const upload = require('../controllers/imgUpload');
-const userUpload = require('../controllers/userImgUpload')
+const userUpload = require('../controllers/userImgUpload');
 
 /* 회원 가입 */
 
@@ -47,6 +47,12 @@ router.use('/:userId/posts/:postId/favorites', favoriteRouter);
 router.use('/:userId/posts/:postId/visitedPosts', visitedRouter);
 
 /* 유저 정보 수정 */
-router.put('/:userId', isAuth, userUpload.single('userImage'), validationModifyUser, modifyUser);
+router.put(
+  '/:userId',
+  isAuth,
+  userUpload.single('userImage'),
+  validationModifyUser,
+  modifyUser
+);
 
 module.exports = router;

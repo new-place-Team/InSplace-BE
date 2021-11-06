@@ -14,6 +14,7 @@ const {
   schemasOfGettingReviews,
 } = require('../middlewares/validationReview');
 require('dotenv').config();
+
 /* 이미지 배열을 DB저장할 수 있는 텍스트로 변환 */
 const convertImageArrToText = (imgArr) => {
   const baseUrlSize = process.env.IMG_BASE_URL.length;
