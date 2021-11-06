@@ -5,6 +5,7 @@ const {
   mdQuery,
   weatherQuery,
 } = require('../query/main');
+const { getUserVisitedQuery, getUserFavoriteQuery } = require('../query/index');
 const customizedError = require('./error');
 
 const searchMain = async (req, res, next) => {
@@ -58,6 +59,52 @@ const searchMain = async (req, res, next) => {
   }
 };
 
+/* 가본 리스트 조회  */
+const getVisitedPosts = async (req, res, next) => {
+  const userId = req.user;
+
+  const adjImg = (result) => {
+    let resultImg = result[0];
+    for (let i = 0; i < resultImg.length; i++) {
+      resultImg[i].postImage = result[0][i].postImage.split('&&').slice(1)[0];
+    }
+    return resultImg;
+  };
+  try {
+    const result = await pool.query(getUserVisitedQuery(userId));
+    const visitedPosts = adjImg(result);
+    return res.status(200).json({
+      visitedPosts,
+    });
+  } catch (err) {
+    return next(customizedError(err, 500));
+  }
+};
+
+const getFavoritesPosts = async (req, res, next) => {
+  const userId = req.user;
+
+  const adjImg = (result) => {
+    let resultImg = result[0];
+    for (let i = 0; i < resultImg.length; i++) {
+      resultImg[i].postImage = result[0][i].postImage.split('&&').slice(1)[0];
+    }
+    return resultImg;
+  };
+
+  try {
+    const result = await pool.query(getUserFavoriteQuery(userId));
+    const favoritePosts = adjImg(result);
+    return res.status(200).json({
+      favoritePosts,
+    });
+  } catch (err) {
+    return next(customizedError(err, 500));
+  }
+};
+
 module.exports = {
   searchMain,
+  getVisitedPosts,
+  getFavoritesPosts,
 };

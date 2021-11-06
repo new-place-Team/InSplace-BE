@@ -8,14 +8,6 @@ const { checkVisitedUser, addVisited } = require('../query/post');
 const customizedError = require('./error');
 const { pool } = require('../models/index');
 
-/* 로그인한 유저인지 검사 */
-const isMatchingUserIds = (userId, targetUserId) => {
-  if (userId === targetUserId) {
-    return true;
-  }
-  return false;
-};
-
 /* 가본 장소 리스트에 추가 */
 const addVisitedPosts = async (req, res, next) => {
   //유저가 가본 리스트에 추가했는지 확인
@@ -44,11 +36,6 @@ const addVisitedPosts = async (req, res, next) => {
 const deleteVisitedPosts = async (req, res, next) => {
   const postId = req.params.postId;
   const userId = req.user;
-
-  /* 로그인 한 유저와 입력 받은 userId가 다른 경우 */
-  if (!isMatchingUserIds(userId, Number(req.params.userId))) {
-    return next(customizedError('잘못된 접근 입니다.', 400));
-  }
 
   try {
     /* 유효성 검사: Success */

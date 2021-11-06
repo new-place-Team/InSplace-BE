@@ -1,6 +1,6 @@
 /**
  * @swagger
- * /users/{userId}/posts/{postId}/favorites:
+ * /posts/{postId}/favorites:
  *   post:
  *     security:
  *      - bearerAuth: []
@@ -9,13 +9,6 @@
  *     name: 찜 목록에 추가
  *     summary: 찜 목록에 추가
  *     parameters:
- *       - name: userId
- *         in: path
- *         required: true
- *         default: 4
- *         schema:
- *           type: Number
- *           description: 해당 유저 고유 아이디
  *       - name: postId
  *         in: path
  *         required: true
@@ -38,13 +31,6 @@
  *     name: 찜 목록에서 삭제
  *     summary: 찜 목록에서 삭제
  *     parameters:
- *       - name: userId
- *         in: path
- *         required: true
- *         default: 4
- *         schema:
- *           type: Number
- *           description: 해당 유저 고유 아이디
  *       - name: postId
  *         in: path
  *         required: true

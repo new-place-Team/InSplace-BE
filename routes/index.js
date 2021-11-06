@@ -5,8 +5,12 @@ const postRouter = require('./post');
 const searchingRouter = require('./searching');
 const adminRouter = require('./admin');
 const weatherRotuer = require('./weatherInfo');
-const { searchMain } = require('../controllers/index');
-const { justCheckAuth } = require('../middlewares/auth');
+const {
+  searchMain,
+  getFavoritesPosts,
+  getVisitedPosts,
+} = require('../controllers/index');
+const { justCheckAuth, isAuth } = require('../middlewares/auth');
 require('dotenv').config();
 
 //swagger
@@ -61,7 +65,13 @@ router.use('/admin', adminRouter);
 router.use('/weather', weatherRotuer);
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-/* GET main page. */
+/* 메인 페이지 조회 */
 router.get('/main', justCheckAuth, searchMain);
+
+/* 찜한 포스트 조회 */
+router.get('/favorites', isAuth, getFavoritesPosts);
+
+/* 가본 리스트 조회 */
+router.get('/visitedPosts', isAuth, getVisitedPosts);
 
 module.exports = router;
