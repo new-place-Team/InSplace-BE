@@ -29,25 +29,6 @@ const updateUserDeleteYn = (userID) => {
   return `UPDATE Users SET delete_yn = 1 WHERE user_id="${userID}"`;
 };
 
-const getUserFavoriteQuery = (userID) => {
-  return `
-  SELECT DISTINCT Posts.post_id AS postId, Posts.title, Posts.category_id AS categoryId, Posts.post_images AS postImage
-  FROM Posts 
-  LEFT JOIN Favorites
-  ON Posts.post_id = Favorites.post_id
-  WHERE Favorites.user_id = ${userID}
-  `;
-};
-
-const getUserVisitedQuery = (userID) => {
-  return `
-  SELECT DISTINCT Posts.post_id AS postId, Posts.title, Posts.category_id AS categoryId, Posts.post_images AS postImage
-  FROM Posts 
-  LEFT JOIN VisitedPosts
-  ON Posts.post_id = VisitedPosts.post_id
-  WHERE VisitedPosts.user_id = ${userID}
-  `;
-};
 const getKakaoUser = (userKakaoId) => {
   return `
   SELECT user_id, nickname, user_image, description ,email FROM Users  
@@ -70,19 +51,19 @@ const insertNewUserforKakao = (kakaoId, userImage, nickname, gender) => {
 };
 
 const modifyUserQuery = (userId, nickname, mbtiId, email, userImage) => {
-  if(userImage === 'null'){
+  if (userImage === 'null') {
     return `
     UPDATE Users
     SET email='${email}', nickname='${nickname}', mbti_id=${mbtiId}
     WHERE user_Id = ${userId}
-    `
+    `;
   }
   return `
     UPDATE Users
     SET email='${email}', nickname='${nickname}', mbti_id=${mbtiId}, user_image='${userImage}'
     WHERE user_id = ${userId}
-    `
-}
+    `;
+};
 
 module.exports = {
   getUsers,
@@ -91,8 +72,6 @@ module.exports = {
   getUserInformation,
   getUserInformationById,
   updateUserDeleteYn,
-  getUserFavoriteQuery,
-  getUserVisitedQuery,
   getKakaoUser,
   insertNewUserforKakao,
   modifyUserQuery,
