@@ -46,10 +46,10 @@ const schedulingWeather = async (req, res) => {
   } else if (weatherString.charAt(0) === 6) {
     weatherFe = 3; // snow상태일경우 눈 상태로 보내줍니다
   } else if(
-    weatherString === 801 ||
-    weatherString === 802 ||
-    weatherString === 803 ||
-    weatherString === 804 
+    weatherString === '801' ||
+    weatherString === '802' ||
+    weatherString === '803' ||
+    weatherString === '804' 
     ) {
     weatherFe = 4; //구름 날씨일 경우 구름 상태로 만들어줍니다.
   } else {
