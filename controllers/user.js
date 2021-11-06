@@ -107,9 +107,7 @@ const authUser = async (req, res, next) => {
     //true면 로그인 성공
     if (comparePassword == true) {
       //jsontoken만들기
-      const token = jwt.sign({ user_id }, process.env.SECRET_KEY, {
-        expiresIn: '60m',
-      });
+      const token = jwt.sign({ user_id }, process.env.SECRET_KEY);
 
       return res.status(201).json({
         userId: user_id,

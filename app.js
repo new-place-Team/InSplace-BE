@@ -4,9 +4,6 @@ const path = require('path');
 const logger = require('./config/logger');
 const compression = require('compression');
 app.use(compression());
-console.log('hi');
-console.log('bye');
-console.log('good');
 //CORS
 const cors = require('cors');
 const corsOptions = {
@@ -41,5 +38,3 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
-
-//배토되랍도리ㅏㅈㅂ도리ㅏㅁ너리ㅑㅏㅁ너ㅣㅏㄹㄴㄷ머

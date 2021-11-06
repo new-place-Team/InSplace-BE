@@ -16,9 +16,7 @@ const checkDuplicateOfNickname = async (nickname, next) => {
 
 //로그인 시키는 함수
 const startLogin = (user_id, nickname, description, user_image, email, res) => {
-  const token = jwt.sign({ user_id }, process.env.SECRET_KEY, {
-    expiresIn: '60m',
-  });
+  const token = jwt.sign({ user_id }, process.env.SECRET_KEY);
   return res.status(200).json({
     userId: user_id,
     token,
