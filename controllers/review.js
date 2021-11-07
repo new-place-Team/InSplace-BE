@@ -194,7 +194,7 @@ const modifyReview = async (req, res, next) => {
 /* 최신순으로 리뷰 가져오기 */
 const getReviewByLatest = async (req, res, next) => {
   const postId = req.params.postId;
-  const pageNum = req.params.num * 16;
+  const pageNum = Number(req.params.num);
   let userId = 0;
   /* 로그인 한 유저인 경우 userId, 아닌 경우 0 */
   if (req.user) {
@@ -260,6 +260,8 @@ const getReviewByLike = async (req, res, next) => {
       queryOfGettingReviewsByOrder(postId, userId, pageNum, 'like_cnt')
     );
     reviews = reviews[0];
+
+    console.log('length:', reviews.length);
     /* 이미지 배열로 변환 */
     for (let i = 0; i < reviews.length; i++) {
       reviews[i].reviewImages = convertImageTextToArr(
@@ -267,6 +269,7 @@ const getReviewByLike = async (req, res, next) => {
         process.env.REVIEW_BASE_URL
       );
     }
+
     res.status(200).json({
       reviews,
     });

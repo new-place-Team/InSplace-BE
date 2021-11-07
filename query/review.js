@@ -67,7 +67,7 @@ const queryOfGettingReviewsByOrder = (postId, userId, pageNum, orderBy) => {
   created_at AS createdAt
   FROM Reviews
   LEFT JOIN ReviewLikes ON
-  Reviews.review_id = ReviewLikes.review_id AND ReviewLikes.user_id = ${userId}
+  Reviews.review_id = ReviewLikes.review_id
   INNER JOIN ReviewWeathers ON
   Reviews.r_weather_id = ReviewWeathers.r_weather_id
   INNER JOIN Users ON
