@@ -201,4 +201,24 @@
  *         description: Bad Request
  *       '500':
  *         description: Internal Server Error(서버쪽 문제)
+ * /posts/{postId}/reviews/write:
+ *   get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *      - Review
+ *     summary: 리뷰 작성 페이지 조회
+ *     parameters:
+ *       - name: postId
+ *         in: path
+ *         required: true
+ *         default: 4
+ *         schema:
+ *           type: Number
+ *           description: 해당 게시글 고유 아이디
+ *     responses:
+ *       '200':
+ *         description: 데이터 불러오기 성공
+ *       '400':
+ *         description: Bad Request
  */

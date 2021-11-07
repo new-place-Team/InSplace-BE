@@ -80,10 +80,19 @@ const queryOfGettingReviewsByOrder = (postId, userId, pageNum, orderBy) => {
 `;
 };
 
+const queryOfGettingWritingPageOfReview = `
+  SELECT post_id AS postId, post_images AS postImage, Categories.description AS category,
+  title 
+  FROM Posts
+  INNER JOIN Categories ON Posts.category_id = Categories.category_id
+  WHERE post_id = ?
+`;
+
 module.exports = {
   updateReviewDeleteYn,
   queryOfRegistingReview,
   queryOfModifyingReview,
   queryOfGettingReview,
   queryOfGettingReviewsByOrder,
+  queryOfGettingWritingPageOfReview,
 };
