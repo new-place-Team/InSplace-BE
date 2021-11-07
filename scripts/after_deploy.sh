@@ -2,6 +2,6 @@
 
 echo 'script start'
 
-cd /home/ubuntu/insplace
 
-pm2 restart ./bin/www 
+
+pm2 restart /home/ubuntu/insplace/bin/www
