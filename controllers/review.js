@@ -19,6 +19,7 @@ const {
 const {
   convertImageArrToText,
   convertImageTextToArr,
+  getMainImage,
 } = require('./utils/image');
 
 /* post 데이터 가공 */
@@ -276,10 +277,10 @@ const getReviewByLike = async (req, res, next) => {
   }
 };
 
-const adjImg = (resultImg) => {
+/* const adjImg = (resultImg) => {
   resultImg.postImage = resultImg.postImage.split('&&').slice(1)[0];
   return resultImg.postImage;
-};
+}; */
 
 /* review 작성 페이지 조회 */
 const getWritingPageOfReview = async (req, res, next) => {
@@ -296,7 +297,7 @@ const getWritingPageOfReview = async (req, res, next) => {
     return res.status(200).json({
       post: {
         postId: result.postId,
-        postImage: adjImg(result),
+        postImage: getMainImage(result.postImage, process.env.POST_BASE_URL),
         category: result.category,
         title: result.title,
       },
