@@ -18,10 +18,10 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
 // 배포용 및 로컬용 host 나누기
-let host = `localhost:${process.env.PORT}`;
-if (process.env.NODE_ENV === 'production') {
-  host = process.env.HOST;
-}
+let host =
+  process.env.NODE_ENV === 'production'
+    ? process.env.HOST
+    : `localhost:${process.env.PORT}`;
 
 const swaggerDefinition = {
   info: {
