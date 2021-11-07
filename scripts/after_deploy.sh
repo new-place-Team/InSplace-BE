@@ -2,5 +2,5 @@
 
 echo 'script start'
 
-cd insplace 
+cd /home/ubuntu/insplace
 mkdir testfile
