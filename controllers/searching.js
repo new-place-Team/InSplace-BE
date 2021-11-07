@@ -1,5 +1,6 @@
 const logger = require('../config/logger');
 const { pool } = require('../models/index');
+require('dotenv').config;
 const {
   queryOfResultPageOfCondition,
   queryOfDetailPageOfInOutDoors,
@@ -12,21 +13,7 @@ const {
   schemasOfResultPageofTotal,
 } = require('../middlewares/validationSearching');
 
-/* image Text를 Array로 변환시키는 함수 */
-const convertImageToArray = (imgText) => {
-  const imgArr = imgText.split('&&');
-  return imgArr.slice(1);
-};
-
-/* 메인 이미지 한개만 가져오는 함수 */
-const getMainImage = (imgText) => {
-  const imgArr = imgText.split('&&');
-  let res = '';
-  if (imgArr.length >= 2) {
-    res = imgArr[1];
-  }
-  return res;
-};
+const { getMainImage } = require('./utils/image');
 
 /*
  * 로그인한 유저가 아니면 0
@@ -66,7 +53,10 @@ const getResultPageOfTotal = async (req, res, next) => {
     let posts = data[0];
     // 메인 이미지만 가져오기
     for (let i = 0; i < posts.length; i++) {
-      posts[i].postImage = getMainImage(posts[i].postImage);
+      posts[i].postImage = getMainImage(
+        posts[i].postImage,
+        process.env.POST_BASE_URL
+      );
     }
     return res.status(200).json({
       posts,
@@ -109,7 +99,10 @@ const getResultPageOfCondition = async (req, res, next) => {
       if (insideSize > 16 && outsideSize > 16) {
         break;
       }
-      result[0][i].postImage = getMainImage(result[0][i].postImage);
+      result[0][i].postImage = getMainImage(
+        result[0][i].postImage,
+        process.env.POST_BASE_URL
+      );
       if (result[0][i].insideYN === 1 && insideSize <= 14) {
         insidePlaces.push(result[0][i]);
       } else if (result[0][i].insideYN === 0 && outsideSize <= 14) {
@@ -158,7 +151,10 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
     let posts = result[0];
     // 메인 이미지만 가져오기
     for (let i = 0; i < posts.length; i++) {
-      posts[i].postImage = getMainImage(posts[i].postImage);
+      posts[i].postImage = getMainImage(
+        posts[i].postImage,
+        process.env.POST_BASE_URL
+      );
     }
     return res.status(200).json({
       posts,

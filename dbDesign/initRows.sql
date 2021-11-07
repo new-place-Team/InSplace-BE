@@ -56,3 +56,11 @@ INSERT INTO MemberCnt(member_id, description) VALUES(3, "4명 미만");
 INSERT INTO MemberCnt(member_id, description) VALUES(4, "4명 이상");
 INSERT INTO MemberCnt(member_id, description) VALUES(5, "1명, 2명, 4명 미만, 4명 이상");
 INSERT INTO MemberCnt(member_id, description) VALUES(6, "2명, 4명 미만");
+
+
+-- ReviewWeathers
+INSERT INTO ReviewWeathers(r_weather_id, description) VALUES(1, "맑음");
+INSERT INTO ReviewWeathers(r_weather_id, description) VALUES(2, "비");
+INSERT INTO ReviewWeathers(r_weather_id, description) VALUES(3, "눈");
+INSERT INTO ReviewWeathers(r_weather_id, description) VALUES(4, "흐림");
+INSERT INTO ReviewWeathers(r_weather_id, description) VALUES(5, "기억안남");

@@ -1,4 +1,5 @@
 const multer = require('multer');
+const path = require('path');
 const multerS3 = require('multer-s3-transform');
 const sharp = require('sharp');
 const AWS = require('aws-sdk');
@@ -10,10 +11,11 @@ const s3 = new AWS.S3({
   region: process.env.S3_BUCKET_REGION,
 });
 
-const upload = multer({
+const reviewImgUpload = multer({
   storage: multerS3({
     s3: s3,
     bucket: 'halimg',
+    contentType: multerS3.AUTO_CONTENT_TYPE,
     shouldTransform: function (req, file, cb) {
       cb(null, /^image/i.test(file.mimetype));
     },
@@ -21,9 +23,9 @@ const upload = multer({
       {
         id: 'original',
         key: function (req, file, cb) {
-          cb(null, `${Date.now()}${file.originalname}`);
-          //use Date.now() for unique file keys
-          //Date.now()로 파일이름의 중복 막기
+          const ext = path.extname(file.originalname); //올린 사진의 확장자 확인
+          const uploadFile = `reviews/${Date.now()}${ext}`;
+          cb(null, uploadFile);
         },
         transform: function (req, file, cb) {
           //사진을 잘라내어 압축.. 해당 코드 리뷰필요...
@@ -33,4 +35,4 @@ const upload = multer({
     ],
   }),
 });
-module.exports = upload;
+module.exports = reviewImgUpload;
