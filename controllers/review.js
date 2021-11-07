@@ -7,6 +7,7 @@ const {
   queryOfModifyingReview,
   queryOfGettingReviewsByOrder,
   queryOfGettingWritingPageOfReview,
+  queryOfGettingEditingPageOfReview,
 } = require('../query/review');
 
 const customizedError = require('../controllers/error');
@@ -311,6 +312,31 @@ const getWritingPageOfReview = async (req, res, next) => {
     await connection.release();
   }
 };
+
+/* 리뷰 수정 페이지 조회 */
+const getEditingPageOfReview = async (req, res, next) => {
+  const reviewId = req.params.reviewId;
+
+  const connection = await pool.getConnection(async (conn) => conn);
+  try {
+    const [[review]] = await connection.query(
+      queryOfGettingEditingPageOfReview,
+      [reviewId]
+    );
+
+    review.reviewImages = convertImageTextToArr(
+      review.reviewImages,
+      process.env.REVIEW_BASE_URL
+    );
+    return res.status(200).json({
+      review,
+    });
+  } catch (err) {
+    return next(customizedError(err, 500));
+  } finally {
+    await connection.release();
+  }
+};
 module.exports = {
   registReview,
   modifyReview,
@@ -318,4 +344,5 @@ module.exports = {
   getReviewByLatest,
   getReviewByLike,
   getWritingPageOfReview,
+  getEditingPageOfReview,
 };

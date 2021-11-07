@@ -7,6 +7,7 @@ const {
   getReviewByLatest,
   getReviewByLike,
   getWritingPageOfReview,
+  getEditingPageOfReview,
 } = require('../controllers/review');
 const reviewImgUpload = require('../controllers/reviewImgUpload');
 const { isAuth, justCheckAuth } = require('../middlewares/auth');
@@ -16,6 +17,9 @@ router.use('/:reviewId/likes', reviewLikeRouter);
 
 /* 리뷰 작성 페이지 조회 */
 router.get('/write', isAuth, getWritingPageOfReview);
+
+/* 리뷰 수정 페이지 조회 */
+router.get('/:reviewId/edit', isAuth, getEditingPageOfReview);
 /* 리뷰 삭제 라우터 */
 router.delete('/:reviewId', isAuth, deleteReview);
 
