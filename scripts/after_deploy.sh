@@ -3,4 +3,4 @@
 echo 'script start'
 
 cd /home/ubuntu/insplace
-mkdir testfile
+pm2 restart ./bin/www 
