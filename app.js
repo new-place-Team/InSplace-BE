@@ -6,6 +6,7 @@ const compression = require('compression');
 app.use(compression());
 //CORS
 const cors = require('cors');
+console.log('앱이 켜졌습니다');
 const corsOptions = {
   //cors 설정
   origin: '*', // 전체 허용
