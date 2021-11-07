@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "pm2 start ./bin/www -i 0",
+    "start": "pm2 start ./bin/www",
     "dev": "nodemon ./bin/www",
     "test": "jest"
   },

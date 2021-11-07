@@ -1,4 +1,5 @@
 const { pool } = require('../models/index');
+require('dotenv').config();
 const {
   updateReviewDeleteYn,
   queryOfRegistingReview,
@@ -14,40 +15,11 @@ const {
   schemasOfModifyingReview,
   schemasOfGettingReviews,
 } = require('../middlewares/validationReview');
-require('dotenv').config();
 
-/* 이미지 배열을 DB저장할 수 있는 텍스트로 변환 */
-const convertImageArrToText = (imgArr) => {
-  const baseUrlSize = process.env.IMG_BASE_URL.length;
-  let imgText = '';
-  /* 아무 이미지도 없는 경우 */
-  if (imgArr.length === 0) {
-    return imgText;
-  }
-  for (let i = 0; i < imgArr.length; i++) {
-    if (i === 0) {
-      imgText += `${imgArr[i].transforms[0].location.slice(baseUrlSize)}`;
-    } else {
-      imgText += `&&${imgArr[i].transforms[0].location.slice(baseUrlSize)}`;
-    }
-  }
-  return imgText;
-};
-
-/* DB에 저장 된 reviewImages를 배열로 변환 */
-const convertImageTextToArr = (imgText) => {
-  let imgArr = [];
-  /* 아무 이미지도 없는 경우 */
-  if (imgText.length === 0) {
-    return imgArr;
-  }
-
-  imgArr = imgText.split('&&');
-  for (let i = 0; i < imgArr.length; i++) {
-    imgArr[i] = `${process.env.IMG_BASE_URL}${imgArr[i]}`;
-  }
-  return imgArr;
-};
+const {
+  convertImageArrToText,
+  convertImageTextToArr,
+} = require('./utils/image');
 
 /* post 데이터 가공 */
 const getPostData = (result) => {
@@ -58,7 +30,10 @@ const getPostData = (result) => {
     nickname: result.nickname,
     gender: result.gender,
     mbti: result.mbti,
-    reviewImages: convertImageTextToArr(result.reviewImages),
+    reviewImages: convertImageTextToArr(
+      result.reviewImages,
+      process.env.REVIEW_BASE_URL
+    ),
     reviewDesc: result.reviewDesc,
     weather: result.weather,
     weekdayYN: result.weekdayYN,
@@ -75,7 +50,10 @@ const registReview = async (req, res, next) => {
   const userId = req.user;
   const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
 
-  const reviewImages = convertImageArrToText(req.files);
+  const reviewImages = convertImageArrToText(
+    req.files,
+    process.env.REVIEW_BASE_URL
+  );
 
   /* 유효성 검사 */
   try {
@@ -100,10 +78,11 @@ const registReview = async (req, res, next) => {
     revisitYN,
     weather,
   ];
-
+  console.log('params:', params);
   const connection = await pool.getConnection(async (conn) => conn);
   try {
     let result = await connection.query(queryOfRegistingReview, params);
+    console.log('result:', result);
     /* 추가 되지 않은 경우 */
     if (result[0].affectedRows === 0) {
       return next(
@@ -111,6 +90,7 @@ const registReview = async (req, res, next) => {
       );
     }
     const reviewId = result[0].insertId;
+    console.log('reviewId: ', reviewId);
     const paramsOfGettingReview = [userId, userId, reviewId, postId];
     result = await connection.query(
       queryOfGettingReview,
@@ -151,7 +131,10 @@ const modifyReview = async (req, res, next) => {
   const { postId, reviewId } = req.params;
   const userId = req.user;
   const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
-  const reviewImages = convertImageArrToText(req.files);
+  const reviewImages = convertImageArrToText(
+    req.files,
+    process.env.REVIEW_BASE_URL
+  );
 
   /* 유효성 검사 */
   try {
@@ -235,7 +218,10 @@ const getReviewByLatest = async (req, res, next) => {
     reviews = reviews[0];
     /* 이미지 배열로 변환 */
     for (let i = 0; i < reviews.length; i++) {
-      reviews[i].reviewImages = convertImageTextToArr(reviews[i].reviewImages);
+      reviews[i].reviewImages = convertImageTextToArr(
+        reviews[i].reviewImages,
+        process.env.REVIEW_BASE_URL
+      );
     }
     res.status(200).json({
       reviews,
@@ -275,7 +261,10 @@ const getReviewByLike = async (req, res, next) => {
     reviews = reviews[0];
     /* 이미지 배열로 변환 */
     for (let i = 0; i < reviews.length; i++) {
-      reviews[i].reviewImages = convertImageTextToArr(reviews[i].reviewImages);
+      reviews[i].reviewImages = convertImageTextToArr(
+        reviews[i].reviewImages,
+        process.env.REVIEW_BASE_URL
+      );
     }
     res.status(200).json({
       reviews,
