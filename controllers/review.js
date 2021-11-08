@@ -21,6 +21,7 @@ const {
   convertImageArrToText,
   convertImageTextToArr,
   getMainImage,
+  convertBodyImageArrToText,
 } = require('./utils/image');
 
 /* post 데이터 가공 */
@@ -139,16 +140,24 @@ const modifyReview = async (req, res, next) => {
   const userId = req.user;
   const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
 
+  /* 
+  req.body.reviewImages: https://halimg.s3.ap-northeast-2.amazonaws.com/reviews/1636366183908.jpg, req.files:
+  req.body.reviewImages: https://halimg.s3.ap-northeast-2.amazonaws.com/reviews/1636366183908.jpg, req.files: [object Object]
+  req.body.reviewImages: undefined, req.files:
+  */
   console.log(
     `req.body.reviewImages: ${req.body.reviewImages}, req.files: ${req.files}`
   );
-  let reviewImages =
-    !req.files || req.files.length === 0
-      ? convertImageArrToText(
-          req.body.reviewImages,
-          process.env.REVIEW_BASE_URL
-        )
-      : convertImageArrToText(req.files, process.env.REVIEW_BASE_URL);
+  let reviewImages;
+  /* undefine이 아닌 경우 */
+  if (req.body.reviewImages) {
+    const imgArr = req.body.reviewImages.split(',');
+    reviewImages += convertBodyImageArrToText(
+      imgArr,
+      process.env.REVIEW_BASE_URL
+    );
+  }
+  reviewImages += convertImageArrToText(req.files, process.env.REVIEW_BASE_URL);
   console.log('<<<<<<<<<<<<<<<');
   console.log('reviewImages: ', reviewImages);
   console.log('>>>>>>>>>>>>>>>');

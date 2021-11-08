@@ -2,6 +2,24 @@
  * 배열로 받은 이미지를 DB에 저장할 텍스트로 변환
  *  baseUrl은 process.env.POST_BASE_URL or  REVIEW_BASE_URL or USER_BASE_URL 이 배열로 들어온다.
  */
+
+const convertBodyImageArrToText = (imgArr, baseUrl) => {
+  const baseUrlSize = baseUrl.length;
+  let imgText = '';
+
+  /* 아무 이미지도 없는 경우 */
+  if (imgArr.length === 0) {
+    return imgText;
+  }
+  for (let i = 0; i < imgArr.length; i++) {
+    if (i === 0) {
+      imgText += `${imgArr[i].slice(baseUrlSize)}`;
+    } else {
+      imgText += `&&${imgArr[i].slice(baseUrlSize)}`;
+    }
+  }
+  return imgText;
+};
 const convertImageArrToText = (imgArr, baseUrl) => {
   const baseUrlSize = baseUrl.length;
   let imgText = '';
@@ -49,4 +67,5 @@ module.exports = {
   convertImageArrToText,
   convertImageTextToArr,
   getMainImage,
+  convertBodyImageArrToText,
 };
