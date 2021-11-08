@@ -181,7 +181,7 @@ const kakaoLogin = async (req, res, next) => {
     const getKakaoUserResult = await getKakaoUserInformation(
       success.data.access_token
     );
-
+    console.log(getKakaoUserResult.data);
     const {
       id: kakaoUserId,
       properties: { nickname, profile_image },
