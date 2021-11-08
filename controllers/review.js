@@ -128,26 +128,10 @@ const deleteReview = async (req, res, next) => {
 
 /* 리뷰 수정 미들웨어 */
 const modifyReview = async (req, res, next) => {
-  /* 문자열로 온 경우 req.body.reviewImages 존재
-     파일로 온 경우 req.body.reviewImages == undefined
-  */
-
-  /* 
-     1장일 경우: 문자열로
-     2장 이상일 경우, 배열로 들어온다
-     */
   const { postId, reviewId } = req.params;
   const userId = req.user;
   const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
 
-  /* 
-  req.body.reviewImages: https://halimg.s3.ap-northeast-2.amazonaws.com/reviews/1636366183908.jpg, req.files:
-  req.body.reviewImages: https://halimg.s3.ap-northeast-2.amazonaws.com/reviews/1636366183908.jpg, req.files: [object Object]
-  req.body.reviewImages: undefined, req.files:
-  */
-  console.log(
-    `req.body.reviewImages: ${req.body.reviewImages}, req.files: ${req.files}`
-  );
   let reviewImages = '';
   /* undefine이 아닌 경우 */
   if (req.body.reviewImages) {
@@ -163,7 +147,6 @@ const modifyReview = async (req, res, next) => {
   if (reviewImages && req.files.length >= 1) {
     reviewImages += '&&';
   }
-
   reviewImages += convertImageArrToText(req.files, process.env.REVIEW_BASE_URL);
   console.log('<<<<<<<<<<<<<<<');
   console.log('reviewImages: ', reviewImages);
@@ -368,13 +351,6 @@ const getEditingPageOfReview = async (req, res, next) => {
   }
 };
 
-const checkImageFileType = (req, res, next) => {
-  console.log('checkImageFileType');
-  const reviewImages = req.body.reviewImages;
-  console.log('reviewImages', reviewImages, typeof reviewImages);
-
-  next('route');
-};
 module.exports = {
   registReview,
   modifyReview,
@@ -383,5 +359,4 @@ module.exports = {
   getReviewByLike,
   getWritingPageOfReview,
   getEditingPageOfReview,
-  checkImageFileType,
 };
