@@ -28,11 +28,14 @@ const addFavorite = async (req, res, next) => {
     const params = [userId, postId];
     const result = await connection.query(queryOfGettingFavoriteData, params);
     if (result[0].length >= 1) {
+      await connection.release();
+      console.log('if 문 안에 release()');
       return next(customizedError('찜목록에 이미 존재합니다.', 400));
     }
   } catch (err) {
     /* 존재 유무 검사 중 예측하지 못한 에러 발생 */
     await connection.release();
+    console.log('first catch release()');
     return next(customizedError(err, 500));
   }
   try {
@@ -48,6 +51,7 @@ const addFavorite = async (req, res, next) => {
     await connection.rollback(); // 에러가 발생할 경우 원래 상태로 돌리기
     return next(customizedError(err, 500));
   } finally {
+    console.log('second catch release()');
     await connection.release(); // 연결 끊기
   }
 };
@@ -71,11 +75,14 @@ const deleteFavorite = async (req, res, next) => {
     const params = [userId, postId];
     const result = await connection.query(queryOfGettingFavoriteData, params);
     if (result[0].length === 0) {
+      console.log('if 문 안에 release()');
+      await connection.release();
       return next(customizedError('찜목록에 존재하지 않습니다.', 400));
     }
   } catch (err) {
     /* 존재 유무 검사 중 예측하지 못한 에러 발생 */
     await connection.release();
+    console.log('first catach release()');
     return next(customizedError(err, 500));
   }
 
@@ -91,6 +98,7 @@ const deleteFavorite = async (req, res, next) => {
     await connection.rollback();
     return next(customizedError(err, 400));
   } finally {
+    console.log('second finally release()');
     await connection.release();
   }
 };
