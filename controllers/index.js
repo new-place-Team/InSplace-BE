@@ -7,6 +7,7 @@ const {
 } = require('../query/main');
 const { getUserVisitedQuery, getUserFavoriteQuery } = require('../query/index');
 const customizedError = require('./error');
+const { getMainImage } = require('./utils/image');
 
 const searchMain = async (req, res, next) => {
   let weatherResult;
@@ -16,7 +17,9 @@ const searchMain = async (req, res, next) => {
   const adjImg = (result) => {
     let resultImg = result[0];
     for (let i = 0; i < resultImg.length; i++) {
-      resultImg[i].postImages = result[0][i].postImages.split('&&').slice(1)[0];
+      resultImg[i].postImages = `${process.env.POST_BASE_URL}${
+        result[0][i].postImages.split('&&')[0]
+      }`;
     }
     return resultImg;
   };
@@ -62,17 +65,15 @@ const searchMain = async (req, res, next) => {
 /* 가본 리스트 조회  */
 const getVisitedPosts = async (req, res, next) => {
   const userId = req.user;
-
-  const adjImg = (result) => {
-    let resultImg = result[0];
-    for (let i = 0; i < resultImg.length; i++) {
-      resultImg[i].postImage = result[0][i].postImage.split('&&').slice(1)[0];
-    }
-    return resultImg;
-  };
   try {
-    const result = await pool.query(getUserVisitedQuery(userId));
-    const visitedPosts = adjImg(result);
+    const [visitedPosts] = await pool.query(getUserVisitedQuery(userId));
+    for (let i = 0; i < visitedPosts.length; i++) {
+      visitedPosts[i].postImage = getMainImage(
+        visitedPosts[i].postImage,
+        process.env.POST_BASE_URL
+      );
+    }
+
     return res.status(200).json({
       visitedPosts,
     });
@@ -81,20 +82,19 @@ const getVisitedPosts = async (req, res, next) => {
   }
 };
 
+/* 찜 목록 조회 */
 const getFavoritesPosts = async (req, res, next) => {
   const userId = req.user;
 
-  const adjImg = (result) => {
-    let resultImg = result[0];
-    for (let i = 0; i < resultImg.length; i++) {
-      resultImg[i].postImage = result[0][i].postImage.split('&&').slice(1)[0];
-    }
-    return resultImg;
-  };
-
   try {
-    const result = await pool.query(getUserFavoriteQuery(userId));
-    const favoritePosts = adjImg(result);
+    const [favoritePosts] = await pool.query(getUserFavoriteQuery(userId));
+    for (let i = 0; i < favoritePosts.length; i++) {
+      favoritePosts[i].postImage = getMainImage(
+        favoritePosts[i].postImage,
+        process.env.POST_BASE_URL
+      );
+    }
+
     return res.status(200).json({
       favoritePosts,
     });

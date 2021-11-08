@@ -221,4 +221,29 @@
  *         description: 데이터 불러오기 성공
  *       '400':
  *         description: Bad Request
+ * /posts/{postId}/reviews/{reviewId}/edit:
+ *   get:
+ *     tags:
+ *      - Review
+ *     summary: 리뷰 수정 페이지 조회
+ *     parameters:
+ *       - name: postId
+ *         in: path
+ *         required: true
+ *         default: 107
+ *         schema:
+ *           type: Number
+ *           description: 해당 게시글 고유 아이디
+ *       - name: reviewId
+ *         in: path
+ *         required: true
+ *         default: 40
+ *         schema:
+ *           type: Number
+ *           description: 해당 리뷰 고유 아이디
+ *     responses:
+ *       '200':
+ *         description: 데이터 불러오기 성공
+ *       '400':
+ *         description: Bad Request
  */

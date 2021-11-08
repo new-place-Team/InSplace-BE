@@ -1,4 +1,5 @@
 const { pool } = require('../models/index');
+require('dotenv').config();
 const {
   updateReviewDeleteYn,
   queryOfRegistingReview,
@@ -6,6 +7,7 @@ const {
   queryOfModifyingReview,
   queryOfGettingReviewsByOrder,
   queryOfGettingWritingPageOfReview,
+  queryOfGettingEditingPageOfReview,
 } = require('../query/review');
 
 const customizedError = require('../controllers/error');
@@ -14,40 +16,12 @@ const {
   schemasOfModifyingReview,
   schemasOfGettingReviews,
 } = require('../middlewares/validationReview');
-require('dotenv').config();
 
-/* 이미지 배열을 DB저장할 수 있는 텍스트로 변환 */
-const convertImageArrToText = (imgArr) => {
-  const baseUrlSize = process.env.IMG_BASE_URL.length;
-  let imgText = '';
-  /* 아무 이미지도 없는 경우 */
-  if (imgArr.length === 0) {
-    return imgText;
-  }
-  for (let i = 0; i < imgArr.length; i++) {
-    if (i === 0) {
-      imgText += `${imgArr[i].transforms[0].location.slice(baseUrlSize)}`;
-    } else {
-      imgText += `&&${imgArr[i].transforms[0].location.slice(baseUrlSize)}`;
-    }
-  }
-  return imgText;
-};
-
-/* DB에 저장 된 reviewImages를 배열로 변환 */
-const convertImageTextToArr = (imgText) => {
-  let imgArr = [];
-  /* 아무 이미지도 없는 경우 */
-  if (imgText.length === 0) {
-    return imgArr;
-  }
-
-  imgArr = imgText.split('&&');
-  for (let i = 0; i < imgArr.length; i++) {
-    imgArr[i] = `${process.env.IMG_BASE_URL}${imgArr[i]}`;
-  }
-  return imgArr;
-};
+const {
+  convertImageArrToText,
+  convertImageTextToArr,
+  getMainImage,
+} = require('./utils/image');
 
 /* post 데이터 가공 */
 const getPostData = (result) => {
@@ -58,7 +32,10 @@ const getPostData = (result) => {
     nickname: result.nickname,
     gender: result.gender,
     mbti: result.mbti,
-    reviewImages: convertImageTextToArr(result.reviewImages),
+    reviewImages: convertImageTextToArr(
+      result.reviewImages,
+      process.env.REVIEW_BASE_URL
+    ),
     reviewDesc: result.reviewDesc,
     weather: result.weather,
     weekdayYN: result.weekdayYN,
@@ -75,7 +52,10 @@ const registReview = async (req, res, next) => {
   const userId = req.user;
   const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
 
-  const reviewImages = convertImageArrToText(req.files);
+  const reviewImages = convertImageArrToText(
+    req.files,
+    process.env.REVIEW_BASE_URL
+  );
 
   /* 유효성 검사 */
   try {
@@ -100,10 +80,11 @@ const registReview = async (req, res, next) => {
     revisitYN,
     weather,
   ];
-
+  console.log('params:', params);
   const connection = await pool.getConnection(async (conn) => conn);
   try {
     let result = await connection.query(queryOfRegistingReview, params);
+    console.log('result:', result);
     /* 추가 되지 않은 경우 */
     if (result[0].affectedRows === 0) {
       return next(
@@ -111,6 +92,7 @@ const registReview = async (req, res, next) => {
       );
     }
     const reviewId = result[0].insertId;
+    console.log('reviewId: ', reviewId);
     const paramsOfGettingReview = [userId, userId, reviewId, postId];
     result = await connection.query(
       queryOfGettingReview,
@@ -151,7 +133,10 @@ const modifyReview = async (req, res, next) => {
   const { postId, reviewId } = req.params;
   const userId = req.user;
   const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
-  const reviewImages = convertImageArrToText(req.files);
+  const reviewImages = convertImageArrToText(
+    req.files,
+    process.env.REVIEW_BASE_URL
+  );
 
   /* 유효성 검사 */
   try {
@@ -210,7 +195,7 @@ const modifyReview = async (req, res, next) => {
 /* 최신순으로 리뷰 가져오기 */
 const getReviewByLatest = async (req, res, next) => {
   const postId = req.params.postId;
-  const pageNum = req.params.num * 16;
+  const pageNum = Number(req.params.num);
   let userId = 0;
   /* 로그인 한 유저인 경우 userId, 아닌 경우 0 */
   if (req.user) {
@@ -235,7 +220,10 @@ const getReviewByLatest = async (req, res, next) => {
     reviews = reviews[0];
     /* 이미지 배열로 변환 */
     for (let i = 0; i < reviews.length; i++) {
-      reviews[i].reviewImages = convertImageTextToArr(reviews[i].reviewImages);
+      reviews[i].reviewImages = convertImageTextToArr(
+        reviews[i].reviewImages,
+        process.env.REVIEW_BASE_URL
+      );
     }
     res.status(200).json({
       reviews,
@@ -273,10 +261,16 @@ const getReviewByLike = async (req, res, next) => {
       queryOfGettingReviewsByOrder(postId, userId, pageNum, 'like_cnt')
     );
     reviews = reviews[0];
+
+    console.log('length:', reviews.length);
     /* 이미지 배열로 변환 */
     for (let i = 0; i < reviews.length; i++) {
-      reviews[i].reviewImages = convertImageTextToArr(reviews[i].reviewImages);
+      reviews[i].reviewImages = convertImageTextToArr(
+        reviews[i].reviewImages,
+        process.env.REVIEW_BASE_URL
+      );
     }
+
     res.status(200).json({
       reviews,
     });
@@ -287,10 +281,10 @@ const getReviewByLike = async (req, res, next) => {
   }
 };
 
-const adjImg = (resultImg) => {
+/* const adjImg = (resultImg) => {
   resultImg.postImage = resultImg.postImage.split('&&').slice(1)[0];
   return resultImg.postImage;
-};
+}; */
 
 /* review 작성 페이지 조회 */
 const getWritingPageOfReview = async (req, res, next) => {
@@ -307,10 +301,35 @@ const getWritingPageOfReview = async (req, res, next) => {
     return res.status(200).json({
       post: {
         postId: result.postId,
-        postImage: adjImg(result),
+        postImage: getMainImage(result.postImage, process.env.POST_BASE_URL),
         category: result.category,
         title: result.title,
       },
+    });
+  } catch (err) {
+    return next(customizedError(err, 500));
+  } finally {
+    await connection.release();
+  }
+};
+
+/* 리뷰 수정 페이지 조회 */
+const getEditingPageOfReview = async (req, res, next) => {
+  const reviewId = req.params.reviewId;
+
+  const connection = await pool.getConnection(async (conn) => conn);
+  try {
+    const [[review]] = await connection.query(
+      queryOfGettingEditingPageOfReview,
+      [reviewId]
+    );
+
+    review.reviewImages = convertImageTextToArr(
+      review.reviewImages,
+      process.env.REVIEW_BASE_URL
+    );
+    return res.status(200).json({
+      review,
     });
   } catch (err) {
     return next(customizedError(err, 500));
@@ -325,4 +344,5 @@ module.exports = {
   getReviewByLatest,
   getReviewByLike,
   getWritingPageOfReview,
+  getEditingPageOfReview,
 };

@@ -67,7 +67,7 @@ const queryOfGettingReviewsByOrder = (postId, userId, pageNum, orderBy) => {
   created_at AS createdAt
   FROM Reviews
   LEFT JOIN ReviewLikes ON
-  Reviews.review_id = ReviewLikes.review_id AND ReviewLikes.user_id = ${userId}
+  Reviews.review_id = ReviewLikes.review_id
   INNER JOIN ReviewWeathers ON
   Reviews.r_weather_id = ReviewWeathers.r_weather_id
   INNER JOIN Users ON
@@ -88,6 +88,13 @@ const queryOfGettingWritingPageOfReview = `
   WHERE post_id = ?
 `;
 
+const queryOfGettingEditingPageOfReview = `
+  SELECT post_id AS postId, review_id AS reviewId, review_images AS reviewImages,
+  review_desc AS reviewDesc, r_weather_id AS weather, weekday_yn AS weekdayYN, revisit_yn AS revisitYN
+  FROM Reviews 
+  WHERE review_id=?
+`;
+
 module.exports = {
   updateReviewDeleteYn,
   queryOfRegistingReview,
@@ -95,4 +102,5 @@ module.exports = {
   queryOfGettingReview,
   queryOfGettingReviewsByOrder,
   queryOfGettingWritingPageOfReview,
+  queryOfGettingEditingPageOfReview,
 };

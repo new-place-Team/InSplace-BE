@@ -1,19 +1,36 @@
 const { pool } = require('../models/index');
 const { findDetailPosts, findDetailReviews } = require('../query/post');
 const customizedError = require('../controllers/error');
+require('dotenv').config();
 
 const showDetailPost = async (req, res, next) => {
   //주소를 &&로 잘라서 재구성하는 함수
   const splitPostAddress = (result) => {
-    let resultSplitAddress = result[0];
-    resultSplitAddress.postImages = result[0].postImages.split('&&').slice(1);
+    const resultSplitAddress = result[0];
+    if (resultSplitAddress.postImages.length === 0) {
+      resultSplitAddress.postImages = [];
+      return { resultSplitAddress };
+    }
+    let postImages = resultSplitAddress.postImages.split('&&');
+    for (let i = 0; i < postImages.length; i++) {
+      postImages[i] = `${process.env.POST_BASE_URL}${postImages[i]}`;
+    }
+    resultSplitAddress.postImages = postImages;
     return { resultSplitAddress };
   };
 
   //리뷰 이미지들을 배열로 만들어주는 함수
   const splitReviewsImages = (detailReviews) => {
     const splitReviewsImages = detailReviews.map((data) => {
-      data.reviewImages = data.reviewImages.split('&&');
+      if (data.reviewImages.length === 0) {
+        data.reviewImages = [];
+        return data;
+      }
+      let reviewImages = data.reviewImages.split('&&');
+      for (let i = 0; i < reviewImages.length; i++) {
+        reviewImages[i] = `${process.env.REVIEW_BASE_URL}${reviewImages[i]}`;
+      }
+      data.reviewImages = reviewImages;
       return data;
     });
     return splitReviewsImages;
@@ -32,7 +49,6 @@ const showDetailPost = async (req, res, next) => {
       if (detailPosts.length == 0) {
         return next(customizedError('포스트가 없습니다.', 400));
       }
-
       return {
         detailPosts,
         detailReviews,
