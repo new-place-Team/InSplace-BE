@@ -8,6 +8,7 @@ const {
   getReviewByLike,
   getWritingPageOfReview,
   getEditingPageOfReview,
+  checkImageFileType,
 } = require('../controllers/review');
 const reviewImgUpload = require('../controllers/reviewImgUpload');
 const { isAuth, justCheckAuth } = require('../middlewares/auth');
@@ -32,6 +33,7 @@ router.post(
 );
 
 /* 리뷰 수정 라우터 */
+
 router.put(
   '/:reviewId',
   isAuth,

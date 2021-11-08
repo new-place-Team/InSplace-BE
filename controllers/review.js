@@ -127,13 +127,23 @@ const deleteReview = async (req, res, next) => {
 
 /* 리뷰 수정 미들웨어 */
 const modifyReview = async (req, res, next) => {
+  console.log('req.files:', req.files, typeof req.files);
+  /* 문자열로 온 경우 req.body.reviewImages 존재
+     파일로 온 경우 req.body.reviewImages == undefined
+  */
+
   const { postId, reviewId } = req.params;
   const userId = req.user;
   const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
-  const reviewImages = convertImageArrToText(
-    req.files,
-    process.env.REVIEW_BASE_URL
+  const reviewImages =
+    req.files != undefined
+      ? convertImageArrToText(req.files, process.env.REVIEW_BASE_URL)
+      : req.body.reviewImages;
+
+  console.log(
+    `reviewImages : ${reviewImages} / type: : ${typeof reviewImages} `
   );
+  return res.json({ success: true });
 
   /* 유효성 검사 */
   try {
@@ -334,6 +344,14 @@ const getEditingPageOfReview = async (req, res, next) => {
     await connection.release();
   }
 };
+
+const checkImageFileType = (req, res, next) => {
+  console.log('checkImageFileType');
+  const reviewImages = req.body.reviewImages;
+  console.log('reviewImages', reviewImages, typeof reviewImages);
+
+  next('route');
+};
 module.exports = {
   registReview,
   modifyReview,
@@ -342,4 +360,5 @@ module.exports = {
   getReviewByLike,
   getWritingPageOfReview,
   getEditingPageOfReview,
+  checkImageFileType,
 };

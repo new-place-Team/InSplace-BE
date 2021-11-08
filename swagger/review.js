@@ -223,6 +223,8 @@
  *         description: Bad Request
  * /posts/{postId}/reviews/{reviewId}/edit:
  *   get:
+ *     security:
+ *      - bearerAuth: []
  *     tags:
  *      - Review
  *     summary: 리뷰 수정 페이지 조회
