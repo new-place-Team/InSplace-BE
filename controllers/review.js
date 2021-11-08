@@ -113,11 +113,11 @@ const registReview = async (req, res, next) => {
 /* 리뷰 삭제 미들웨어 */
 const deleteReview = async (req, res, next) => {
   try {
-    const result = await pool.query(
+    const [result] = await pool.query(
       updateReviewDeleteYn(req.params.postId, req.params.reviewId, req.user)
     );
 
-    if (result[0].changedRows == 0) {
+    if (result.changedRows == 0) {
       return next(customizedError('이미 삭제된 리뷰입니다.', 400));
     }
     return res.sendStatus(200);
@@ -209,11 +209,8 @@ const modifyReview = async (req, res, next) => {
 const getReviewByLatest = async (req, res, next) => {
   const postId = req.params.postId;
   const pageNum = Number(req.params.num);
-  let userId = 0;
   /* 로그인 한 유저인 경우 userId, 아닌 경우 0 */
-  if (req.user) {
-    userId = req.user;
-  }
+  const userId = req.user ? req.user : 0;
 
   /* 유효성 검사 */
   try {
@@ -227,10 +224,10 @@ const getReviewByLatest = async (req, res, next) => {
   }
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    let reviews = await connection.query(
+    const [reviews] = await connection.query(
       queryOfGettingReviewsByOrder(postId, userId, pageNum, 'created_at')
     );
-    reviews = reviews[0];
+
     /* 이미지 배열로 변환 */
     for (let i = 0; i < reviews.length; i++) {
       reviews[i].reviewImages = convertImageTextToArr(
@@ -252,12 +249,9 @@ const getReviewByLatest = async (req, res, next) => {
 const getReviewByLike = async (req, res, next) => {
   const postId = req.params.postId;
   const pageNum = Number(req.params.num);
-  let userId = 0;
-  /* 로그인 한 유저인 경우 userId, 아닌 경우 0 */
-  if (req.user) {
-    userId = req.user;
-  }
 
+  /* 로그인 한 유저인 userId, 아닌 경우 0 */
+  const userId = req.user ? req.user : 0;
   /* 유효성 검사 */
   try {
     await schemasOfGettingReviews.validateAsync({
@@ -270,12 +264,9 @@ const getReviewByLike = async (req, res, next) => {
   }
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    let reviews = await connection.query(
+    const [reviews] = await connection.query(
       queryOfGettingReviewsByOrder(postId, userId, pageNum, 'like_cnt')
     );
-    reviews = reviews[0];
-
-    console.log('length:', reviews.length);
     /* 이미지 배열로 변환 */
     for (let i = 0; i < reviews.length; i++) {
       reviews[i].reviewImages = convertImageTextToArr(
@@ -283,7 +274,6 @@ const getReviewByLike = async (req, res, next) => {
         process.env.REVIEW_BASE_URL
       );
     }
-
     res.status(200).json({
       reviews,
     });
@@ -294,11 +284,6 @@ const getReviewByLike = async (req, res, next) => {
   }
 };
 
-/* const adjImg = (resultImg) => {
-  resultImg.postImage = resultImg.postImage.split('&&').slice(1)[0];
-  return resultImg.postImage;
-}; */
-
 /* review 작성 페이지 조회 */
 const getWritingPageOfReview = async (req, res, next) => {
   const postId = req.params.postId;
@@ -306,11 +291,11 @@ const getWritingPageOfReview = async (req, res, next) => {
   /* 유효성 검사 */
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    let result = await connection.query(queryOfGettingWritingPageOfReview, [
-      postId,
-    ]);
+    const [[result]] = await connection.query(
+      queryOfGettingWritingPageOfReview,
+      [postId]
+    );
 
-    result = result[0][0];
     return res.status(200).json({
       post: {
         postId: result.postId,
@@ -329,7 +314,6 @@ const getWritingPageOfReview = async (req, res, next) => {
 /* 리뷰 수정 페이지 조회 */
 const getEditingPageOfReview = async (req, res, next) => {
   const reviewId = req.params.reviewId;
-
   const connection = await pool.getConnection(async (conn) => conn);
   try {
     const [[review]] = await connection.query(
