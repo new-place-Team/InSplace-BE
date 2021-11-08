@@ -1,8 +1,4 @@
-/* 유저, 포스트, 리뷰 이미지 등록시 디비에 저장 할 때 변환 시켜 줌
- * 배열로 받은 이미지를 DB에 저장할 텍스트로 변환
- *  baseUrl은 process.env.POST_BASE_URL or  REVIEW_BASE_URL or USER_BASE_URL 이 배열로 들어온다.
- */
-
+/* 이미지 Url 배열을 DB에 저장할 텍스트로 알맞게 변환 시킴. */
 const convertBodyImageArrToText = (imgArr, baseUrl) => {
   const baseUrlSize = baseUrl.length;
   let imgText = '';
@@ -20,6 +16,7 @@ const convertBodyImageArrToText = (imgArr, baseUrl) => {
   }
   return imgText;
 };
+/* S3에 파일 업로드 후 받아온 req.files의 이미지를 문자열로 반환하는 함수 */
 const convertImageArrToText = (imgArr, baseUrl) => {
   const baseUrlSize = baseUrl.length;
   let imgText = '';
