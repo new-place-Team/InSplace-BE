@@ -148,7 +148,7 @@ const kakaoLogin = async (req, res, next) => {
     const getKakaoUserResult = await getKakaoUserInformation(
       success.data.access_token
     );
-    console.log(getKakaoUserResult.data);
+    console.log('인가코드와 토큰 받아오기 완료', getKakaoUserResult.data);
     const {
       id: kakaoUserId,
       properties: { nickname, profile_image },
