@@ -128,6 +128,9 @@ const deleteReview = async (req, res, next) => {
 /* 리뷰 수정 미들웨어 */
 const modifyReview = async (req, res, next) => {
   console.log('req.files:', req.files, typeof req.files);
+  console.log("req.body:", req.body);
+  console.log("----------");
+  console.log("req", req);
   /* 문자열로 온 경우 req.body.reviewImages 존재
      파일로 온 경우 req.body.reviewImages == undefined
   */
