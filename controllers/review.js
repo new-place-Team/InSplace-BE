@@ -140,7 +140,7 @@ const modifyReview = async (req, res, next) => {
   const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
 
   console.log(
-    `req.params.reviewImages: ${req.params.reviewImages}, req.files: ${req.files}`
+    `req.body.reviewImages: ${req.body.reviewImages}, req.files: ${req.files}`
   );
   let reviewImages =
     !req.files || req.files.length === 0
