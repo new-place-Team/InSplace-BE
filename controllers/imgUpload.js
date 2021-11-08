@@ -14,6 +14,7 @@ const upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: 'halimg',
+    contentType: multerS3.AUTO_CONTENT_TYPE,
     shouldTransform: function (req, file, cb) {
       cb(null, /^image/i.test(file.mimetype));
     },
