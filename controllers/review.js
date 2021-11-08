@@ -138,6 +138,10 @@ const modifyReview = async (req, res, next) => {
   const { postId, reviewId } = req.params;
   const userId = req.user;
   const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
+
+  console.log(
+    `req.params.reviewImages: ${req.params.reviewImages}, req.files: ${req.files}`
+  );
   let reviewImages =
     !req.files || req.files.length === 0
       ? convertImageArrToText(
