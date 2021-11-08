@@ -45,7 +45,7 @@ const getResultPageOfTotal = async (req, res, next) => {
     return next(customizedError(err, 400));
   }
 
-  const params = [userId, result, result, pageNum];
+  const params = [userId, userId, result, result, pageNum];
   const connection = await pool.getConnection(async (conn) => conn);
   try {
     const data = await connection.query(queryOfResultPageOfTotal, params);
@@ -72,7 +72,7 @@ const getResultPageOfTotal = async (req, res, next) => {
 const getResultPageOfCondition = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const { weather, category, num, gender } = req.query;
-  const params = [userId, weather, category, num, gender];
+  const params = [userId, userId, weather, category, num, gender];
 
   /* 유효성 검사 */
   try {
@@ -125,7 +125,7 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const { weather, category, num, gender, inside } = req.query;
   const pageNum = (Number(req.params.number) - 1) * 16;
-  const params = [userId, weather, category, num, gender, inside, pageNum];
+  const params = [userId, userId, weather, category, num, gender, inside, pageNum];
 
   /* 유효성 검사 */
   try {
