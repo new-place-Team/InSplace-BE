@@ -16,7 +16,7 @@ const addFavorite = async (req, res, next) => {
 
   try {
     /* 유효성 검사: Success */
-    await schemas.validateAsync({ userId, postId });
+    await schemas.validateAsync({ userId, postId: Number(postId) });
   } catch (err) {
     /* 유효성 검사: Fail */
     return next(customizedError(err, 400));
