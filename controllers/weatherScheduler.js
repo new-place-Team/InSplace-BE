@@ -26,24 +26,24 @@ const schedulingWeather = async (req, res) => {
   const weatherComparision = (weatherTemp - prevTemp) // 어제와 현재의 기온을 비교합니다
 
   if (
-    weatherString.charAt(0) === 5 ||
-    weatherString.charAt(0) === 3 ||
-    weatherString.charAt(0) === 2
+    weatherString.charAt(0) === '5' ||
+    weatherString.charAt(0) === '3' ||
+    weatherString.charAt(0) === '2'
   ) {
     weatherCondition = 2; //rain, drizzle, storm일경우 비 상태로 보내줍니다
-  } else if (weatherString.charAt(0) === 6) {
+  } else if (weatherString.charAt(0) === '6') {
     weatherCondition = 3; // snow상태일경우 눈 상태로 보내줍니다
   } else {
     weatherCondition = 1; //그 외의 모든 날씨는 맑음으로 처리합니다
   }
   ///
   if ( //프론트단으로 보내줄 날씨 데이터를 조작하는 부분입니다.
-    weatherString.charAt(0) === 5 ||
-    weatherString.charAt(0) === 3 ||
-    weatherString.charAt(0) === 2
+    weatherString.charAt(0) === '5' ||
+    weatherString.charAt(0) === '3' ||
+    weatherString.charAt(0) === '2'
   ) {
     weatherFe = 2; //rain, drizzle, storm일경우 비 상태로 보내줍니다
-  } else if (weatherString.charAt(0) === 6) {
+  } else if (weatherString.charAt(0) === '6') {
     weatherFe = 3; // snow상태일경우 눈 상태로 보내줍니다
   } else if(
     weatherString === '801' ||
