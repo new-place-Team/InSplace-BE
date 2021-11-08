@@ -148,11 +148,10 @@ const modifyReview = async (req, res, next) => {
   console.log(
     `req.body.reviewImages: ${req.body.reviewImages}, req.files: ${req.files}`
   );
-  let reviewImages;
+  let reviewImages = '';
   /* undefine이 아닌 경우 */
   if (req.body.reviewImages) {
     const tmpArr = String(req.body.reviewImages);
-    console.log('tmpArr:' + tmpArr, 'type:' + typeof tmpArr);
     const imgArr = tmpArr.split(',');
     reviewImages += convertBodyImageArrToText(
       imgArr,
