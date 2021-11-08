@@ -32,6 +32,7 @@ const addFavorite = async (req, res, next) => {
     }
   } catch (err) {
     /* 존재 유무 검사 중 예측하지 못한 에러 발생 */
+    await connection.release();
     return next(customizedError(err, 500));
   }
   try {
@@ -74,6 +75,7 @@ const deleteFavorite = async (req, res, next) => {
     }
   } catch (err) {
     /* 존재 유무 검사 중 예측하지 못한 에러 발생 */
+    await connection.release();
     return next(customizedError(err, 500));
   }
 
@@ -97,5 +99,3 @@ module.exports = {
   addFavorite,
   deleteFavorite,
 };
-
-//testtesttesttest
