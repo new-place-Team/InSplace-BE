@@ -80,11 +80,9 @@ const registReview = async (req, res, next) => {
     revisitYN,
     weather,
   ];
-  console.log('params:', params);
   const connection = await pool.getConnection(async (conn) => conn);
   try {
     let result = await connection.query(queryOfRegistingReview, params);
-    console.log('result:', result);
     /* 추가 되지 않은 경우 */
     if (result[0].affectedRows === 0) {
       return next(
@@ -92,7 +90,6 @@ const registReview = async (req, res, next) => {
       );
     }
     const reviewId = result[0].insertId;
-    console.log('reviewId: ', reviewId);
     const paramsOfGettingReview = [userId, userId, reviewId, postId];
     result = await connection.query(
       queryOfGettingReview,
