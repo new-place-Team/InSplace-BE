@@ -24,7 +24,7 @@ const queryOfGettingReview = `
   CASE WHEN Users.male_yn=1  THEN '남자' ELSE '여자' END AS gender,
   Mbti.description AS mbti,
   review_images AS reviewImages, review_desc AS reviewDesc,
-  ReviewWeathers.description AS weather, weekday_yn AS weekdayYN, revisit_yn AS revisitYN,
+  r_weather_id AS weather, weekday_yn AS weekdayYN, revisit_yn AS revisitYN,
   like_cnt AS likeCnt,
   CASE WHEN ReviewLikes.user_id=? THEN 1 ELSE 0 END AS likeState,
   created_at AS createdAt
@@ -33,8 +33,6 @@ const queryOfGettingReview = `
   ON Reviews.user_id = Users.user_id
   LEFT JOIN ReviewLikes 
   ON Reviews.review_id = ReviewLikes.review_id 
-  LEFT JOIN ReviewWeathers 
-  ON Reviews.r_weather_id = ReviewWeathers.r_weather_id
   INNER JOIN Mbti
   ON Users.mbti_id = Mbti.mbti_id
   WHERE Reviews.user_id=? and Reviews.review_id=? and post_id=?;
