@@ -2,15 +2,11 @@ const { pool } = require('../models/index');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const customizedError = require('../controllers/error');
-
 const {
   getKakaoToken,
   getKakaoUserInformation,
 } = require('../KakaoCall/kakaoLoginApi');
-const {
-  checkDuplicateOfNickname,
-  checkKakaoUserAndLogin,
-} = require('../KakaoCall/kakaoFunction');
+const { checkKakaoUserAndLogin } = require('../KakaoCall/kakaoFunction');
 const {
   insertNewUserforKakao,
   getUsers,
@@ -22,36 +18,20 @@ const {
   getKakaoUser,
   modifyUserQuery,
 } = require('../query/user');
-
+const {
+  checkDuplicateOfEmail,
+  checkDuplicateOfNickname,
+  getuserPasswordAndId,
+} = require('../controllers/utils/user');
 const registUser = async (req, res, next) => {
   const { email, nickname, password, maleYN, mbtiId } = req.user;
-
-  // Email 중복 검사 함수 선언
-  const checkDuplicateOfEmail = async (email) => {
-    try {
-      const [result] = await pool.query(getUsers(email, ''));
-      return result[0];
-    } catch (err) {
-      return next(customizedError(err, 400));
-    }
-  };
-
-  // Nickname 중복 검사 함수 선언
-  const checkDuplicateOfNickname = async (nickname) => {
-    try {
-      const [result] = await pool.query(getUsers('', nickname));
-      return result[0];
-    } catch (err) {
-      return next(customizedError(err, 400));
-    }
-  };
-
   //Email 중복검사
-  if (await checkDuplicateOfEmail(email)) {
+  if (await checkDuplicateOfEmail(email, next)) {
     return next(customizedError('이메일이 이미 존재합니다', 400));
   }
   //Nickname 중복검사
-  if (await checkDuplicateOfNickname(nickname)) {
+
+  if (await checkDuplicateOfNickname(nickname, next)) {
     return next(customizedError('닉네임이 이미 존재합니다 중복검사 에러', 400));
   }
   //중복검사 통과
@@ -63,19 +43,13 @@ const registUser = async (req, res, next) => {
       password,
       parseInt(process.env.HASH_SALT)
     );
-    console.log(hashPassword);
-    //유저 정보 저장
-    pool
 
-      .query(
-        insertNewUser(email, nickname, hashPassword, maleYN, data[0].mbti_id)
-      )
-      .then((data) => {
-        return res.sendStatus(201);
-      })
-      .catch((err) => {
-        return next(customizedError(err, 400));
-      });
+    //유저 정보 저장
+    await pool.query(
+      insertNewUser(email, nickname, hashPassword, maleYN, data[0].mbti_id)
+    );
+
+    return res.sendStatus(201);
   } catch (err) {
     return next(customizedError(err, 400));
   }
@@ -83,30 +57,24 @@ const registUser = async (req, res, next) => {
 
 const authUser = async (req, res, next) => {
   const { email, password } = req.body;
-
   try {
-    //유저가 입력한 이메일로 해쉬된 비밀번호 가져오기
-    const [userPasswordAndId] = await pool.query(getUserInformation(email));
-
     //해쉬된 비밀번호가 없는경우는 이메일이 없는경우이므로 로그인 실패
-    if (userPasswordAndId.length == 0) {
+    const getUserResult = await getuserPasswordAndId(email);
+    if ((await getUserResult.length) == 0) {
       return next(customizedError('Email 혹은 Password가 틀렸습니다', 400));
     }
-
-    const { user_id, nickname, description, user_image } = userPasswordAndId[0];
-    const dbUserEmail = userPasswordAndId[0].email;
-
+    const { user_id, nickname, description, user_image } = getUserResult[0];
+    const dbUserEmail = getUserResult[0].email;
     // 해쉬된 비밀번호와 유저가 입력한 비밀번호를 비교
     const comparePassword = await bcrypt.compare(
       password,
-      userPasswordAndId[0].password
+      getUserResult[0].password
     );
-    console.log(comparePassword);
+
     //true면 로그인 성공
     if (comparePassword == true) {
       //jsontoken만들기
       const token = jwt.sign({ user_id }, process.env.SECRET_KEY);
-
       return res.status(201).json({
         userId: user_id,
         token,
@@ -162,7 +130,6 @@ const kakaoLogin = async (req, res, next) => {
       if (profile_image == undefined) {
         stateProfile_image == null;
       }
-
       await pool.query(
         insertNewUserforKakao(
           kakaoUserId,
