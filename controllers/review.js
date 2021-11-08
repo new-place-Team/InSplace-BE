@@ -151,12 +151,20 @@ const modifyReview = async (req, res, next) => {
   let reviewImages;
   /* undefine이 아닌 경우 */
   if (req.body.reviewImages) {
-    const imgArr = req.body.reviewImages.split(',');
+    const tmpArr = req.body.reviewImages;
+    console.log('tmpArr:' + tmpArr, 'type:' + typeof tmpArr);
+    const imgArr = tmpArr.split(',');
     reviewImages += convertBodyImageArrToText(
       imgArr,
       process.env.REVIEW_BASE_URL
     );
   }
+
+  /* 둘다 존재할 경우 &&로 이어 주기 */
+  if (reviewImages && req.files.length >= 1) {
+    reviewImages += '&&';
+  }
+
   reviewImages += convertImageArrToText(req.files, process.env.REVIEW_BASE_URL);
   console.log('<<<<<<<<<<<<<<<');
   console.log('reviewImages: ', reviewImages);
