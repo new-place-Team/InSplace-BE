@@ -186,7 +186,7 @@ const modifyReview = async (req, res, next) => {
       return next(customizedError('수정된 데이터가 없습니다.', 400));
     }
 
-    const paramsOfGettingReview = [userId, userId, reviewId, postId];
+    const paramsOfGettingReview = [userId, userId, userId, reviewId, postId];
     result = await connection.query(
       queryOfGettingReview,
       paramsOfGettingReview
