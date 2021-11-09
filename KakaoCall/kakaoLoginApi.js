@@ -3,6 +3,7 @@ const qs = require('qs');
 const customizedError = require('../controllers/error');
 
 const getKakaoToken = async (code) => {
+  console.log('인가코드 받는고 요청하기');
   try {
     const result = await axios({
       method: 'POST',
