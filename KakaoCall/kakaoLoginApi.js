@@ -2,6 +2,7 @@ const axios = require('axios');
 const qs = require('qs');
 
 const getKakaoToken = async (code) => {
+  console.log('인가코드로 토큰 받는중');
   const result = await axios({
     method: 'POST',
     url: 'https://kauth.kakao.com/oauth/token',
@@ -19,6 +20,7 @@ const getKakaoToken = async (code) => {
 };
 
 const getKakaoUserInformation = async (token) => {
+  console.log('토큰으로 유저정보 받는중');
   const result = await axios({
     method: 'GET',
     url: 'https://kapi.kakao.com/v2/user/me',
