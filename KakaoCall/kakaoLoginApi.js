@@ -21,6 +21,7 @@ const getKakaoToken = async (code) => {
     });
     return result;
   } catch (err) {
+    console.log('여기서 멈춰야함 400');
     customizedError(err, 400);
   }
 };

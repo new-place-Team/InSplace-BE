@@ -142,12 +142,12 @@ const kakaoLogin = async (req, res, next) => {
     let genderNumber = '';
     //인가코드로 토큰 받아오기
     const success = await getKakaoToken(req.query.code);
-    console.log('안가코드 받아오기 완료', success);
+    console.log('토큰 받아오기 완료', success);
     //받아온 카카오 토큰으로 유저정보 가져오기
     const getKakaoUserResult = await getKakaoUserInformation(
       success.data.access_token
     );
-    console.log('토큰 받아오기 완료', getKakaoUserResult.data);
+    console.log('토큰으로 유저정보 받아오기 완료', getKakaoUserResult.data);
     const {
       id: kakaoUserId,
       properties: { nickname, profile_image },
