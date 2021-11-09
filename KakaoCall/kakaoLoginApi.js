@@ -20,6 +20,7 @@ const getKakaoToken = async (code) => {
     console.log(result);
     return result;
   } catch (err) {
+    console.log(err);
     return customizedError(err.message, 400);
   }
 };
