@@ -32,7 +32,7 @@ router.delete('/:userId', isAuth, deleteUser);
 
 /* 유저 정보 수정 */
 router.put(
-  '/:userId',
+  '/:userId/info',
   isAuth,
   userUpload.single('userImage'),
   validationModifyUser,

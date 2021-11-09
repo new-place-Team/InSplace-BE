@@ -202,10 +202,9 @@ const modifyUser = async (req, res, next) => {
   const userImage =
     req.file === undefined ? 'null' : req.file.transforms[0].location;
   try {
-    const result = await pool.query(
-      modifyUserQuery(userId, nickname, mbtiId, email, userImage)
-    );
-    return res.sendStatus(200);
+    const result = await pool.query(modifyUserQuery(userId, nickname, mbtiId, email, userImage));
+    const [userInformation] = await pool.query(getUserInformationById(userInfo))
+    return res.status(200).json({ ...userInformation[0] })
   } catch (err) {
     return next(customizedError(err, 500));
   }
