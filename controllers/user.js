@@ -187,7 +187,7 @@ const kakaoLogin = async (req, res, next) => {
       return next(customizedError(err, 400));
     }
   } catch (err) {
-    console.log(err);
+    console.log('알수없는 서버에러', err);
     return next(customizedError(err, 500));
   }
 };
