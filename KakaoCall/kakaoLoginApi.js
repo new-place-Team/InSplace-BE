@@ -21,7 +21,6 @@ const getKakaoToken = async (code) => {
     });
     return result;
   } catch (err) {
-    console.log(err);
     customizedError(err, 400);
   }
 };
