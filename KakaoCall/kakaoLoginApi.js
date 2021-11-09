@@ -22,7 +22,7 @@ const getKakaoToken = async (code) => {
     return result;
   } catch (err) {
     console.log('여기서 멈춰야함 400');
-    customizedError(err, 400);
+    return customizedError(err, 400);
   }
 };
 
@@ -37,9 +37,8 @@ const getKakaoUserInformation = async (token) => {
     });
     return result;
   } catch (err) {
-    customizedError(err, 400);
+    return customizedError(err, 400);
   }
-  console.log('토큰으로 유저정보 받는중');
 };
 
 module.exports = { getKakaoToken, getKakaoUserInformation };
