@@ -102,6 +102,7 @@ const registReview = async (req, res, next) => {
       post: getPostData(result),
     });
   } catch (err) {
+    console.log(err);
     /* review 등록: Fail */
     /* Internal Server Error(예상 못한 에러 발생) */
     return next(customizedError(err, 500));

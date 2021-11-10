@@ -139,7 +139,7 @@ const kakaoLogin = async (req, res, next) => {
         )
       );
     };
-    let genderNumber = '';
+
     //인가코드로 토큰 받아오기
     const success = await getKakaoToken(req.query.code);
 
@@ -155,13 +155,7 @@ const kakaoLogin = async (req, res, next) => {
         profile: { nickname, profile_image_url },
       },
     } = getKakaoUserResult.data;
-    console.log('유저 토탈 정보:', getKakaoUserResult.data);
-
-    console.log('유저아이디:', kakaoUserId);
-    console.log('유저성별:', gender);
-    console.log('닉네임', nickname);
-    console.log('유저이미지:', profile_image_url);
-
+    let genderNumber = '';
     if (gender == 'male') {
       genderNumber = 1;
     } else if (gender == 'female') {
@@ -195,8 +189,7 @@ const kakaoLogin = async (req, res, next) => {
       return next(customizedError(err, 400));
     }
   } catch (err) {
-    console.log('알수없는 서버에러', err);
-    return next(customizedError(err, 500));
+    return next(customizedError(err.message, 500));
   }
 };
 
