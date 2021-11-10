@@ -125,9 +125,9 @@ const deleteUser = async (req, res, next) => {
 const kakaoLogin = async (req, res, next) => {
   try {
     //사용자 정보를 데이터베이스에 넣어주는 함수
-    const insertUser = async (genderNumber, profile_image) => {
-      let stateProfile_image = profile_image;
-      if (profile_image == undefined) {
+    const insertUser = async (genderNumber, profile_image_url) => {
+      let stateProfile_image = profile_image_url;
+      if (profile_image_url == undefined) {
         stateProfile_image == null;
       }
       await pool.query(
@@ -142,16 +142,18 @@ const kakaoLogin = async (req, res, next) => {
     let genderNumber = '';
     //인가코드로 토큰 받아오기
     const success = await getKakaoToken(req.query.code);
-    console.log('토큰 받아오기 완료', success);
+
     //받아온 카카오 토큰으로 유저정보 가져오기
     const getKakaoUserResult = await getKakaoUserInformation(
       success.data.access_token
     );
-    console.log('토큰으로 유저정보 받아오기 완료', getKakaoUserResult.data);
+
     const {
       id: kakaoUserId,
-      properties: { nickname, profile_image },
-      kakao_account: { gender },
+      kakao_account: {
+        gender,
+        profile: { nickname, profile_image_url },
+      },
     } = getKakaoUserResult.data;
 
     if (gender == 'male') {
@@ -177,11 +179,11 @@ const kakaoLogin = async (req, res, next) => {
       //유저 정보 저장
       //카카오 유저가 성별을 제공했을 경우
       if (genderNumber == 0 || 1) {
-        await insertUser(genderNumber, profile_image);
+        await insertUser(genderNumber, profile_image_url);
         return await checkKakaoUserAndLogin(kakaoUserId, next, res);
       }
       //카카오 유저가 성별을 제공 안했을 경우
-      await insertUser('', profile_image);
+      await insertUser('', profile_image_url);
       return await checkKakaoUserAndLogin(kakaoUserId, next, res);
     } catch (err) {
       return next(customizedError(err, 400));
