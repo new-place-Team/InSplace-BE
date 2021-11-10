@@ -92,7 +92,9 @@ const registReview = async (req, res, next) => {
       );
     }
     const reviewId = result[0].insertId;
+    console.log('reviewId:', reviewId);
     const paramsOfGettingReview = [userId, userId, userId, reviewId, postId];
+    console.log("userId, reviewId, postId: ", userId, reviewId, postId);
     result = await connection.query(
       queryOfGettingReview,
       paramsOfGettingReview
