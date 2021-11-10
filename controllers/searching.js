@@ -5,6 +5,7 @@ const {
   queryOfResultPageOfCondition,
   queryOfDetailPageOfInOutDoors,
   queryOfResultPageOfTotal,
+  queryOfGettingTotalPageNum,
 } = require('../query/searching');
 const customizedError = require('./error');
 const {
@@ -124,8 +125,18 @@ const getResultPageOfCondition = async (req, res, next) => {
 const getDetailPageOfInOutDoors = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const { weather, category, num, gender, inside } = req.query;
+  const page = req.params.number;
   const pageNum = (Number(req.params.number) - 1) * 16;
-  const params = [userId, userId, weather, category, num, gender, inside, pageNum];
+  const params = [
+    userId,
+    userId,
+    weather,
+    category,
+    num,
+    gender,
+    inside,
+    pageNum,
+  ];
 
   /* 유효성 검사 */
   try {
@@ -156,7 +167,14 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
         process.env.POST_BASE_URL
       );
     }
+
+    /* 마지막 페이지 수를 구하기 위함 */
+    let [lastPage] = await connection.query(queryOfGettingTotalPageNum, params);
+    lastPage = Math.ceil(lastPage[0].pageNum / 16);
+    
     return res.status(200).json({
+      page: Number(page),
+      lastPage,
       posts,
     });
   } catch (err) {

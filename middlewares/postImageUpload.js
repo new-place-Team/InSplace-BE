@@ -39,7 +39,7 @@ const postUpload = multer({
       cb(null, /^image/i.test(file.mimetype));
     },
     transforms: [
-      {
+      { 
         id: 'original',
         key: async (req, file, cb) => {
           const ext = path.extname(file.originalname); //올린 사진의 확장자 확인
