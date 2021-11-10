@@ -123,15 +123,8 @@ const deletePost = async (req, res) => {
   }
 };
 
-const getEmptyPage = (req, res, next) => {
-  console.log('getEmptyPage');
-  console.log("req.files", req.files);
-  return res.json({ success: true });
-};
-
 module.exports = {
   getAdminPage,
   modifyPost,
   deletePost,
-  getEmptyPage,
 };
