@@ -155,6 +155,12 @@ const kakaoLogin = async (req, res, next) => {
         profile: { nickname, profile_image_url },
       },
     } = getKakaoUserResult.data;
+    console.log('유저 토탈 정보:', getKakaoUserResult.data);
+
+    console.log('유저아이디:', kakaoUserId);
+    console.log('유저성별:', gender);
+    console.log('닉네임', nickname);
+    console.log('유저이미지:', profile_image_url);
 
     if (gender == 'male') {
       genderNumber = 1;
