@@ -123,8 +123,14 @@ const deletePost = async (req, res) => {
   }
 };
 
+const getEmptyPage = (req, res, next) => {
+  console.log('getEmptyPage');
+  return res.json({ success: true });
+};
+
 module.exports = {
   getAdminPage,
   modifyPost,
   deletePost,
+  getEmptyPage,
 };
