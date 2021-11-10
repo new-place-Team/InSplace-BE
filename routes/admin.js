@@ -4,14 +4,16 @@ const {
   getAdminPage,
   modifyPost,
   deletePost,
-  getEmptyPage
+  getEmptyPage,
 } = require('../controllers/admin');
 const postUpload = require('../middlewares/postImageUpload');
+const multipart = require('connect-multiparty')();
+const heicToJpeg = require('heic-to-jpeg-middleware')();
 
 /* admin Page 불러오기 */
 router.get('/', getAdminPage);
 router.patch('/posts/:postId', modifyPost);
 router.delete('/posts/:postId', deletePost);
-router.post('/posts', postUpload.array('postImages', 10), getEmptyPage);
+router.post('/posts', multipart, heicToJpeg, getEmptyPage);
 
 module.exports = router;
