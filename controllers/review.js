@@ -26,6 +26,7 @@ const {
 
 /* post 데이터 가공 */
 const getPostData = (result) => {
+  console.log('에러 확인 해 보자', result);
   return (post = {
     postId: result.postId,
     reviewId: result.reviewId,
