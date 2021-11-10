@@ -20,6 +20,7 @@
     "dotenv": "^10.0.0",
     "ejs": "~2.6.1",
     "express": "~4.16.1",
+    "heic-convert": "^1.2.4",
     "joi": "^17.4.2",
     "jsonwebtoken": "^8.5.1",
     "morgan": "~1.9.1",
@@ -37,6 +38,7 @@
     "winston-daily-rotate-file": "^4.5.5"
   },
   "devDependencies": {
+    "artillery": "^2.0.0-4",
     "jest": "^27.3.1",
     "supertest": "^6.1.6",
     "winston": "^3.3.3"
