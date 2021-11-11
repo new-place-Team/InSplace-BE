@@ -72,7 +72,9 @@ const showDetailPost = async (req, res, next) => {
 
     const { resultSplitAddress } = splitPostAddress(detailPosts);
     resultSplitAddress.reviews = splitReviewsImages(detailReviews);
+    //현재 페이지
     resultSplitAddress.page = 1;
+    //리뷰 총 페이지 개수
     resultSplitAddress.lastPage = Math.ceil(totalReviewPage.lastPage / 6);
 
     return res.status(200).json({ ...resultSplitAddress });
