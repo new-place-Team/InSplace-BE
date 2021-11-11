@@ -8,6 +8,7 @@ const {
   queryOfGettingReviewsByOrder,
   queryOfGettingWritingPageOfReview,
   queryOfGettingEditingPageOfReview,
+  quertOfGettingReviewLastPage,
 } = require('../query/review');
 
 const customizedError = require('../controllers/error');
@@ -26,7 +27,6 @@ const {
 
 /* post 데이터 가공 */
 const getPostData = (result) => {
-  console.log('에러 확인 해 보자', result);
   return (post = {
     postId: result.postId,
     reviewId: result.reviewId,
@@ -103,7 +103,6 @@ const registReview = async (req, res, next) => {
       post: getPostData(result),
     });
   } catch (err) {
-    console.log(err);
     /* review 등록: Fail */
     /* Internal Server Error(예상 못한 에러 발생) */
     return next(customizedError(err, 500));
@@ -226,6 +225,10 @@ const getReviewByLatest = async (req, res, next) => {
   }
   const connection = await pool.getConnection(async (conn) => conn);
   try {
+    let [[lastPage]] = await connection.query(
+      quertOfGettingReviewLastPage(postId)
+    );
+    lastPage = Math.ceil(lastPage.lastPage / 6);
     const [reviews] = await connection.query(
       queryOfGettingReviewsByOrder(postId, userId, pageNum, 'created_at')
     );
@@ -238,6 +241,8 @@ const getReviewByLatest = async (req, res, next) => {
       );
     }
     res.status(200).json({
+      page: pageNum,
+      lastPage,
       reviews,
     });
   } catch (err) {
@@ -266,6 +271,10 @@ const getReviewByLike = async (req, res, next) => {
   }
   const connection = await pool.getConnection(async (conn) => conn);
   try {
+    let [[lastPage]] = await connection.query(
+      quertOfGettingReviewLastPage(postId)
+    );
+    lastPage = Math.ceil(lastPage.lastPage / 6);
     const [reviews] = await connection.query(
       queryOfGettingReviewsByOrder(postId, userId, pageNum, 'like_cnt')
     );
@@ -277,6 +286,8 @@ const getReviewByLike = async (req, res, next) => {
       );
     }
     res.status(200).json({
+      page: pageNum,
+      lastPage,
       reviews,
     });
   } catch (err) {
