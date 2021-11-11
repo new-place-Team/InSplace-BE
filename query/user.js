@@ -50,7 +50,7 @@ const insertNewUserforKakao = (kakaoId, userImage, nickname, gender) => {
   VALUES(${kakaoId},"${userImage}","${nickname}", 1, ${gender},17)`;
 };
 
-const modifyUserQuery = (nickname, mbtiId, maleYN, userImage) => {
+const modifyUserQuery = (userId, nickname, mbtiId, maleYN, userImage) => {
   if (userImage === 'null') {
     return `
     UPDATE Users
