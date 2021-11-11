@@ -193,6 +193,19 @@ const kakaoLogin = async (req, res, next) => {
   }
 };
 
+const checkUserNickname = async(req, res, next) => {
+  const { nickname } = req.body
+  if (await checkDuplicateOfNickname(nickname, next)) {
+    return res.status(200).json({
+      Msg: true
+    });
+  } else {
+    return res.status(200).json({
+      Msg: false
+    });
+  }
+}
+
 const modifyUser = async (req, res, next) => {
   const userId = parseInt(req.params.userId);
   const userInfo = req.user;
@@ -200,10 +213,6 @@ const modifyUser = async (req, res, next) => {
 
   if (userInfo !== userId) {
     return next(customizedError('잘못된 접근입니다', 400));
-  }
-  
-  if (await checkDuplicateOfNickname(nickname, next)) {
-    return next(customizedError('바꾸려는 닉네임이 이미 존재합니다', 400));
   }
 
   const userImage =
@@ -227,5 +236,6 @@ module.exports = {
   checkUser,
   deleteUser,
   kakaoLogin,
+  checkUserNickname,
   modifyUser,
 };
