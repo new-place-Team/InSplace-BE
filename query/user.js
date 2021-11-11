@@ -50,17 +50,17 @@ const insertNewUserforKakao = (kakaoId, userImage, nickname, gender) => {
   VALUES(${kakaoId},"${userImage}","${nickname}", 1, ${gender},17)`;
 };
 
-const modifyUserQuery = (userId, nickname, mbtiId, email, userImage) => {
+const modifyUserQuery = (nickname, mbtiId, maleYN, userImage) => {
   if (userImage === 'null') {
     return `
     UPDATE Users
-    SET email='${email}', nickname='${nickname}', mbti_id=${mbtiId}
+    SET nickname='${nickname}', mbti_id=${mbtiId}, male_yn= ${maleYN}
     WHERE user_Id = ${userId}
     `;
   }
   return `
     UPDATE Users
-    SET email='${email}', nickname='${nickname}', mbti_id=${mbtiId}, user_image='${userImage}'
+    SET nickname='${nickname}', mbti_id=${mbtiId}, male_yn= ${maleYN}, user_image='${userImage}'
     WHERE user_id = ${userId}
     `;
 };
