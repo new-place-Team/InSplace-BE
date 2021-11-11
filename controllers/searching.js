@@ -32,7 +32,7 @@ const checkLoginUser = (target) => {
 const getResultPageOfTotal = async (req, res, next) => {
   logger.info('토탈 결과 페이지 조회');
   const userId = Number(checkLoginUser(req.user));
-  const pageNum = (Number(req.params.number) - 1) * 16; // Pages Number
+  const pageNum = (Number(req.params.number) - 1) * 12; // Pages Number
   const result = req.query.result; // Searching Result
 
   /* 유효성 검사 */
@@ -93,20 +93,20 @@ const getResultPageOfCondition = async (req, res, next) => {
     const result = await connection.query(queryOfResultPageOfCondition, params);
     const insidePlaces = [];
     const outSidePlaces = [];
-    // 실내 실외 포스트 구분(최대 16개씩 받기)
+    // 실내 실외 포스트 구분(최대 9개씩 받기)
     for (let i = 0; i < result[0].length; i++) {
       const insideSize = insidePlaces.length;
       const outsideSize = outSidePlaces.length;
-      if (insideSize > 16 && outsideSize > 16) {
+      if (insideSize > 9 && outsideSize > 9) {
         break;
       }
       result[0][i].postImage = getMainImage(
         result[0][i].postImage,
         process.env.POST_BASE_URL
       );
-      if (result[0][i].insideYN === 1 && insideSize <= 14) {
+      if (result[0][i].insideYN === 1 && insideSize < 9) {
         insidePlaces.push(result[0][i]);
-      } else if (result[0][i].insideYN === 0 && outsideSize <= 14) {
+      } else if (result[0][i].insideYN === 0 && outsideSize < 9) {
         outSidePlaces.push(result[0][i]);
       }
     }
@@ -126,7 +126,7 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const { weather, category, num, gender, inside } = req.query;
   const page = req.params.number;
-  const pageNum = (Number(req.params.number) - 1) * 16;
+  const pageNum = (Number(req.params.number) - 1) * 12;
   const params = [
     userId,
     userId,
@@ -170,8 +170,8 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
 
     /* 마지막 페이지 수를 구하기 위함 */
     let [lastPage] = await connection.query(queryOfGettingTotalPageNum, params);
-    lastPage = Math.ceil(lastPage[0].pageNum / 16);
-    
+    lastPage = Math.ceil(lastPage[0].pageNum / 12);
+
     return res.status(200).json({
       page: Number(page),
       lastPage,
