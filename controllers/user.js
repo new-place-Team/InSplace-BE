@@ -196,11 +196,11 @@ const kakaoLogin = async (req, res, next) => {
 const checkUserNickname = async(req, res, next) => {
   const { nickname } = req.body
   if (await checkDuplicateOfNickname(nickname, next)) {
-    return res.res.status(201).json({
+    return res.status(200).json({
       Msg: true
     });
   } else {
-    return res.res.status(201).json({
+    return res.status(200).json({
       Msg: false
     });
   }
@@ -214,7 +214,7 @@ const modifyUser = async (req, res, next) => {
   if (userInfo !== userId) {
     return next(customizedError('잘못된 접근입니다', 400));
   }
-  
+
   const userImage =
     req.file === undefined ? 'null' : req.file.transforms[0].location;
   try {
