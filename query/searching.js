@@ -41,7 +41,7 @@ AND MemberCnt.description
 LIKE CONCAT('%', (${memberQuery}), '%')
 AND Genders.description 
 LIKE CONCAT('%', (${genderQuery}), '%')
-  `;
+`;
 
 const queryOfGettingTotalPageNum = `
 SELECT 
@@ -119,7 +119,7 @@ LIKE CONCAT('%', (${memberQuery}), '%')
 AND Genders.description 
 LIKE CONCAT('%', (${genderQuery}), '%')
 AND inside_yn = ?
-LIMIT ?, 16;
+LIMIT ?, 12;
 `;
 
 const queryOfResultPageOfTotal = `
@@ -146,7 +146,7 @@ LEFT JOIN (
 ON Posts.post_id = b.post_id
 WHERE title LIKE CONCAT('%', ?, '%')
 OR post_desc LIKE CONCAT('%', ?, '%')
-LIMIT ?, 16;
+LIMIT ?, 12;
 `;
 module.exports = {
   queryOfResultPageOfCondition,
