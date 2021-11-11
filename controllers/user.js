@@ -210,7 +210,7 @@ const modifyUser = async (req, res, next) => {
     req.file === undefined ? 'null' : req.file.transforms[0].location;
   try {
     const result = await pool.query(
-      modifyUserQuery(nickname, mbtiId, maleYN, userImage)
+      modifyUserQuery(userId, nickname, mbtiId, maleYN, userImage)
     );
     const [userInformation] = await pool.query(
       getUserInformationById(userInfo)
