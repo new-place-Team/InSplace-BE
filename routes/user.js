@@ -32,7 +32,7 @@ router.post('/check/auth', checkUser);
 router.delete('/:userId', isAuth, deleteUser);
 
 /* 유저 닉네임 체크*/
-router.get('/check/nickname', checkUserNickname);
+router.post('/check/nickname', checkUserNickname);
 
 /* 유저 정보 수정 */
 router.put(
