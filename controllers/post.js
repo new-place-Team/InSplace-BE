@@ -1,5 +1,9 @@
 const { pool } = require('../models/index');
-const { findDetailPosts, findDetailReviews } = require('../query/post');
+const {
+  findDetailPosts,
+  findDetailReviews,
+  findLastPage,
+} = require('../query/post');
 const customizedError = require('../controllers/error');
 require('dotenv').config();
 
@@ -42,7 +46,9 @@ const showDetailPost = async (req, res, next) => {
       const [detailPosts] = await pool.query(
         findDetailPosts(req.params.postId, req.user)
       );
-
+      const [[totalReviewPage]] = await pool.query(
+        findLastPage(req.params.postId)
+      );
       const [detailReviews] = await pool.query(
         findDetailReviews(req.params.postId, req.user)
       );
@@ -52,6 +58,7 @@ const showDetailPost = async (req, res, next) => {
       return {
         detailPosts,
         detailReviews,
+        totalReviewPage,
       };
     } catch (err) {
       return next(customizedError(err.message, 400));
@@ -60,12 +67,13 @@ const showDetailPost = async (req, res, next) => {
 
   //상세페이지 찾는 쿼리
   try {
-    const { detailPosts, detailReviews } = await findDetailPage(
-      req.params.postId
-    );
+    const { detailPosts, detailReviews, totalReviewPage } =
+      await findDetailPage(req.params.postId);
 
     const { resultSplitAddress } = splitPostAddress(detailPosts);
     resultSplitAddress.reviews = splitReviewsImages(detailReviews);
+    resultSplitAddress.page = 1;
+    resultSplitAddress.lastPage = Math.ceil(totalReviewPage.lastPage / 6);
 
     return res.status(200).json({ ...resultSplitAddress });
   } catch (err) {

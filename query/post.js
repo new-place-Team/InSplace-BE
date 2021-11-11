@@ -69,12 +69,18 @@ const findDetailReviews = (postID, userID) => {
   Mbti.mbti_id = Users.mbti_id
   WHERE post_id ="${postID}" AND Reviews.delete_yn = "0"
   ORDER BY created_at DESC 
-  LIMIT 16
+  LIMIT 6
 `;
+};
+const findLastPage = (postId) => {
+  return `
+  SELECT COUNT(post_id) AS lastPage FROM Reviews WHERE Reviews.post_id = ${postId} AND Reviews.delete_yn = 0
+  `;
 };
 module.exports = {
   addVisited,
   findDetailPosts,
   findDetailReviews,
   checkVisitedUser,
+  findLastPage,
 };
