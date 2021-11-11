@@ -8,6 +8,7 @@ const {
   checkUser,
   deleteUser,
   kakaoLogin,
+  checkUserNickname,
   modifyUser,
 } = require('../controllers/user');
 
@@ -29,6 +30,9 @@ router.post('/check/auth', checkUser);
 
 /* 회원 탈퇴 */
 router.delete('/:userId', isAuth, deleteUser);
+
+/* 유저 닉네임 체크*/
+router.get('/check/nickname', checkUserNickname);
 
 /* 유저 정보 수정 */
 router.put(
