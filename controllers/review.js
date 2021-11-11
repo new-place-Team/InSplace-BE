@@ -8,6 +8,7 @@ const {
   queryOfGettingReviewsByOrder,
   queryOfGettingWritingPageOfReview,
   queryOfGettingEditingPageOfReview,
+  quertOfGettingReviewLastPage,
 } = require('../query/review');
 
 const customizedError = require('../controllers/error');
@@ -94,7 +95,7 @@ const registReview = async (req, res, next) => {
     const reviewId = result[0].insertId;
     console.log('reviewId:', reviewId);
     const paramsOfGettingReview = [userId, userId, userId, reviewId, postId];
-    console.log("userId, reviewId, postId: ", userId, reviewId, postId);
+    console.log('userId, reviewId, postId: ', userId, reviewId, postId);
     result = await connection.query(
       queryOfGettingReview,
       paramsOfGettingReview
@@ -228,6 +229,10 @@ const getReviewByLatest = async (req, res, next) => {
   }
   const connection = await pool.getConnection(async (conn) => conn);
   try {
+    let [[lastPage]] = await connection.query(
+      quertOfGettingReviewLastPage(postId)
+    );
+    lastPage = Math.ceil(lastPage.lastPage / 6);
     const [reviews] = await connection.query(
       queryOfGettingReviewsByOrder(postId, userId, pageNum, 'created_at')
     );
@@ -240,6 +245,8 @@ const getReviewByLatest = async (req, res, next) => {
       );
     }
     res.status(200).json({
+      page: pageNum,
+      lastPage,
       reviews,
     });
   } catch (err) {
@@ -268,6 +275,10 @@ const getReviewByLike = async (req, res, next) => {
   }
   const connection = await pool.getConnection(async (conn) => conn);
   try {
+    let [[lastPage]] = await connection.query(
+      quertOfGettingReviewLastPage(postId)
+    );
+    lastPage = Math.ceil(lastPage.lastPage / 6);
     const [reviews] = await connection.query(
       queryOfGettingReviewsByOrder(postId, userId, pageNum, 'like_cnt')
     );
@@ -279,6 +290,8 @@ const getReviewByLike = async (req, res, next) => {
       );
     }
     res.status(200).json({
+      page: pageNum,
+      lastPage,
       reviews,
     });
   } catch (err) {

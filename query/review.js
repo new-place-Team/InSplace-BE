@@ -52,6 +52,10 @@ AND Reviews.review_id= ?
 AND post_id= ?;
 `;
 
+const quertOfGettingReviewLastPage = (postId) => {
+  return `SELECT COUNT(*) AS lastPage FROM Reviews WHERE post_id=${postId} and delete_yn=0`;
+};
+
 const queryOfGettingReviewsByOrder = (postId, userId, pageNum, orderBy) => {
   return `
 SELECT 
@@ -93,7 +97,7 @@ Mbti.mbti_id = Users.mbti_id
 WHERE post_id =${postId} 
 AND Reviews.delete_yn =0
 ORDER BY ${orderBy} DESC 
-LIMIT ${(pageNum - 1) * 16} , 16
+LIMIT ${(pageNum - 1) * 6} , 6
 `;
 };
 
@@ -120,4 +124,5 @@ module.exports = {
   queryOfGettingReviewsByOrder,
   queryOfGettingWritingPageOfReview,
   queryOfGettingEditingPageOfReview,
+  quertOfGettingReviewLastPage,
 };
