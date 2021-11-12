@@ -12,7 +12,7 @@ const getKakaoToken = async (code) => {
       },
       data: qs.stringify({
         grant_type: 'authorization_code',
-        redirect_uri: 'https://insplace-dev.web.app/users/kakao/auth',
+        redirect_uri: process.env.KAKAO_REDIRECT_URL,
         client_id: process.env.KAKAO_REST_KEY, //env파일로
         code,
       }),
