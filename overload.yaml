@@ -1,19 +1,11 @@
 config:
-  target: 'http://localhost:5000'
+  target: 'https://ispdev.shop'
   phases:
-    - duration: 10
+    - duration: 60
       arrivalRate: 10
 scenarios:
-  # 메인페이지 조회
-  - flow:
+  - name: '60초동안 초당 10명이 메인페이지'
+    flow:
+      # 메인페이지 조회
       - get:
           url: '/main'
-      # 토탈 검색페이지 결과 조회
-      - get:
-          url: '/search/pages/1/total?result=카페'
-      # 조건 검색 결과페이지 조회
-      - get:
-          url: '/search/condition?weather=1&category=3&num=1&gender=3'
-      # 조건 검색 상세페이지 조회
-      - get:
-          url: '/search/pages/1/condition?weather=2&category=3&num=1&gender=3&inside=1'
