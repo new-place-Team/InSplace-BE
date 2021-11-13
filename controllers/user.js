@@ -147,7 +147,7 @@ const kakaoLogin = async (req, res, next) => {
     const getKakaoUserResult = await getKakaoUserInformation(
       success.data.access_token
     );
-
+    console.log(success);
     const {
       id: kakaoUserId,
       kakao_account: {
@@ -193,18 +193,18 @@ const kakaoLogin = async (req, res, next) => {
   }
 };
 
-const checkUserNickname = async(req, res, next) => {
-  const { nickname } = req.body
+const checkUserNickname = async (req, res, next) => {
+  const { nickname } = req.body;
   if (await checkDuplicateOfNickname(nickname, next)) {
     return res.status(200).json({
-      Msg: true
+      Msg: true,
     });
   } else {
     return res.status(200).json({
-      Msg: false
+      Msg: false,
     });
   }
-}
+};
 
 const modifyUser = async (req, res, next) => {
   const userId = parseInt(req.params.userId);
