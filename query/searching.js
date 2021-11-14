@@ -103,7 +103,8 @@ INNER JOIN Weathers
 ON Posts.weather_id = Weathers.weather_id
 INNER JOIN MemberCnt
 ON Posts.member_id = MemberCnt.member_id
-INNER JOIN Categories ON Posts.category_id = Categories.category_id
+INNER JOIN Categories 
+ON Posts.category_id = Categories.category_id
 LEFT JOIN (
 	SELECT post_id, user_id
     FROM Favorites

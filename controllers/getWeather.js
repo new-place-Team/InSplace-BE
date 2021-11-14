@@ -4,16 +4,18 @@ const { weatherQuery } = require('../query/showWeather');
 
 const getWeatherInfo = async (req, res, next) => {
   try {
-    const result = await pool.query(weatherQuery);
-    const weahterInfo = result[0]
+    const [[weatherInfo]] = await pool.query(weatherQuery);
     return res.status(200).json({
-      weahterInfo
-    })
+      status: weatherInfo.status,
+      temperature: weatherInfo.temperature,
+      diff: weatherInfo.diff,
+      frontWeather: weatherInfo.frontWeather,
+    });
   } catch (err) {
     return next(customizedError(err, 400));
-  } 
-}
+  }
+};
 
 module.exports = {
-  getWeatherInfo
+  getWeatherInfo,
 };
