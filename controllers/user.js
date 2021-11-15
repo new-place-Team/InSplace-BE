@@ -63,7 +63,8 @@ const authUser = async (req, res, next) => {
     if ((await getUserResult.length) == 0) {
       return next(customizedError('Email 혹은 Password가 틀렸습니다', 400));
     }
-    const { user_id, nickname, description, user_image } = getUserResult[0];
+    const { user_id, nickname, description, user_image, maleYN } =
+      getUserResult[0];
     const dbUserEmail = getUserResult[0].email;
     // 해쉬된 비밀번호와 유저가 입력한 비밀번호를 비교
     const comparePassword = await bcrypt.compare(
@@ -82,6 +83,7 @@ const authUser = async (req, res, next) => {
         mbti: description,
         userImage: user_image,
         email: dbUserEmail,
+        maleYN,
       });
     }
     //비밀번호가 틀려서 로그인 실패
@@ -100,7 +102,6 @@ const checkUser = async (req, res, next) => {
     const [userInformation] = await pool.query(
       getUserInformationById(result.user_id)
     );
-
     return res.status(200).json({ ...userInformation[0] });
   } catch (err) {
     if (err.message == 'jwt expired') {
