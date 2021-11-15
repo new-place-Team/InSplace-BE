@@ -1,0 +1,11 @@
+config:
+  target: 'https://ispdev.shop'
+  phases:
+    - duration: 60
+      arrivalRate: 10
+scenarios:
+  - name: '60초동안 초당 10명이 메인페이지'
+    flow:
+      # 메인페이지 조회
+      - get:
+          url: '/main'

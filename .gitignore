@@ -1,4 +1,5 @@
 .env
-logs
-node_modules
 .vscode
+logs
+redis.js
+node_modules
