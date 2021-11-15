@@ -22,7 +22,9 @@ const getUserInformation = (email) => {
     WHERE email = "${email}"`;
 };
 const getUserInformationById = (id) => {
-  return `SELECT user_id AS userId, email, male_yn AS maleYN nickname, user_image AS userImage ,description AS mbti FROM Users INNER JOIN Mbti ON Users.mbti_id = Mbti.mbti_id WHERE user_id = ${id} `;
+  return `
+  SELECT user_id AS userId, email, male_yn AS maleYN, nickname, user_image AS userImage,
+  description AS mbti FROM Users INNER JOIN Mbti ON Users.mbti_id = Mbti.mbti_id WHERE user_id = ${id} `;
 };
 
 const updateUserDeleteYn = (userID) => {

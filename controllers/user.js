@@ -97,8 +97,10 @@ const authUser = async (req, res, next) => {
 const checkUser = async (req, res, next) => {
   const authHeader = req.get('Authorization');
   const token = authHeader.split(' ')[1];
+
   try {
     const result = jwt.verify(token, process.env.SECRET_KEY);
+
     const [userInformation] = await pool.query(
       getUserInformationById(result.user_id)
     );
