@@ -27,7 +27,7 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 app.use(cors(corsOptions));
-
+console.log('서버가 켜짐');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
