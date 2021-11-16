@@ -10,14 +10,21 @@ const checkMBTI = (mbti) => {
     WHERE mbti_id = "${mbti}"`;
 };
 
-const insertNewUser = (email, nickname, hashPassword, male_yn, mbti) => {
+const insertNewUser = (
+  email,
+  nickname,
+  hashPassword,
+  male_yn,
+  mbti,
+  defaultImage
+) => {
   return male_yn == null
     ? `INSERT INTO Users 
-  (email, nickname, password, mbti_id) 
-  VALUES("${email}","${nickname}","${hashPassword}","${mbti}")`
+  (email, nickname, password, mbti_id,user_image) 
+  VALUES("${email}","${nickname}","${hashPassword}","${mbti}","${defaultImage}")`
     : `INSERT INTO Users 
-  (email, nickname, password, male_yn, mbti_id) 
-  VALUES("${email}","${nickname}","${hashPassword}","${male_yn}","${mbti}")`;
+  (email, nickname, password, male_yn, mbti_id,user_image) 
+  VALUES("${email}","${nickname}","${hashPassword}","${male_yn}","${mbti}","${defaultImage}")`;
 };
 
 const getUserInformation = (email) => {

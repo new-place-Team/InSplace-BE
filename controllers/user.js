@@ -22,7 +22,9 @@ const {
   checkDuplicateOfEmail,
   checkDuplicateOfNickname,
   getuserPasswordAndId,
+  randomRegistImage,
 } = require('../controllers/utils/user');
+
 const registUser = async (req, res, next) => {
   const { email, nickname, password, maleYN, mbtiId } = req.user;
 
@@ -37,6 +39,8 @@ const registUser = async (req, res, next) => {
   }
   //중복검사 통과
   try {
+    const randomImageResult = randomRegistImage(maleYN);
+
     //mbti id검사
     const [data] = await pool.query(checkMBTI(mbtiId));
     //비밀번호 암호화
@@ -48,7 +52,14 @@ const registUser = async (req, res, next) => {
     //유저 정보 저장
 
     await pool.query(
-      insertNewUser(email, nickname, hashPassword, maleYN, data[0].mbti_id)
+      insertNewUser(
+        email,
+        nickname,
+        hashPassword,
+        maleYN,
+        data[0].mbti_id,
+        randomImageResult
+      )
     );
 
     return res.sendStatus(201);
@@ -155,7 +166,7 @@ const kakaoLogin = async (req, res, next) => {
     const getKakaoUserResult = await getKakaoUserInformation(
       success.data.access_token
     );
-    console.log(success);
+
     const {
       id: kakaoUserId,
       kakao_account: {
