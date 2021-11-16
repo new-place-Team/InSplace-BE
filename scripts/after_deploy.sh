@@ -3,6 +3,7 @@
 echo 'script start'
 
 cd /home/ubuntu/insplace
-pm2 stop 0
-pm2 kill
-pm2 start ./bin/www
+sudo docker stop $(sudo docker ps -aq)
+sudo docker build -t insplace .
+sudo docker run -p 5000:5000 insplace
+sudo docker run -p 5001:5000 insplace
