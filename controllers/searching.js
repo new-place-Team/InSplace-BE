@@ -7,6 +7,8 @@ const {
   queryOfResultPageOfTotal,
   queryOfGettingTotalPageNum,
   queryOfResultPageOfConditionAndCurrentLoc,
+  queryOfDetailPageOfInOutDoorsAndCurrentLoc,
+  queryOfGettingTotalPageNumAndCurrentLoc,
 } = require('../query/searching');
 const customizedError = require('./error');
 const {
@@ -137,19 +139,25 @@ const getResultPageOfCondition = async (req, res, next) => {
 /* 조건 결과 상세 페이지 조회(실내외 중 한개) */
 const getDetailPageOfInOutDoors = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
-  const { weather, category, num, gender, inside } = req.query;
+  const { weather, category, num, gender, inside, x, y } = req.query;
   const page = req.params.number;
   const pageNum = (Number(req.params.number) - 1) * 12;
-  const params = [
-    userId,
-    userId,
-    weather,
-    category,
-    num,
-    gender,
-    inside,
-    pageNum,
-  ];
+  const params =
+    x === undefined || y === undefined
+      ? [userId, userId, weather, category, num, gender, inside, pageNum]
+      : [
+          userId,
+          x,
+          y,
+          x,
+          userId,
+          weather,
+          category,
+          num,
+          gender,
+          inside,
+          pageNum,
+        ];
 
   /* 유효성 검사 */
   try {
@@ -167,11 +175,15 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
   }
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    const result = await connection.query(
-      queryOfDetailPageOfInOutDoors,
-      params
-    );
-
+    const result =
+      x === undefined || y === undefined
+        ? /* 현재 위치가 설정 안된 경우 */
+          await connection.query(queryOfDetailPageOfInOutDoors, params)
+        : /* 현재 위치가 설정 된 경우 */
+          await connection.query(
+            queryOfDetailPageOfInOutDoorsAndCurrentLoc,
+            params
+          );
     let posts = result[0];
     // 메인 이미지만 가져오기
     for (let i = 0; i < posts.length; i++) {
@@ -182,7 +194,21 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
     }
 
     /* 마지막 페이지 수를 구하기 위함 */
-    let [lastPage] = await connection.query(queryOfGettingTotalPageNum, params);
+    let [lastPage] =
+      x === undefined || y === undefined
+        ? await connection.query(queryOfGettingTotalPageNum, params)
+        : await connection.query(
+            queryOfGettingTotalPageNumAndCurrentLoc(
+              userId,
+              x,
+              y,
+              weather,
+              category,
+              num,
+              gender,
+              inside
+            )
+          );
     lastPage = Math.ceil(lastPage[0].pageNum / 12);
 
     return res.status(200).json({
