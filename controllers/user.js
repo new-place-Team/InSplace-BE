@@ -65,8 +65,11 @@ const authUser = async (req, res, next) => {
     if ((await getUserResult.length) == 0) {
       return next(customizedError('Email 혹은 Password가 틀렸습니다', 400));
     }
-    const { user_id, nickname, description, user_image, maleYN } =
+    const { user_id, nickname, description, user_image, maleYN, deleteYN } =
       getUserResult[0];
+    if (deleteYN == 1) {
+      return next(customizedError('탈퇴한 회원입니다.', 400));
+    }
     const dbUserEmail = getUserResult[0].email;
     // 해쉬된 비밀번호와 유저가 입력한 비밀번호를 비교
     const comparePassword = await bcrypt.compare(

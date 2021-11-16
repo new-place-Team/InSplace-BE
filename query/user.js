@@ -21,7 +21,7 @@ const insertNewUser = (email, nickname, hashPassword, male_yn, mbti) => {
 };
 
 const getUserInformation = (email) => {
-  return `SELECT password,  male_yn AS maleYN, user_id, nickname, email, description, user_image   
+  return `SELECT password,  male_yn AS maleYN, user_id, nickname, email, description, user_image, delete_yn AS deleteYN   
     FROM Users INNER JOIN Mbti ON Users.mbti_id = Mbti.mbti_id
     WHERE email = "${email}"`;
 };
