@@ -6,6 +6,7 @@ const {
   queryOfDetailPageOfInOutDoors,
   queryOfResultPageOfTotal,
   queryOfGettingTotalPageNum,
+  queryOfResultPageOfConditionAndCurrentLoc,
 } = require('../query/searching');
 const customizedError = require('./error');
 const {
@@ -72,8 +73,13 @@ const getResultPageOfTotal = async (req, res, next) => {
 /* 조건 결과 페이지 조회  */
 const getResultPageOfCondition = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
-  const { weather, category, num, gender } = req.query;
-  const params = [userId, userId, weather, category, num, gender];
+  const { weather, category, num, gender, x, y } = req.query;
+
+  /* 현재 위치가 설정 되어 있을 경우 없을 경우 */
+  const params =
+    x === undefined || y === undefined
+      ? [userId, userId, weather, category, num, gender]
+      : [userId, x, y, x, userId, weather, category, num, gender];
 
   /* 유효성 검사 */
   try {
@@ -90,7 +96,14 @@ const getResultPageOfCondition = async (req, res, next) => {
 
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    const result = await connection.query(queryOfResultPageOfCondition, params);
+    /* 현재 위치가 설정 되어있을 경우 없을 경우 */
+    const result =
+      x === undefined || y === undefined
+        ? await connection.query(queryOfResultPageOfCondition, params)
+        : await connection.query(
+            queryOfResultPageOfConditionAndCurrentLoc,
+            params
+          );
     const insidePlaces = [];
     const outSidePlaces = [];
     // 실내 실외 포스트 구분(최대 9개씩 받기)
