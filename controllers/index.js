@@ -34,7 +34,46 @@ const searchMain = async (req, res, next) => {
     const weatherCondition = weatherInfo[0].weather_status; //날씨 상태 ID
     const weatherTemp = weatherInfo[0].weather_temp; //현재 온도
     const weatherDiff = weatherInfo[0].temp_diff; // 어제와 오늘 온도의 차이
-    const weatherFe = weatherInfo[0].weather_status_fe;
+    const weatherFe = weatherInfo[0].weather_status_fe; //프론트로 보내줄 날씨 상태 ID입니다
+    const humidity = weatherInfo[0].humidity; // 현재 습도입니다.
+    let pm25 = weatherInfo[0].pm25; // 현재 미세먼지입니다. 1시간 단위로 변화합니다.
+    let pm10 = weatherInfo[0].pm10 // 현재 초미세먼지입니다. 1시간 단위로 변화합니다.
+
+    switch(true){
+      case(pm10 < 25):
+        pm10 = 1; // 미세먼지 좋음
+        break;
+      case(pm10 < 50):
+        pm10 = 2 // 미세먼지 보통
+        break;
+      case(pm10 < 90):
+        pm10 = 3; // 미세먼지 나쁨
+        break;
+      case(pm10 < 180):
+        pm10 = 4; //미세먼지 매우 나쁨
+        break;
+      case(pm10 > 180):
+        pm10 = 5; //미세먼지 위험
+        break;
+    }
+
+    switch(true){
+      case(pm25 < 15):
+        pm25 = 1; // 초미세먼지 좋음
+        break;
+      case(pm25 < 30):
+        pm25 = 2 // 초미세먼지 보통
+        break;
+      case(pm25 < 55):
+        pm25 = 3; // 초미세먼지 나쁨
+        break;
+      case(pm25 < 110):
+        pm25 = 4; // 초미세먼지 매우나쁨
+        break;
+      case(pm25 > 110):
+        pm25 = 5; // 초미세먼지 위험
+        break;
+    }
     const result = await connection.query(
       searchMainQuery(weatherCondition, user)
     ); //날씨
@@ -50,6 +89,9 @@ const searchMain = async (req, res, next) => {
         temperature: weatherTemp,
         diff: weatherDiff,
         frontWeather: weatherFe,
+        humidity: humidity,
+        pm10 : pm10,
+        pm25: pm25,
       },
       weatherPlace: adjResult,
       likePlace: adjLike,
