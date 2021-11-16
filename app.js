@@ -15,7 +15,7 @@ const morganFormat = process.env.NODE_ENV !== 'production' ? 'dev' : 'dev';
 logger.info(`Current NODE_ENV: ${morganFormat}`);
 app.use(morgan(morganFormat, { stream: logger.stream })); // morgan 로그 설정
 app.use(compression());
-console.log('서버 켜짐');
+console.log('서버 켜짐안올라가요오옹');
 //CORS
 const cors = require('cors');
 const corsOptions = {
