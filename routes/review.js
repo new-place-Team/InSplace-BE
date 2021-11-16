@@ -12,9 +12,10 @@ const {
 const reviewImgUpload = require('../controllers/reviewImgUpload');
 const { isAuth, justCheckAuth } = require('../middlewares/auth');
 const reviewLikeRouter = require('./reviewLike');
+const reportRouter = require('./report');
 
 router.use('/:reviewId/likes', reviewLikeRouter);
-
+router.use('/:reviewId/reports', reportRouter);
 /* 리뷰 작성 페이지 조회 */
 router.get('/write', isAuth, getWritingPageOfReview);
 

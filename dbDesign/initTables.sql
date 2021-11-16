@@ -131,6 +131,15 @@ CREATE TABLE `Weathers` (
   `description` varchar(20)
  );
 
+-- 신고 테이블
+CREATE TABLE `Reports` (
+  `report_id` integer PRIMARY KEY,
+  `from_user_id` integer NOT NULL,
+  `to_user_id` integer NOT NULL,
+  `review_id` integer NOT NULL,
+  `category_num` integer NOT NULL,
+  `description` text NULL
+ );
  
 
 
@@ -153,6 +162,10 @@ ALTER TABLE `Posts` ADD FOREIGN KEY (`gender_id`) REFERENCES `Genders` (`gender_
 ALTER TABLE `Posts` ADD FOREIGN KEY (`weather_id`) REFERENCES `Weathers` (`weather_id`);
 ALTER TABLE `Posts` ADD FOREIGN KEY (`member_id`) REFERENCES `MemberCnt` (`member_id`);
 
+--Reports Foreign Key
+ALTER TABLE `Reports` ADD FOREIGN KEY (`from_user_id`) REFERENCES `Users` (`user_id`);
+ALTER TABLE `Reports` ADD FOREIGN KEY (`to_user_id`) REFERENCES `Users` (`user_id`);
+ALTER TABLE `Reports` ADD FOREIGN KEY (`review_id`) REFERENCES `Reviews` (`review_id`);
 
 
 -- Charset UTF-8 추가 
@@ -169,3 +182,4 @@ ALTER TABLE Weathers CONVERT TO character SET utf8;
 ALTER TABLE MemberCnt CONVERT TO character SET utf8;
 ALTER TABLE CurrentWeather CONVERT TO character SET utf8;
 ALTER TABLE ReviewWeathers CONVERT TO character SET utf8;
+ALTER TABLE Reports CONVERT TO character SET utf8;
