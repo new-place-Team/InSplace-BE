@@ -65,6 +65,20 @@
  *         default: 3
  *         schema:
  *           type: Number
+ *       - name: x
+ *         in: query
+ *         required: true
+ *         description: 위도(x)
+ *         default: 37.51350
+ *         schema:
+ *           type: string
+ *       - name: y
+ *         in: query
+ *         required: true
+ *         description: 경도(y)
+ *         default: 127.10009
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         description: 데이터 불러오기 성공
@@ -122,6 +136,20 @@
  *         default: 1
  *         schema:
  *           type: Number
+ *       - name: x
+ *         in: query
+ *         required: true
+ *         description: 위도(x)
+ *         default: 37.51350
+ *         schema:
+ *           type: string
+ *       - name: y
+ *         in: query
+ *         required: true
+ *         description: 경도(y)
+ *         default: 127.10009
+ *         schema:
+ *           type: string
  *     responses:
  *       '200':
  *         description: 데이터 불러오기 성공
