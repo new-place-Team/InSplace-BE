@@ -11,9 +11,13 @@ const checkMBTI = (mbti) => {
 };
 
 const insertNewUser = (email, nickname, hashPassword, male_yn, mbti) => {
-  return `INSERT INTO Users 
-    (email, nickname, password, male_yn, mbti_id) 
-    VALUES("${email}","${nickname}","${hashPassword}","${male_yn}","${mbti}")`;
+  return male_yn == null
+    ? `INSERT INTO Users 
+  (email, nickname, password, mbti_id) 
+  VALUES("${email}","${nickname}","${hashPassword}","${mbti}")`
+    : `INSERT INTO Users 
+  (email, nickname, password, male_yn, mbti_id) 
+  VALUES("${email}","${nickname}","${hashPassword}","${male_yn}","${mbti}")`;
 };
 
 const getUserInformation = (email) => {

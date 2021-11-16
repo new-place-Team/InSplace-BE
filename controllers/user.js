@@ -25,6 +25,7 @@ const {
 } = require('../controllers/utils/user');
 const registUser = async (req, res, next) => {
   const { email, nickname, password, maleYN, mbtiId } = req.user;
+
   //Email 중복검사
   if (await checkDuplicateOfEmail(email, next)) {
     return next(customizedError('이메일이 이미 존재합니다', 400));
@@ -45,6 +46,7 @@ const registUser = async (req, res, next) => {
     );
 
     //유저 정보 저장
+
     await pool.query(
       insertNewUser(email, nickname, hashPassword, maleYN, data[0].mbti_id)
     );
