@@ -10,6 +10,7 @@ const customizedError = require('./error');
 const { getMainImage } = require('./utils/image');
 
 const searchMain = async (req, res, next) => {
+  console.log('메인 실행');
   let weatherResult;
   let user = 0;
   const connection = await pool.getConnection(async (conn) => conn);
