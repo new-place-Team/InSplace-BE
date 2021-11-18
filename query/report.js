@@ -8,7 +8,7 @@ const queryOfAddingReport = (
   return `
     INSERT INTO
     Reports(from_user_id, to_user_id, review_id, category_num, description) 
-    VALUES(${fromUserId}, ${toUserId}, ${reviewId}, ${categoryNum}, ${description})    
+    VALUES(${fromUserId}, ${toUserId}, ${reviewId}, ${categoryNum}, '${description}')    
     `;
 };
 
