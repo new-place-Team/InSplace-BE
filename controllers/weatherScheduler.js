@@ -20,7 +20,7 @@ const schedulingWeather = async (req, res) => {
     `https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=37.5683&lon=126.9778&dt=${yesterdayTime}&appid=${process.env.WEATHER_API}&units=metric`
   );
   const {data : pollutionData} = await axios.get(
-    `https://api.openweathermap.org/data/2.5/air_pollution?lat=37.5683&lon=126.9778&appid=${process.env.WEATHER_API}`
+    `http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?serviceKey=${process.env.POLLUTION_KEY}&returnType=json&numOfRows=1&pageNo=1&sidoName=%EC%84%9C%EC%9A%B8&ver=1.0`
   ); //미세먼지 정보는 1시간주기로 업데이트 됩니다.
 
   weatherCondition = data.weather[0].id; // 현재 날씨에 대한 상태를 가져옵니다
@@ -30,8 +30,8 @@ const schedulingWeather = async (req, res) => {
   const prevTemp = prevData.current.temp.toString().substr(0, 2); // 현 시간 기준 어제 기온을 가져옵니다.
   const weatherComparision = (weatherTemp - prevTemp) // 어제와 현재의 기온을 비교합니다
 
-  const pmTen = Math.floor(pollutionData.list[0].components.pm10); // 미세먼지를 가져옵니다
-  const pmTwoFive = Math.floor(pollutionData.list[0].components.pm2_5); // 초미세먼지를 가져옵니다.
+  const pmTen = parseInt(pollutionData.response.body.items[0].pm10Value) // 미세먼지를 가져옵니다
+  const pmTwoFive = parseInt(pollutionData.response.body.items[0].pm25Value); // 초미세먼지를 가져옵니다.
 
   if (
     weatherString.charAt(0) === '5' ||
