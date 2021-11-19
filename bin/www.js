@@ -89,9 +89,10 @@ function onListening() {
   debug('Listening on ' + bind);
 
   if (process.env.NODE_ENV === 'production') {
-    schedule.scheduleJob('*/10 * * * *', function () {
+    schedule.scheduleJob('*/1 * * * *', function () {
       schedulingWeather();
       logger.info('날씨 상태 업데이트 완료');
+      console.log('스케쥴러 실행, 날씨 변경완료.')
     });
   }
 }
