@@ -25,24 +25,6 @@ const getWeatherInfo = async (req, res, next) => {
         break;
     }
 
-    switch(true){
-      case(pm25 < 15):
-        pm25 = 1; // 초미세먼지 좋음
-        break;
-      case(pm25 < 30):
-        pm25 = 2 // 초미세먼지 보통
-        break;
-      case(pm25 < 55):
-        pm25 = 3; // 초미세먼지 나쁨
-        break;
-      case(pm25 < 110):
-        pm25 = 4; // 초미세먼지 매우나쁨
-        break;
-      case(pm25 > 110):
-        pm25 = 5; // 초미세먼지 위험
-        break;
-    }
-
     return res.status(200).json({
       status: weatherInfo.status,
       temperature: weatherInfo.temperature,
