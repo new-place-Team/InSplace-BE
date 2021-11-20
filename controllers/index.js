@@ -10,6 +10,7 @@ const customizedError = require('./error');
 const { getMainImage } = require('./utils/image');
 
 const searchMain = async (req, res, next) => {
+  const lang = req.headers['language'];
   let weatherResult;
   let user = 0;
   const connection = await pool.getConnection(async (conn) => conn);
@@ -58,10 +59,10 @@ const searchMain = async (req, res, next) => {
     }
 
     const result = await connection.query(
-      searchMainQuery(weatherCondition, user)
+      searchMainQuery(weatherCondition, user, lang)
     ); //날씨
-    const likeResult = await connection.query(likeQuery(user)); //좋아요
-    const mdResult = await connection.query(mdQuery(user)); // 관리자 추천
+    const likeResult = await connection.query(likeQuery(user, lang)); //좋아요
+    const mdResult = await connection.query(mdQuery(user, lang)); // 관리자 추천
     const adjResult = adjImg(result);
     const adjLike = adjImg(likeResult);
     const adjMd = adjImg(mdResult);

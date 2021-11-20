@@ -42,9 +42,10 @@ const showDetailPost = async (req, res, next) => {
 
   //포스트와 리뷰들을 조회하는 함수
   const findDetailPage = async () => {
+    const lang = req.headers['accept-language'];
     try {
       const [detailPosts] = await pool.query(
-        findDetailPosts(req.params.postId, req.user)
+        findDetailPosts(req.params.postId, req.user, lang)
       );
       const [[totalReviewPage]] = await pool.query(
         findLastPage(req.params.postId)

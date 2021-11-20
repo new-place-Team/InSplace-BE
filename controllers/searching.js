@@ -37,7 +37,7 @@ const getResultPageOfTotal = async (req, res, next) => {
   const userId = Number(checkLoginUser(req.user));
   const pageNum = (Number(req.params.number) - 1) * 12; // Pages Number
   const result = req.query.result; // Searching Result
-
+  const lang = req.header('language');
   /* 유효성 검사 */
   try {
     await schemasOfResultPageofTotal.validateAsync({
@@ -52,7 +52,7 @@ const getResultPageOfTotal = async (req, res, next) => {
   const params = [userId, userId, result, result, pageNum];
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    const data = await connection.query(queryOfResultPageOfTotal, params);
+    const data = await connection.query(queryOfResultPageOfTotal(userId, result, pageNum, lang));
 
     let posts = data[0];
     // 메인 이미지만 가져오기
@@ -76,7 +76,7 @@ const getResultPageOfTotal = async (req, res, next) => {
 const getResultPageOfCondition = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const { weather, category, num, gender, x, y } = req.query;
-
+  const lang = req.header('language');
   /* 현재 위치가 설정 되어 있을 경우 없을 경우 */
   const params =
     x === undefined || y === undefined
@@ -101,10 +101,11 @@ const getResultPageOfCondition = async (req, res, next) => {
     /* 현재 위치가 설정 되어있을 경우 없을 경우 */
     const result =
       x === undefined || y === undefined
-        ? await connection.query(queryOfResultPageOfCondition, params)
+        ? await connection.query(queryOfResultPageOfCondition(userId, weather, category, num, gender))
         : await connection.query(
-            queryOfResultPageOfConditionAndCurrentLoc,
-            params
+            queryOfResultPageOfConditionAndCurrentLoc(
+            userId, x, y, weather, category, num, gender, lang
+            )
           );
     const insidePlaces = [];
     const outSidePlaces = [];
@@ -139,6 +140,7 @@ const getResultPageOfCondition = async (req, res, next) => {
 /* 조건 결과 상세 페이지 조회(실내외 중 한개) */
 const getDetailPageOfInOutDoors = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
+  const lang = req.headers['language'];
   const { weather, category, num, gender, inside, x, y } = req.query;
   const page = req.params.number;
   const pageNum = (Number(req.params.number) - 1) * 12;
@@ -178,11 +180,10 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
     const result =
       x === undefined || y === undefined
         ? /* 현재 위치가 설정 안된 경우 */
-          await connection.query(queryOfDetailPageOfInOutDoors, params)
+          await connection.query(queryOfDetailPageOfInOutDoors(userId, weather, category, num, gender, inside, pageNum))
         : /* 현재 위치가 설정 된 경우 */
           await connection.query(
-            queryOfDetailPageOfInOutDoorsAndCurrentLoc,
-            params
+            queryOfDetailPageOfInOutDoorsAndCurrentLoc(userId, x, y, weather, category, num, gender, inside, pageNum)
           );
     let posts = result[0];
     // 메인 이미지만 가져오기
