@@ -3,30 +3,74 @@ const addVisited = (userID, postID) => {
     (user_id, post_id)
     VALUES("${userID}","${postID}")`;
 };
-const findDetailPosts = (postID, userID) => {
-  return `
-  SELECT 
-  Posts.post_id AS postId,
-  post_images AS postImages, contact_number AS contactNumber,
-  post_loc_x AS postLocationX, post_loc_y AS postLocationY ,Posts.category_id AS categoryId, address, title,
-   address_short AS addressShort, post_desc AS postDesc, favorite_cnt AS favoriteCnt,
-   CASE WHEN Favorites.user_id = "${userID}"
-   THEN 1
-   ELSE 0
-   END AS favoriteState ,
-   CASE WHEN VisitedPosts.user_id = "${userID}"
-   THEN 1
-   ELSE 0
-   END AS visitedStatus
-   FROM Posts 
-   INNER JOIN Categories 
-   ON Posts.category_id = Categories.category_id   
-   LEFT JOIN Favorites
-   ON Posts.post_id = Favorites.post_id AND Favorites.user_id="${userID}"
-   LEFT JOIN VisitedPosts
-   ON Posts.post_id = VisitedPosts.post_id AND VisitedPosts.user_id="${userID}"
-   WHERE Posts.post_id = "${postID}"
-`;
+const findDetailPosts = (postID, userID, lang) => {
+  if(lang === 'ko' || lang === undefined){
+    return `
+      SELECT 
+      Posts.post_id AS postId,
+      post_images AS postImages, contact_number AS contactNumber,
+      post_loc_x AS postLocationX, 
+      post_loc_y AS postLocationY,
+      Posts.category_id AS categoryId, 
+      address, 
+      title,
+      address_short AS addressShort, 
+      post_desc AS postDesc, 
+      favorite_cnt AS favoriteCnt,
+        CASE WHEN Favorites.user_id = "${userID}"
+        THEN 1
+        ELSE 0
+        END AS favoriteState ,
+        CASE WHEN VisitedPosts.user_id = "${userID}"
+        THEN 1
+        ELSE 0
+        END AS visitedStatus
+      FROM Posts 
+      INNER JOIN Categories 
+      ON Posts.category_id = Categories.category_id   
+      LEFT JOIN Favorites
+      ON Posts.post_id = Favorites.post_id 
+      AND Favorites.user_id="${userID}"
+      LEFT JOIN VisitedPosts
+      ON Posts.post_id = VisitedPosts.post_id 
+      AND VisitedPosts.user_id="${userID}"
+      WHERE Posts.post_id = "${postID}"
+    `;
+  } else {
+    return`
+      SELECT 
+        Posts.post_id AS postId,
+        post_images AS postImages, 
+        contact_number AS contactNumber,
+        post_loc_x AS postLocationX, 
+        post_loc_y AS postLocationY,
+        Posts.category_id AS categoryId, 
+        Posts.address_en AS address,
+        Posts.title_en AS title,
+        Posts.address_short_en AS addressShort, 
+        Posts.post_desc_en AS postDesc, 
+        favorite_cnt AS favoriteCnt,
+          CASE WHEN Favorites.user_id = "${userID}"
+          THEN 1
+          ELSE 0
+          END AS favoriteState ,
+          CASE WHEN VisitedPosts.user_id = "${userID}"
+          THEN 1
+          ELSE 0
+          END AS visitedStatus
+      FROM Posts 
+      INNER JOIN Categories 
+      ON Posts.category_id = Categories.category_id   
+      LEFT JOIN Favorites
+      ON Posts.post_id = Favorites.post_id 
+      AND Favorites.user_id="${userID}"
+      LEFT JOIN VisitedPosts
+      ON Posts.post_id = VisitedPosts.post_id 
+      AND VisitedPosts.user_id="${userID}"
+      WHERE Posts.post_id = "${postID}"
+    `
+  }
+  
 };
 
 const checkVisitedUser = (userID, postID) => {
