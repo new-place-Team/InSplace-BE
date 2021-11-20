@@ -433,7 +433,7 @@ const queryOfDetailPageOfInOutDoorsAndCurrentLoc = (userId, x, y, weather, categ
 			) b 
 			ON Posts.post_id = b.post_id
 			WHERE Weathers.description
-			LLIKE CONCAT('%', (SELECT description FROM Weathers WHERE weather_id=${weather}),'%')
+			LIKE CONCAT('%', (SELECT description FROM Weathers WHERE weather_id=${weather}),'%')
 			AND Categories.description
 			LIKE CONCAT('%', (SELECT description FROM Categories WHERE category_id=${category}), '%')
 			AND MemberCnt.description
