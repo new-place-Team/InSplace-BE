@@ -98,7 +98,7 @@ const queryOfResultPageOfConditionAndCurrentLoc = (userId, x, y, weather, catego
 }
 
 /* 조건 결과 페이지 조회 */
-const queryOfResultPageOfCondition = (userId, weather, category, num, gender) => {
+const queryOfResultPageOfCondition = (userId, weather, category, num, gender, lang) => {
 	if(lang === 'ko' || lang === undefined){
 		return `
 			SELECT 
@@ -262,7 +262,7 @@ const queryOfGettingTotalPageNumAndCurrentLoc = (
 `;
 };
 /* 조건 결과 상세 페이지 조회 쿼리(실내외 구분) */
-const queryOfDetailPageOfInOutDoors = (userId, weather, category, num, gender, inside, pageNum) => {
+const queryOfDetailPageOfInOutDoors = (userId, weather, category, num, gender, inside, pageNum, lang) => {
 	if(lang === 'ko' || lang === undefined){
 		return `
 			SELECT 
@@ -351,7 +351,7 @@ const queryOfDetailPageOfInOutDoors = (userId, weather, category, num, gender, i
 } 
 
 /* 현재 위치 기반, 조건 결과 상세 페이지 조회 쿼리(실내외 구분) */
-const queryOfDetailPageOfInOutDoorsAndCurrentLoc = (userId, x, y, weather, category, num, gender, inside, pageNum) => {
+const queryOfDetailPageOfInOutDoorsAndCurrentLoc = (userId, x, y, weather, category, num, gender, inside, pageNum, lang) => {
 	if(lang === 'ko' || lang === undefined) {
 		return `
 			SELECT 

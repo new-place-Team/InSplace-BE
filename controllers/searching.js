@@ -101,7 +101,7 @@ const getResultPageOfCondition = async (req, res, next) => {
     /* 현재 위치가 설정 되어있을 경우 없을 경우 */
     const result =
       x === undefined || y === undefined
-        ? await connection.query(queryOfResultPageOfCondition(userId, weather, category, num, gender))
+        ? await connection.query(queryOfResultPageOfCondition(userId, weather, category, num, gender, lang))
         : await connection.query(
             queryOfResultPageOfConditionAndCurrentLoc(
             userId, x, y, weather, category, num, gender, lang
@@ -180,10 +180,10 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
     const result =
       x === undefined || y === undefined
         ? /* 현재 위치가 설정 안된 경우 */
-          await connection.query(queryOfDetailPageOfInOutDoors(userId, weather, category, num, gender, inside, pageNum))
+          await connection.query(queryOfDetailPageOfInOutDoors(userId, weather, category, num, gender, inside, pageNum,lang))
         : /* 현재 위치가 설정 된 경우 */
           await connection.query(
-            queryOfDetailPageOfInOutDoorsAndCurrentLoc(userId, x, y, weather, category, num, gender, inside, pageNum)
+            queryOfDetailPageOfInOutDoorsAndCurrentLoc(userId, x, y, weather, category, num, gender, inside, pageNum, lang)
           );
     let posts = result[0];
     // 메인 이미지만 가져오기
