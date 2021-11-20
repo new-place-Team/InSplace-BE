@@ -84,7 +84,7 @@ const queryOfResultPageOfConditionAndCurrentLoc = (userId, x, y, weather, catego
 			ON Posts.post_id = b.post_id
 			WHERE 
 			Weathers.description
-			LIKE CONCAT('%', (SELECT description FROM Weathers WHERE weather_id=${weather}),'%')
+			LIKE CONCAT('%', (SELECT description FROM Weathers WHERE weather_id=${weather}), '%')
 			AND Categories.description
 			LIKE CONCAT('%', (SELECT description FROM Categories WHERE category_id=${category}), '%')
 			AND MemberCnt.description
@@ -130,8 +130,9 @@ const queryOfResultPageOfCondition = (userId, weather, category, num, gender, la
 					where user_id = ${userId}
 			) b 
 			ON Posts.post_id = b.post_id
+			WHERE
 			Weathers.description
-			LIKE CONCAT('%', (SELECT description FROM Weathers WHERE weather_id=${weather}),'%')
+			LIKE CONCAT('%', (SELECT description FROM Weathers WHERE weather_id=${weather}), '%')
 			AND Categories.description
 			LIKE CONCAT('%', (SELECT description FROM Categories WHERE category_id=${category}), '%')
 			AND MemberCnt.description
@@ -170,6 +171,7 @@ const queryOfResultPageOfCondition = (userId, weather, category, num, gender, la
 					where user_id = ${userId}
 			) b 
 			ON Posts.post_id = b.post_id
+			WHERE
 			Weathers.description
 			LIKE CONCAT('%', (SELECT description FROM Weathers WHERE weather_id=${weather}),'%')
 			AND Categories.description
