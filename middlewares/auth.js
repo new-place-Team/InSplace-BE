@@ -12,10 +12,7 @@ const isAuth = (req, res, next) => {
     /* authHeader == undefined || Bearer로 시작하지 않는 경우 */
     if (!(authHeader && authHeader.startsWith('Bearer'))) {
       return next(
-        customizedError(
-          'Authorization이 undefined이거나 Bearer로 시작 되지 않습니다.',
-          400
-        )
+        customizedError('로그인한 유저만 이용 가능한 서비스입니다.', 400)
       );
     }
 

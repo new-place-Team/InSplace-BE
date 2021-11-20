@@ -50,7 +50,7 @@ const registUser = async (req, res, next) => {
     );
 
     //유저 정보 저장
-
+    console.log('유저 정보 저장 전');
     await pool.query(
       insertNewUser(
         email,
@@ -61,9 +61,10 @@ const registUser = async (req, res, next) => {
         randomImageResult
       )
     );
-
+    console.log('유저 정보 저장 완료');
     return res.sendStatus(201);
   } catch (err) {
+    console.log('에러 발생');
     return next(customizedError(err, 400));
   }
 };
