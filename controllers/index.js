@@ -134,6 +134,7 @@ const getFavoritesPosts = async (req, res, next) => {
 
 /* 피드백 추가 */
 const addFeedback = async (req, res, next) => {
+  console.log('user Feedback middleware');
   const userId = req.user;
   const description = req.body.description;
 

@@ -23,7 +23,7 @@ const queryOfAddingFeedback = (userId, description) => {
   return `
       INSERT INTO
       Feedbacks(user_id, description) 
-      VALUES(${userId}, ${description})    
+      VALUES(${userId}, '${description}');    
       `;
 };
 
