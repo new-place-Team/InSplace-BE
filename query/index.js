@@ -17,7 +17,18 @@ const getUserVisitedQuery = (userId) => {
     WHERE VisitedPosts.user_id = ${userId}
     `;
 };
+
+/* Feedback 추가하는 쿼리문 */
+const queryOfAddingFeedback = (userId, description) => {
+  return `
+      INSERT INTO
+      Feedbacks(user_id, description) 
+      VALUES(${userId}, ${description})    
+      `;
+};
+
 module.exports = {
   getUserFavoriteQuery,
   getUserVisitedQuery,
+  queryOfAddingFeedback,
 };
