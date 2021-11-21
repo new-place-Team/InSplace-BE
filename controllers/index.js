@@ -91,8 +91,9 @@ const searchMain = async (req, res, next) => {
 /* 가본 리스트 조회  */
 const getVisitedPosts = async (req, res, next) => {
   const userId = req.user;
+  const lang = req.headers['language']; 
   try {
-    const [visitedPosts] = await pool.query(getUserVisitedQuery(userId));
+    const [visitedPosts] = await pool.query(getUserVisitedQuery(userId, lang));
     for (let i = 0; i < visitedPosts.length; i++) {
       visitedPosts[i].postImage = getMainImage(
         visitedPosts[i].postImage,
@@ -111,9 +112,10 @@ const getVisitedPosts = async (req, res, next) => {
 /* 찜 목록 조회 */
 const getFavoritesPosts = async (req, res, next) => {
   const userId = req.user;
+  const lang = req.headers['language'];
 
   try {
-    const [favoritePosts] = await pool.query(getUserFavoriteQuery(userId));
+    const [favoritePosts] = await pool.query(getUserFavoriteQuery(userId, lang));
     for (let i = 0; i < favoritePosts.length; i++) {
       favoritePosts[i].postImage = getMainImage(
         favoritePosts[i].postImage,

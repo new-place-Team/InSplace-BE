@@ -14,7 +14,7 @@ const queryOfResultPageOfConditionAndCurrentLoc = (userId, x, y, weather, catego
 				favorite_cnt AS favoriteCnt, 
 				post_images AS postImage, 
 				inside_yn AS insideYN,
-				Categories.description AS category, 
+				Posts.category_id AS category,
 				permission_state AS permissionState, 
 					CASE WHEN b.user_id = ${userId} THEN 1 
 					ELSE 0 
@@ -58,7 +58,7 @@ const queryOfResultPageOfConditionAndCurrentLoc = (userId, x, y, weather, catego
 				favorite_cnt AS favoriteCnt, 
 				post_images AS postImage, 
 				inside_yn AS insideYN,
-				Categories.description AS category, 
+				Posts.category_id AS category, 
 				permission_state AS permissionState, 
 					CASE WHEN b.user_id = ${userId} THEN 1 
 					ELSE 0 
@@ -108,7 +108,7 @@ const queryOfResultPageOfCondition = (userId, weather, category, num, gender, la
 			favorite_cnt AS favoriteCnt, 
 			post_images AS postImage, 
 			inside_yn AS insideYN,
-			Categories.description AS category, 
+			Posts.category_id AS category, 
 			permission_state AS permissionState, 
 				CASE WHEN b.user_id = ${userId} THEN 1 
 				ELSE 0 
@@ -149,7 +149,7 @@ const queryOfResultPageOfCondition = (userId, weather, category, num, gender, la
 			favorite_cnt AS favoriteCnt, 
 			post_images AS postImage, 
 			inside_yn AS insideYN,
-			Categories.description AS category, 
+			Posts.category_id AS category, 
 			permission_state AS permissionState, 
 				CASE WHEN b.user_id = ${userId} THEN 1 
 				ELSE 0 
@@ -274,7 +274,7 @@ const queryOfDetailPageOfInOutDoors = (userId, weather, category, num, gender, i
 			favorite_cnt AS favoriteCnt, 
 			post_images AS postImage, 
 			inside_yn AS insideYN,
-			Categories.description AS category, 
+			Posts.category_id AS category, 
 			permission_state AS permissionState, 
 				CASE WHEN b.user_id = ${userId} THEN 1 
 				ELSE 0 
@@ -316,7 +316,7 @@ const queryOfDetailPageOfInOutDoors = (userId, weather, category, num, gender, i
 			favorite_cnt AS favoriteCnt, 
 			post_images AS postImage, 
 			inside_yn AS insideYN,
-			Categories.description AS category, 
+			Posts.category_id AS category,
 			permission_state AS permissionState, 
 				CASE WHEN b.user_id = ${userId} THEN 1 
 				ELSE 0 
@@ -363,7 +363,7 @@ const queryOfDetailPageOfInOutDoorsAndCurrentLoc = (userId, x, y, weather, categ
 			favorite_cnt AS favoriteCnt, 
 			post_images AS postImage, 
 			inside_yn AS insideYN,
-			Categories.description AS category, 
+			Posts.category_id AS category, 
 			permission_state AS permissionState, 
 				CASE WHEN b.user_id = ${userId} THEN 1 
 				ELSE 0 
@@ -408,7 +408,7 @@ const queryOfDetailPageOfInOutDoorsAndCurrentLoc = (userId, x, y, weather, categ
 			favorite_cnt AS favoriteCnt, 
 			post_images AS postImage, 
 			inside_yn AS insideYN,
-			Categories.description AS category, 
+			Posts.category_id AS category, 
 			permission_state AS permissionState, 
 				CASE WHEN b.user_id = ${userId} THEN 1 
 				ELSE 0 
@@ -456,7 +456,7 @@ const queryOfResultPageOfTotal = (userId, result, pageNum, lang) => {
 		address_short AS addressShort, 
 		favorite_cnt AS favoriteCnt, 
 		post_images AS postImage,
-		Categories.description AS category, 
+		Posts.category_id AS category, 
 		permission_state AS permissionState,
 			CASE WHEN b.user_id = ${userId} THEN 1 
 				ELSE 0 END AS favoriteState,
@@ -483,7 +483,7 @@ const queryOfResultPageOfTotal = (userId, result, pageNum, lang) => {
 			Posts.address_short_en AS addressShort, 
 			favorite_cnt AS favoriteCnt, 
 			post_images AS postImage,
-			Categories.description AS category, 
+			Posts.category_id AS category, 
 			permission_state AS permissionState,
 				CASE WHEN b.user_id = ${userId} THEN 1 
 					ELSE 0 END AS favoriteState,
