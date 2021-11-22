@@ -6,7 +6,7 @@ CREATE TABLE `Users` (
   `kakao_id` integer UNIQUE, 
   `email` varchar(255) UNIQUE,
   `nickname` varchar(255) UNIQUE NOT NULL,
-  `password` varchar(40) NOT NULL,
+  `password` varchar(100) NOT NULL,
   `male_yn` boolean,
   `mbti_id` integer NOT NULL,
   `user_image` varchar(255),
@@ -103,6 +103,7 @@ CREATE TABLE `Reviews` (
   `review_desc` varchar(255),
   `weekday_yn` boolean NOT NULL,
   `revisit_yn` boolean NOT NULL,
+  `like_cnt` integer NOT NULL DEFAULT 0,
   `r_weather_id` integer NOT NULL,
   `delete_yn` boolean NOT NULL DEFAULT 0,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP
@@ -126,7 +127,9 @@ CREATE TABLE `CurrentWeather` (
   `weather_status_fe` integer NOT NULL,
   `weather_status` integer NOT NULL,
   `weather_temp` varchar(20) NOT NULL,
-  `temp_diff` varchar(20) NOT NULL
+  `pm10` integer,
+  `pm25` integer,
+  `temp_diff` varchar(20)
  );
 
 -- REVIEW WEATHER TABLE

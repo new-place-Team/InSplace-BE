@@ -4,7 +4,7 @@ const addVisited = (userID, postID) => {
     VALUES("${userID}","${postID}")`;
 };
 const findDetailPosts = (postID, userID, lang) => {
-  if(lang === 'ko' || lang === undefined){
+  if (lang === 'ko' || lang === undefined) {
     return `
       SELECT 
       Posts.post_id AS postId,
@@ -37,7 +37,7 @@ const findDetailPosts = (postID, userID, lang) => {
       WHERE Posts.post_id = "${postID}"
     `;
   } else {
-    return`
+    return `
       SELECT 
         Posts.post_id AS postId,
         post_images AS postImages, 
@@ -68,14 +68,17 @@ const findDetailPosts = (postID, userID, lang) => {
       ON Posts.post_id = VisitedPosts.post_id 
       AND VisitedPosts.user_id="${userID}"
       WHERE Posts.post_id = "${postID}"
-    `
+    `;
   }
-  
 };
 
 const checkVisitedUser = (userID, postID) => {
   return `SELECT * FROM VisitedPosts WHERE user_id = "${userID}" AND post_id = "${postID}"`;
 };
+
+/* 
+CASE WHEN male_yn = 1 THEN "남자" WHEN  male_yn = 0 THEN "여자" END AS gender FROM Users;
+*/
 
 const findDetailReviews = (postID, userID) => {
   return `
@@ -87,8 +90,9 @@ const findDetailReviews = (postID, userID) => {
   CASE
   WHEN Users.male_yn = 1
   THEN '남자'
-  ELSE '여자'
-  END AS 'gender',
+  WHEN Users.male_yn = 0
+  THEN '여자'
+  END AS gender,
   Mbti.description AS mbti,
   review_images AS reviewImages, 
   review_desc AS reviewDesc, 
