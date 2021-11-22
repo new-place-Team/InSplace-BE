@@ -12,10 +12,9 @@ const Schema = Joi.object({
 });
 
 const validationModifyUser = async (req, res, next) => {
-  const { email, nickname, mbtiId } = req.body;
+  const { nickname, mbtiId } = req.body;
   try {
     await Schema.validateAsync({
-      email,
       nickname,
       mbtiId,
     });
