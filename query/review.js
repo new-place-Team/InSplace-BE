@@ -23,9 +23,12 @@ post_id AS postId,
 Reviews.review_id AS reviewId, 
 Users.user_image AS userImage,
 nickname, 
-CASE WHEN Users.male_yn= 1 THEN '남자' 
-ELSE '여자' 
-END AS gender,
+CASE
+  WHEN Users.male_yn = 1
+  THEN '남자'
+  WHEN Users.male_yn = 0
+  THEN '여자'
+  END AS gender,
 Mbti.description AS mbti,
 review_images AS reviewImages, review_desc AS reviewDesc,
 r_weather_id AS weather, 
@@ -64,10 +67,11 @@ Reviews.review_id AS reviewId,
 Users.user_image AS userImage,
 nickname,
 CASE
-WHEN Users.male_yn = 1
-THEN '남자'
-ELSE '여자'
-END AS 'gender',
+  WHEN Users.male_yn = 1
+  THEN '남자'
+  WHEN Users.male_yn = 0
+  THEN '여자'
+  END AS gender,
 Mbti.description AS mbti,
 review_images AS reviewImages, 
 review_desc AS reviewDesc, 
