@@ -17,7 +17,8 @@ const queryOfDeletingFavorite = `
 
 const queryOfDecreasingFavoriteCnt = `
     UPDATE Posts
-    SET favorite_cnt = favorite_cnt - 1
+    SET favorite_cnt = CASE WHEN favorite_cnt <= 0
+    THEN 0 ELSE favorite_cnt - 1 END
     WHERE post_id=?;
 `;
 const queryOfGettingFavoriteData = `
