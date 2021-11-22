@@ -1,12 +1,6 @@
 const Joi = require('joi');
 const customizedError = require('../controllers/error');
 const Schema = Joi.object({
-  email: Joi.string()
-    .email({
-      minDomainSegments: 2,
-      tlds: { allow: ['com', 'net'] },
-    })
-    .required(),
   nickname: Joi.string().min(2).max(12).required(),
   mbtiId: Joi.number().integer().required(),
 });
