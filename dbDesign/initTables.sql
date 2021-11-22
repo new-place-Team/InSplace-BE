@@ -24,12 +24,16 @@ CREATE TABLE `Users` (
 CREATE TABLE `Posts` (
   `post_id` integer UNIQUE PRIMARY KEY AUTO_INCREMENT,
   `title` varchar(45) NOT NULL,
-  `address` varchar(45),
-  `address_short` varchar(45),
+  `title_en` varchar(45) NOT NULL,
+  `address` varchar(45) NOT NULL,
+  `address_en` varchar(45) NOT NULL,
+  `address_short` varchar(45) NOT NULL,
+  `address_short_en` varchar(45) NOT NULL,
   `contact_number` varchar(20),
   `category_id` integer NOT NULL,
-  `post_images` text,
-  `post_desc` text,
+  `post_images` text NOT NULL,
+  `post_desc` text NOT NULL ,
+  `post_desc_en` text NOT NULL,
   `post_loc_x` varchar(20) NOT NULL,
   `post_loc_y` varchar(20) NOT NULL,
   `favorite_cnt` integer NOT NULL DEFAULT 0,
@@ -117,7 +121,7 @@ CREATE TABLE `Weathers` (
 );
 
 -- 현재 날씨 테이블
- CREATE TABLE `CurrentWeather` (
+CREATE TABLE `CurrentWeather` (
   `cur_weather_id` integer PRIMARY KEY,
   `weather_status_fe` integer NOT NULL,
   `weather_status` integer NOT NULL,
@@ -140,9 +144,15 @@ CREATE TABLE `Reports` (
   `category_num` integer NOT NULL,
   `description` text NULL
  );
+
+-- Feedback 테이블
+CREATE TABLE `Feedbacks` (
+  `fb_id` integer PRIMARY KEY AUTO_INCREMENT,
+  `user_id` integer NOT NULL,
+  `phone_number` varchar(15),
+  `description` text NULL
+ );
  
-
-
 -- Foreign Key
 ALTER TABLE `Favorites` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE `Reviews` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
@@ -166,6 +176,7 @@ ALTER TABLE `Posts` ADD FOREIGN KEY (`member_id`) REFERENCES `MemberCnt` (`membe
 ALTER TABLE `Reports` ADD FOREIGN KEY (`from_user_id`) REFERENCES `Users` (`user_id`);
 ALTER TABLE `Reports` ADD FOREIGN KEY (`to_user_id`) REFERENCES `Users` (`user_id`);
 ALTER TABLE `Reports` ADD FOREIGN KEY (`review_id`) REFERENCES `Reviews` (`review_id`);
+ALTER TABLE `Feedbacks` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`);
 
 
 -- Charset UTF-8 추가 
@@ -183,3 +194,4 @@ ALTER TABLE MemberCnt CONVERT TO character SET utf8;
 ALTER TABLE CurrentWeather CONVERT TO character SET utf8;
 ALTER TABLE ReviewWeathers CONVERT TO character SET utf8;
 ALTER TABLE Reports CONVERT TO character SET utf8;
+ALTER TABLE Feedbacks CONVERT TO character SET utf8;

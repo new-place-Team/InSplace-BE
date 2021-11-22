@@ -50,6 +50,7 @@ const getUserVisitedQuery = (userId, lang) => {
   }
  
 };
+
 module.exports = {
   getUserFavoriteQuery,
   getUserVisitedQuery,
