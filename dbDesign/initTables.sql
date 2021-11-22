@@ -140,9 +140,15 @@ CREATE TABLE `Reports` (
   `category_num` integer NOT NULL,
   `description` text NULL
  );
+
+-- Feedback 테이블
+CREATE TABLE `Feedbacks` (
+  `fb_id` integer PRIMARY KEY AUTO_INCREMENT,
+  `user_id` integer NOT NULL,
+  `phone_number` varchar(15),
+  `description` text NULL
+ );
  
-
-
 -- Foreign Key
 ALTER TABLE `Favorites` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE `Reviews` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
@@ -166,6 +172,7 @@ ALTER TABLE `Posts` ADD FOREIGN KEY (`member_id`) REFERENCES `MemberCnt` (`membe
 ALTER TABLE `Reports` ADD FOREIGN KEY (`from_user_id`) REFERENCES `Users` (`user_id`);
 ALTER TABLE `Reports` ADD FOREIGN KEY (`to_user_id`) REFERENCES `Users` (`user_id`);
 ALTER TABLE `Reports` ADD FOREIGN KEY (`review_id`) REFERENCES `Reviews` (`review_id`);
+ALTER TABLE `Feedbacks` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`);
 
 
 -- Charset UTF-8 추가 
@@ -183,3 +190,4 @@ ALTER TABLE MemberCnt CONVERT TO character SET utf8;
 ALTER TABLE CurrentWeather CONVERT TO character SET utf8;
 ALTER TABLE ReviewWeathers CONVERT TO character SET utf8;
 ALTER TABLE Reports CONVERT TO character SET utf8;
+ALTER TABLE Feedbacks CONVERT TO character SET utf8;

@@ -10,6 +10,8 @@ const {
   getFavoritesPosts,
   getVisitedPosts,
 } = require('../controllers/index');
+
+const addFeedback = require('../controllers/feedback');
 const { justCheckAuth, isAuth } = require('../middlewares/auth');
 require('dotenv').config();
 
@@ -67,6 +69,9 @@ router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /* 메인 페이지 조회 */
 router.get('/main', justCheckAuth, searchMain);
+
+/* FeedBack 받기 */
+router.post('/feedbacks', isAuth, addFeedback);
 
 /* 찜한 포스트 조회 */
 router.get('/favorites', isAuth, getFavoritesPosts);
