@@ -41,8 +41,8 @@ const showDetailPost = async (req, res, next) => {
   };
 
   //포스트와 리뷰들을 조회하는 함수
-  const findDetailPage = async () => {
-    const lang = req.header('language');
+  const findDetailPage = async (req, res, next) => {
+    const lang = req.headers['language'];
     try {
       const [detailPosts] = await pool.query(
         findDetailPosts(req.params.postId, req.user, lang)
