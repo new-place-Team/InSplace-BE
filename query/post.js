@@ -76,10 +76,6 @@ const checkVisitedUser = (userID, postID) => {
   return `SELECT * FROM VisitedPosts WHERE user_id = "${userID}" AND post_id = "${postID}"`;
 };
 
-/* 
-CASE WHEN male_yn = 1 THEN "남자" WHEN  male_yn = 0 THEN "여자" END AS gender FROM Users;
-*/
-
 const findDetailReviews = (postID, userID) => {
   return `
   SELECT 
