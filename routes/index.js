@@ -9,8 +9,9 @@ const {
   searchMain,
   getFavoritesPosts,
   getVisitedPosts,
-  addFeedback,
 } = require('../controllers/index');
+
+const addFeedback = require('../controllers/feedback');
 const { justCheckAuth, isAuth } = require('../middlewares/auth');
 require('dotenv').config();
 

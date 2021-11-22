@@ -5,11 +5,7 @@ const {
   mdQuery,
   weatherQuery,
 } = require('../query/main');
-const {
-  getUserVisitedQuery,
-  getUserFavoriteQuery,
-  queryOfAddingFeedback,
-} = require('../query/index');
+const { getUserVisitedQuery, getUserFavoriteQuery } = require('../query/index');
 const customizedError = require('./error');
 const { getMainImage } = require('./utils/image');
 
@@ -132,43 +128,8 @@ const getFavoritesPosts = async (req, res, next) => {
   }
 };
 
-/* 피드백 추가 */
-const addFeedback = async (req, res, next) => {
-  console.log('user Feedback middleware');
-  const userId = req.user;
-  const description = req.body.description;
-
-  /* 유효성 검사  */
-
-  // try {
-  //   await schemasOfFeedback.validateAsync({
-  //     userId,
-  //     description,
-  //   });
-  // } catch (err) {
-  //   return next(customizedError(err, 400));
-  // }
-  const connection = await pool.getConnection(async (conn) => conn);
-  try {
-    const [result] = await connection.query(
-      queryOfAddingFeedback(userId, description)
-    );
-    /* 추가 되지 않은 경우 */
-    if (result.affectedRows === 0) {
-      return next(customizedError('유저 피드백이 추가 되지 않았습니다.', 400));
-    }
-    return res.sendStatus(201);
-  } catch (err) {
-    /* 신고 등록: Fail */
-    /* Internal Server Error(예상 못한 에러 발생) */
-    return next(customizedError(err, 500));
-  } finally {
-    await connection.release();
-  }
-};
 module.exports = {
   searchMain,
   getVisitedPosts,
   getFavoritesPosts,
-  addFeedback,
 };

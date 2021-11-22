@@ -145,11 +145,10 @@ CREATE TABLE `Reports` (
 CREATE TABLE `Feedbacks` (
   `fb_id` integer PRIMARY KEY AUTO_INCREMENT,
   `user_id` integer NOT NULL,
+  `phone_number` varchar(15),
   `description` text NULL
  );
  
-
-
 -- Foreign Key
 ALTER TABLE `Favorites` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE `Reviews` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
