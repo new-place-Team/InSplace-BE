@@ -30,7 +30,7 @@ const reviewImgUpload = multer({
         transform: function (req, file, cb) {
           //사진을 잘라내어 압축.. 해당 코드 리뷰필요...
           cb(null, sharp()
-            .resize(600, 600, {fit:'contain'})
+            .resize(600, 600)
             .png({quality: 75})
             .jpeg({quality: 75})
             .withMetadata()
