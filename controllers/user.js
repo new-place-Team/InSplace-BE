@@ -205,7 +205,7 @@ const kakaoLogin = async (req, res, next) => {
 
     const [, backUrl] = profile_image_url.split(':');
 
-    const httpsKakaoImageUrl = `${(https, backUrl)}`;
+    const httpsKakaoImageUrl = `${https}${backUrl}`;
     console.log(httpsKakaoImageUrl);
     let genderNumber = '';
     if (gender == 'male') {
