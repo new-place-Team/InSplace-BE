@@ -1,6 +1,5 @@
 const Joi = require('joi');
 const customizedError = require('../controllers/error');
-const logger = require('../config/logger');
 const Schema = Joi.object({
   email: Joi.string()
     .email({
@@ -18,7 +17,7 @@ const Schema = Joi.object({
 
 const validationUser = async (req, res, next) => {
   const { email, nickname, password, maleYN, mbtiId } = req.body;
-  const lang = req.headers['language'];
+
   try {
     await Schema.validateAsync({
       email,
@@ -29,13 +28,9 @@ const validationUser = async (req, res, next) => {
     });
     req.user = { email, nickname, password, maleYN, mbtiId };
     return next();
-  } catch (err) {
-    const errMsg =
-      lang === 'ko' || lang === undefined
-        ? '비밀번호는 영어와 숫자로 8자 이상 16자 이하로 작성해주세요.'
-        : 'Please write the password in English and numbers, not less than 8 characters and not more than 16 characters.';
-    logger.info(`${errMsg} : ${err}`);
-    return next(customizedError(errMsg, 400));
+  } catch (error) {
+    const { message } = error;
+    return next(customizedError(message, 400));
   }
 };
 
