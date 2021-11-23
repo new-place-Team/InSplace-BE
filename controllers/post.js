@@ -6,6 +6,7 @@ const {
 } = require('../query/post');
 const customizedError = require('../controllers/error');
 require('dotenv').config();
+const logger = require('../config/logger');
 
 const showDetailPost = async (req, res, next) => {
   //주소를 &&로 잘라서 재구성하는 함수
@@ -43,6 +44,7 @@ const showDetailPost = async (req, res, next) => {
   //포스트와 리뷰들을 조회하는 함수
   const findDetailPage = async () => {
     const lang = req.headers['language'];
+    let errMsg;
     try {
       const [detailPosts] = await pool.query(
         findDetailPosts(req.params.postId, req.user, lang)
@@ -54,7 +56,11 @@ const showDetailPost = async (req, res, next) => {
         findDetailReviews(req.params.postId, req.user)
       );
       if (detailPosts.length == 0) {
-        return next(customizedError('포스트가 없습니다.', 400));
+        errMsg = 
+        (lang === 'ko' || lang === undefined)
+        ? `포스트가 없습니다.`
+        : `There is no Posts`
+        return next(customizedError(errMsg, 400));
       }
       return {
         detailPosts,
@@ -62,7 +68,12 @@ const showDetailPost = async (req, res, next) => {
         totalReviewPage,
       };
     } catch (err) {
-      return next(customizedError(err.message, 400));
+      logger.error(`Post Detail에서 발생한 에러입니다 : ${err}`)
+      errMsg = 
+        (lang === 'ko' || lang === undefined)
+        ? `포스트에 대한 상세 설명을 조회하는데 오류가 발생했습니다. 관리자에 문의하세요`
+        : `There is an Error in Loading Posts Info Progress, Please contact Administor`
+      return next(customizedError(errMsg, 400));
     }
   };
 
@@ -80,6 +91,7 @@ const showDetailPost = async (req, res, next) => {
 
     return res.status(200).json({ ...resultSplitAddress });
   } catch (err) {
+    logger.error(`상세페이지를 찾는 과정에서 에러가 발생했습니다 : ${err}`)
     return next(customizedError(err.message, 500));
   }
 };

@@ -1,4 +1,5 @@
 const { pool } = require('../models/index');
+const logger = require('../config/logger');
 require('dotenv').config();
 const {
   updateReviewDeleteYn,
@@ -52,6 +53,8 @@ const getPostData = (result) => {
 const registReview = async (req, res, next) => {
   const postId = req.params.postId;
   const userId = req.user;
+  const lang = req.headers['language'];
+  let errMsg;
   const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
 
   const reviewImages = convertImageArrToText(
@@ -71,7 +74,11 @@ const registReview = async (req, res, next) => {
       weather,
     });
   } catch (err) {
-    return next(customizedError(err, 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? `유효하지 않은 요청입니다. 다시 확인해주세요`
+    : `Invalid Request. Please check your request`;
+    return next(customizedError(errMsg, 400));
   }
   const params = [
     postId,
@@ -87,8 +94,12 @@ const registReview = async (req, res, next) => {
     let result = await connection.query(queryOfRegistingReview, params);
     /* 추가 되지 않은 경우 */
     if (result[0].affectedRows === 0) {
+      errMsg = 
+      (lang === 'ko' || lang === undefined)
+      ? `리뷰 데이터가 추가되지 않았습니다.`
+      : `Your Review data is not posted. Please check your Review`;
       return next(
-        customizedError('review 데이터가 추가 되지 않았습니다.', 400)
+        customizedError(errMsg, 400)
       );
     }
     const reviewId = result[0].insertId;
@@ -105,6 +116,7 @@ const registReview = async (req, res, next) => {
   } catch (err) {
     /* review 등록: Fail */
     /* Internal Server Error(예상 못한 에러 발생) */
+    logger.error(`리뷰등록 과정에서 서버 에러가 발생했습니다 : ${err}`)
     return next(customizedError(err, 500));
   } finally {
     await connection.release();
@@ -113,16 +125,23 @@ const registReview = async (req, res, next) => {
 
 /* 리뷰 삭제 미들웨어 */
 const deleteReview = async (req, res, next) => {
+  const lang = req.headers['language'];
+  let errMsg;
   try {
     const [result] = await pool.query(
       updateReviewDeleteYn(req.params.postId, req.params.reviewId, req.user)
     );
 
     if (result.changedRows == 0) {
-      return next(customizedError('이미 삭제된 리뷰입니다.', 400));
+      errMsg = 
+      (lang === 'ko' || lang === undefined)
+      ? `이미 삭제된 리뷰입니다.`
+      : `This Review Has Already Deleted`;
+      return next(customizedError(errMsg, 400));
     }
     return res.sendStatus(200);
   } catch (err) {
+    logger.error(`리뷰 삭제 과정에서 서버측에러가 발생했습니다 : ${err}`);
     return next(customizedError(err.message, 500));
   }
 };
@@ -132,6 +151,8 @@ const modifyReview = async (req, res, next) => {
   const { postId, reviewId } = req.params;
   const userId = req.user;
   const { reviewDesc, weekdayYN, revisitYN, weather } = req.body;
+  const lang = req.headers['language'];
+  let errMsg;
 
   let reviewImages = '';
   /* undefine이 아닌 경우 */
@@ -165,7 +186,11 @@ const modifyReview = async (req, res, next) => {
       weather,
     });
   } catch (err) {
-    return next(customizedError(err, 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? `유효하지 않은 요청입니다. 다시 확인해주세요`
+    : `Invalid Request. Please check your request`;
+    return next(customizedError(errMsg, 400));
   }
 
   const params = [
@@ -184,7 +209,11 @@ const modifyReview = async (req, res, next) => {
     let result = await connection.query(queryOfModifyingReview, params);
     /* 변경된 것이 없는 경우 */
     if (result[0].changedRows == 0) {
-      return next(customizedError('수정된 데이터가 없습니다.', 400));
+      errMsg = 
+      (lang === 'ko' || lang === undefined)
+      ? `수정된 데이터가 없습니다`
+      : `There is nothing changed in your review`;
+      return next(customizedError(errMsg, 400));
     }
 
     const paramsOfGettingReview = [userId, userId, userId, reviewId, postId];
@@ -200,6 +229,7 @@ const modifyReview = async (req, res, next) => {
   } catch (err) {
     /* review 수정: Fail */
     /* Internal Server Error(예상 못한 에러 발생) */
+    logger.error(`리뷰 수정 과정에서 서버측 에러가 발생했습니다 : ${err}`)
     return next(customizedError(err, 500));
   } finally {
     await connection.release();
@@ -212,6 +242,8 @@ const getReviewByLatest = async (req, res, next) => {
   const pageNum = Number(req.params.num);
   /* 로그인 한 유저인 경우 userId, 아닌 경우 0 */
   const userId = req.user ? req.user : 0;
+  const lang = req.headers['language'];
+  let errMsg;
 
   /* 유효성 검사 */
   try {
@@ -221,7 +253,11 @@ const getReviewByLatest = async (req, res, next) => {
       postId,
     });
   } catch (err) {
-    return next(customizedError(err, 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? `유효하지 않은 요청입니다. 다시 확인해주세요`
+    : `Invalid Request. Please check your request`;
+    return next(customizedError(errMsg, 400));
   }
   const connection = await pool.getConnection(async (conn) => conn);
   try {
@@ -246,6 +282,7 @@ const getReviewByLatest = async (req, res, next) => {
       reviews,
     });
   } catch (err) {
+    logger.error(`최신순으로 리뷰를 가져오던 도중 서버 에러가 발생했습니다 : ${err}`)
     return next(customizedError(err, 500));
   } finally {
     await connection.release();
@@ -256,6 +293,8 @@ const getReviewByLatest = async (req, res, next) => {
 const getReviewByLike = async (req, res, next) => {
   const postId = req.params.postId;
   const pageNum = Number(req.params.num);
+  const lang = req.headers['language'];
+  let errMsg;
 
   /* 로그인 한 유저인 userId, 아닌 경우 0 */
   const userId = req.user ? req.user : 0;
@@ -267,7 +306,11 @@ const getReviewByLike = async (req, res, next) => {
       postId,
     });
   } catch (err) {
-    return next(customizedError(err, 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? `유효하지 않은 요청입니다. 다시 확인해주세요`
+    : `Invalid Request. Please check your request`;
+    return next(customizedError(errMsg, 400));
   }
   const connection = await pool.getConnection(async (conn) => conn);
   try {
@@ -291,6 +334,7 @@ const getReviewByLike = async (req, res, next) => {
       reviews,
     });
   } catch (err) {
+    logger.error(`추천순으로 로그를 가져오던 도중 서버 에러가 발생했습니다 : ${err}`)
     return next(customizedError(err, 500));
   } finally {
     await connection.release();
@@ -318,6 +362,7 @@ const getWritingPageOfReview = async (req, res, next) => {
       },
     });
   } catch (err) {
+    logger.error(`리뷰 작성 페이지를 조회하던 도중 서버 에러가 발생했습니다 : ${err}`)
     return next(customizedError(err, 500));
   } finally {
     await connection.release();
@@ -342,6 +387,7 @@ const getEditingPageOfReview = async (req, res, next) => {
       review,
     });
   } catch (err) {
+    logger.error(`리뷰 수정 페이지를 조회하던 도중 서버 에러가 발생했습니다 : ${err}`)
     return next(customizedError(err, 500));
   } finally {
     await connection.release();
