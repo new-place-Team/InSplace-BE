@@ -8,6 +8,7 @@ const {
 const { getUserVisitedQuery, getUserFavoriteQuery } = require('../query/index');
 const customizedError = require('./error');
 const { getMainImage } = require('./utils/image');
+const logger = require('../config/logger');
 
 const searchMain = async (req, res, next) => {
   const lang = req.headers['language'];
@@ -87,6 +88,7 @@ const searchMain = async (req, res, next) => {
     (lang === 'ko' || lang === undefined)
     ? `잘못된 요청입니다 : ${err}`
     : `Invalid Request : ${err}`
+    logger.error(`스케쥴러에서 에러가 발생했습니다. SQL 컬럼과 API요청을 확인해주세요 : ${err}`)
     return next(customizedError(errMsg, 400));
   } finally {
     await connection.release();
@@ -110,6 +112,7 @@ const getVisitedPosts = async (req, res, next) => {
       visitedPosts,
     });
   } catch (err) {
+    logger.error(`가본 리스트를 조회하던 도중 서버에러가 발생했습니다 : ${err}`);
     return next(customizedError(err, 500));
   }
 };
@@ -132,6 +135,7 @@ const getFavoritesPosts = async (req, res, next) => {
       favoritePosts,
     });
   } catch (err) {
+    logger.error(`찜 목록을 조회하던 도중 서버 에러가 발생했습니다: ${err}`);
     return next(customizedError(err, 500));
   }
 };
