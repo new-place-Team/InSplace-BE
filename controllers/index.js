@@ -11,6 +11,7 @@ const { getMainImage } = require('./utils/image');
 
 const searchMain = async (req, res, next) => {
   const lang = req.headers['language'];
+  let errMsg;
   let weatherResult;
   let user = 0;
   const connection = await pool.getConnection(async (conn) => conn);
@@ -82,7 +83,11 @@ const searchMain = async (req, res, next) => {
       pickPlace: adjMd,
     });
   } catch (err) {
-    return next(customizedError(err, 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? `잘못된 요청입니다 : ${err}`
+    : `Invalid Request : ${err}`
+    return next(customizedError(errMsg, 400));
   } finally {
     await connection.release();
   }
