@@ -1,6 +1,7 @@
 const { pool } = require('../models/index');
 const customizedError = require('./error');
 const { weatherQuery } = require('../query/showWeather');
+const logger = require('../config/logger');
 
 const getWeatherInfo = async (req, res, next) => {
   try {
@@ -35,6 +36,7 @@ const getWeatherInfo = async (req, res, next) => {
       pm25: pm25
     });
   } catch (err) {
+    logger.error(`데이터베이스의 날씨를 가져오던 도중 에러가 발생했습니다 : ${err}`)
     return next(customizedError(err, 400));
   }
 };

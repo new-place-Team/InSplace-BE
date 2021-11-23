@@ -38,6 +38,7 @@ const getResultPageOfTotal = async (req, res, next) => {
   const pageNum = (Number(req.params.number) - 1) * 12; // Pages Number
   const result = req.query.result; // Searching Result
   const lang = req.headers['language'];
+  let errMsg;
   /* 유효성 검사 */
   try {
     await schemasOfResultPageofTotal.validateAsync({
@@ -46,7 +47,11 @@ const getResultPageOfTotal = async (req, res, next) => {
       pageNum,
     });
   } catch (err) {
-    return next(customizedError(err, 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? `유효하지 않은 요청입니다. 다시 확인해주세요`
+    : `Invalid Request. Please check your request`;
+    return next(customizedError(errMsg, 400));
   }
 
   const params = [userId, userId, result, result, pageNum];
@@ -66,6 +71,7 @@ const getResultPageOfTotal = async (req, res, next) => {
       posts,
     });
   } catch (err) {
+    logger.error(`토탈 검색 페이지에서 서버측 에러가 발생했습니다 : ${err}`)
     return next(customizedError(err, 500));
   } finally {
     await connection.release();
@@ -77,6 +83,7 @@ const getResultPageOfCondition = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const { weather, category, num, gender, x, y } = req.query;
   const lang = req.headers['language'];
+  let errMsg;
   /* 현재 위치가 설정 되어 있을 경우 없을 경우 */
   const params =
     x === undefined || y === undefined
@@ -93,7 +100,11 @@ const getResultPageOfCondition = async (req, res, next) => {
       gender,
     });
   } catch (err) {
-    return next(customizedError(err, 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? `유효하지 않은 요청입니다. 다시 확인해주세요`
+    : `Invalid Request. Please check your request`;
+    return next(customizedError(errMsg, 400));
   }
 
   const connection = await pool.getConnection(async (conn) => conn);
@@ -131,6 +142,7 @@ const getResultPageOfCondition = async (req, res, next) => {
       outSidePlaces,
     });
   } catch (err) {
+    logger.error(`조건 결과 페이지 조회에서 서버측 에러가 발생했습니다 : ${err}`)
     return next(customizedError(err, 500));
   } finally {
     await connection.release();
@@ -141,6 +153,7 @@ const getResultPageOfCondition = async (req, res, next) => {
 const getDetailPageOfInOutDoors = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const lang = req.headers['language'];
+  let errMsg;
   const { weather, category, num, gender, inside, x, y } = req.query;
   const page = req.params.number;
   const pageNum = (Number(req.params.number) - 1) * 12;
@@ -173,7 +186,11 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
       pageNum,
     });
   } catch (err) {
-    return next(customizedError(err, 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? `유효하지 않은 요청입니다. 다시 확인해주세요`
+    : `Invalid Request. Please check your request`;
+    return next(customizedError(errMsg, 400));
   }
   const connection = await pool.getConnection(async (conn) => conn);
   try {
@@ -218,6 +235,7 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
       posts,
     });
   } catch (err) {
+    logger.error(`조건 결과 상세 페이지 조회(실내외중 한개)에서 서버축 에러가 발생했습니다: ${err}`)
     return next(customizedError(err, 500));
   } finally {
     await connection.release();
