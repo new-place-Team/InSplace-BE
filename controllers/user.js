@@ -217,7 +217,7 @@ const kakaoLogin = async (req, res, next) => {
     if ((await checkKakaoUserAndLogin(kakaoUserId, next, res)) == true) {
       return;
     }
-    z;
+
     //Nickname 중복검사
     if (await checkDuplicateOfNickname(nickname, next)) {
       errMsg =
