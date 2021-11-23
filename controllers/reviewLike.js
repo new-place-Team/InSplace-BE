@@ -96,8 +96,9 @@ const deleteReviewLike = async (req, res, next) => {
 
   /* 존재 유무 검사 */
   try {
-    const params = [userId, reviewId];
-    let [result] = await connection.query(queryOfGettingReviewLikes, params);
+    let [result] = await connection.query(
+      queryOfGettingReviewLikes(userId, reviewId)
+    );
     if (result.length === 0) {
       await connection.release();
       errMsg =
