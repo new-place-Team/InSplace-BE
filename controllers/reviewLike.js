@@ -9,6 +9,7 @@ const {
 } = require('../query/reviewLike');
 const customizedError = require('../controllers/error');
 const { schemasOfReviewLike } = require('../middlewares/validationReview');
+const logger = require('../config/logger');
 require('dotenv').config();
 
 /* 리뷰 좋아요 추가  */
@@ -22,20 +23,35 @@ const addReviewLike = async (req, res, next) => {
     await schemasOfReviewLike.validateAsync({ userId, reviewId });
   } catch (err) {
     /* 유효성 검사: Fail */
-    return next(customizedError(err, 400));
+    errMsg =
+      lang === 'ko' || lang === undefined
+        ? '잘못된 형식입니다.'
+        : 'Invalid format.';
+    logger.info(`${errMsg} : ${err}`);
+    return next(customizedError(errMsg, 400));
   }
 
   const connection = await pool.getConnection(async (conn) => conn);
   /* 존재 유무 검사 */
   try {
-    const params = [userId, reviewId];
-    const [result] = await connection.query(queryOfGettingReviewLikes, params);
+    const [result] = await connection.query(
+      queryOfGettingReviewLikes(userId, reviewId)
+    );
     if (result.length >= 1) {
-      return next(customizedError('좋아요를 이미 눌렀습니다.', 400));
+      await connection.release();
+      errMsg =
+        lang === 'ko' || lang === undefined
+          ? '이미 좋아요가 눌린 게시글 입니다.'
+          : 'This post has already been pressed on like';
+      return next(customizedError(errMsg, 400));
     }
   } catch (err) {
     /* 존재 유무 검사 중 예측하지 못한 에러 발생 */
-    return next(customizedError(err, 500));
+    await connection.release();
+    errMsg =
+      'func: addReviewLike에서 존재 유무 검사 중 Internal server Error 발생';
+    logger.error(`${errMsg}: ${err}`);
+    return next(customizedError(errMsg, 500));
   }
   try {
     // transaction 시작
@@ -48,13 +64,18 @@ const addReviewLike = async (req, res, next) => {
   } catch (err) {
     /* 좋아요 추가: Fail -> 예측하지 못한 에러 */
     await connection.rollback(); // 에러가 발생할 경우 원래 상태로 돌리기
-    return next(customizedError(err, 500));
+    errMsg =
+      'func: addReviewLike에서 리뷰 좋아요 추가 중 Internal server Error 발생';
+    logger.error(`${errMsg}: ${err}`);
+    return next(customizedError(errMsg, 500));
   } finally {
     await connection.release(); // 연결 끊기
   }
 };
 /* 리뷰 좋아요 취소 */
 const deleteReviewLike = async (req, res, next) => {
+  let errMsg = '';
+  const lang = req.headers['language'];
   const reviewId = req.params.reviewId;
   const userId = req.user;
 
@@ -63,7 +84,12 @@ const deleteReviewLike = async (req, res, next) => {
     await schemasOfReviewLike.validateAsync({ userId, reviewId });
   } catch (err) {
     /* 유효성 검사: Fail */
-    return next(customizedError(err, 400));
+    errMsg =
+      lang === 'ko' || lang === undefined
+        ? '잘못된 형식입니다.'
+        : 'Invalid format.';
+    logger.error(`${errMsg} : ${err}`);
+    return next(customizedError(errMsg, 400));
   }
 
   const connection = await pool.getConnection(async (conn) => conn);
@@ -71,18 +97,23 @@ const deleteReviewLike = async (req, res, next) => {
   /* 존재 유무 검사 */
   try {
     const params = [userId, reviewId];
-    let result = await connection.query(queryOfGettingReviewLikes, params);
-    if (result[0].length === 0) {
-      return next(
-        customizedError(
-          '도움이 돼요 버튼을 눌렀던 이력이 존재하지 않습니다.',
-          400
-        )
-      );
+    let [result] = await connection.query(queryOfGettingReviewLikes, params);
+    if (result.length === 0) {
+      await connection.release();
+      errMsg =
+        lang === 'ko' || lang == undefined
+          ? '도움이 돼요 버튼을 눌렀던 이력이 존재하지 않습니다.'
+          : 'There is no history of pressing the like button.';
+      logger.info(errMsg);
+      return next(customizedError(errMsg, 400));
     }
   } catch (err) {
     /* 존재 유무 검사 중 예측하지 못한 에러 발생 */
-    return next(customizedError(err, 500));
+    await connection.release();
+    errMsg =
+      'func: deleteReviewLike에서 존재 유무 검사 중 Internal server Error 발생';
+    logger.error(`${errMsg}: ${err}`);
+    return next(customizedError(errMsg, 500));
   }
   try {
     await connection.beginTransaction(); // transaction 시작
@@ -95,7 +126,10 @@ const deleteReviewLike = async (req, res, next) => {
   } catch (err) {
     /* 리뷰 좋아요 취소: Fail -> 예측하지 못한 에러 */
     await connection.rollback();
-    return next(customizedError(err, 500));
+    errMsg =
+      'func: deleteReviewLike에서 좋아요 목록 삭제 중 Internal server Error 발생';
+    logger.error(`${errMsg}: ${err}`);
+    return next(customizedError(errMsg, 500));
   } finally {
     await connection.release();
   }

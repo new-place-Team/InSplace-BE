@@ -97,8 +97,8 @@ const deleteFavorite = async (req, res, next) => {
   /* 존재 유무 검사 */
   try {
     const params = [userId, postId];
-    const result = await connection.query(queryOfGettingFavoriteData, params);
-    if (result[0].length === 0) {
+    const [result] = await connection.query(queryOfGettingFavoriteData, params);
+    if (result.length === 0) {
       await connection.release();
       errMsg =
         lang === 'ko' || lang === undefined
