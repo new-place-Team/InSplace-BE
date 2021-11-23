@@ -131,18 +131,13 @@ const authUser = async (req, res, next) => {
 };
 
 const checkUser = async (req, res, next) => {
-  console.log('로그인 체크 실행');
   const authHeader = req.get('Authorization');
-  console.log(authHeader);
   const token = authHeader.split(' ')[1];
-  console.log('헤더에서 토큰 가져오기 완료', token);
   try {
     const result = jwt.verify(token, process.env.SECRET_KEY);
-    console.log('토큰 veryfy성공', result);
     const [userInformation] = await pool.query(
       getUserInformationById(result.user_id)
     );
-    console.log('유저 정보 가져오기 성공', userInformation[0]);
     return res.status(200).json({ ...userInformation[0] });
   } catch (err) {
     if (err.message == 'jwt expired') {
