@@ -7,15 +7,22 @@ const {
 const { checkVisitedUser, addVisited } = require('../query/post');
 const customizedError = require('./error');
 const { pool } = require('../models/index');
+const logger = require('../config/logger');
 
 /* 가본 장소 리스트에 추가 */
 const addVisitedPosts = async (req, res, next) => {
+  const lang = req.headers['language'];
+  let errMsg;
   //유저가 가본 리스트에 추가했는지 확인
   const resultCheckVisitedUser = async (user, postID) => {
     const result = await pool.query(checkVisitedUser(user, postID));
     if (result[0].length !== 0) {
+      errMsg = 
+      (lang === 'ko' || lang === undefined)
+      ? `이미 가본 리스트에 추가되어 있습니다`
+      : `Already exist in Visited Place`
       return next(
-        customizedError('이미 가본 리스트에 추가되어 있습니다.', 400)
+        customizedError(errMsg, 400)
       );
     }
     return true;
@@ -36,6 +43,8 @@ const addVisitedPosts = async (req, res, next) => {
 const deleteVisitedPosts = async (req, res, next) => {
   const postId = req.params.postId;
   const userId = req.user;
+  const lang = req.headers['language'];
+  let errMsg;
 
   try {
     /* 유효성 검사: Success */
@@ -52,11 +61,16 @@ const deleteVisitedPosts = async (req, res, next) => {
     const params = [userId, postId];
     const result = await connection.query(queryOfGettingVisitedData, params);
     if (result[0].length === 0) {
-      return next(customizedError('삭제할 데이터가 없습니다.', 400));
+      errMsg = 
+      (lang === 'ko' || lang === undefined)
+      ? `삭제할 데이터가 없습니다.`
+      : `There is nothing to delete `
+      return next(customizedError(errMsg, 400));
     }
   } catch (err) {
     /* 존재 유무 검사 중 예측하지 못한 에러 발생 */
     await connection.release();
+    logger.error(`존재유무 검사중  예측하지 못한 에러: ${err}`);
     return next(customizedError(err, 500));
   }
 
@@ -66,6 +80,7 @@ const deleteVisitedPosts = async (req, res, next) => {
     return res.sendStatus(200);
   } catch (err) {
     /* 가본 리스트에서 삭제: Fail -> 예측하지 못한 에러 */
+    logger.error(`가본 리스트에서 삭제: Fail -> 예측하지 못한 에러: ${err}`);
     return next(customizedError(err, 400));
   } finally {
     await connection.release();

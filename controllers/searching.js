@@ -37,7 +37,7 @@ const getResultPageOfTotal = async (req, res, next) => {
   const userId = Number(checkLoginUser(req.user));
   const pageNum = (Number(req.params.number) - 1) * 12; // Pages Number
   const result = req.query.result; // Searching Result
-  const lang = req.header('language');
+  const lang = req.headers['language'];
   /* 유효성 검사 */
   try {
     await schemasOfResultPageofTotal.validateAsync({
@@ -76,7 +76,7 @@ const getResultPageOfTotal = async (req, res, next) => {
 const getResultPageOfCondition = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const { weather, category, num, gender, x, y } = req.query;
-  const lang = req.header('language');
+  const lang = req.headers['language'];
   /* 현재 위치가 설정 되어 있을 경우 없을 경우 */
   const params =
     x === undefined || y === undefined
