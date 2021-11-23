@@ -200,6 +200,9 @@ const kakaoLogin = async (req, res, next) => {
         profile: { nickname, profile_image_url },
       },
     } = getKakaoUserResult.data;
+
+    console.log(getKakaoUserResult.data);
+
     let genderNumber = '';
     if (gender == 'male') {
       genderNumber = 1;
@@ -211,7 +214,7 @@ const kakaoLogin = async (req, res, next) => {
     if ((await checkKakaoUserAndLogin(kakaoUserId, next, res)) == true) {
       return;
     }
-
+    z;
     //Nickname 중복검사
     if (await checkDuplicateOfNickname(nickname, next)) {
       errMsg =
