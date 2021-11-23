@@ -170,9 +170,9 @@ const kakaoLogin = async (req, res, next) => {
   let errMsg;
   try {
     //사용자 정보를 데이터베이스에 넣어주는 함수
-    const insertUser = async (genderNumber, profile_image_url) => {
-      let stateProfile_image = profile_image_url;
-      if (profile_image_url == undefined) {
+    const insertUser = async (genderNumber, httpsKakaoImageUrl) => {
+      let stateProfile_image = httpsKakaoImageUrl;
+      if (httpsKakaoImageUrl == undefined) {
         stateProfile_image == null;
       }
       await pool.query(
@@ -188,24 +188,25 @@ const kakaoLogin = async (req, res, next) => {
     //인가코드로 토큰 받아오기
     const success = await getKakaoToken(req.query.code);
 
-    console.log('인가코드', success);
-
     //받아온 카카오 토큰으로 유저정보 가져오기
     const getKakaoUserResult = await getKakaoUserInformation(
       success.data.access_token
     );
 
-    console.log('유저정보', getKakaoUserResult);
     const {
       id: kakaoUserId,
       kakao_account: {
         gender,
-        profile: { nickname, profile_image_url },
+        profile: { nickname, httpsKakaoImageUrl },
       },
     } = getKakaoUserResult.data;
 
-    console.log(getKakaoUserResult.data);
+    const https = 'https:';
 
+    const [, backUrl] = httpsKakaoImageUrl.split(':');
+
+    const httpsKakaoImageUrl = `${(https, backUrl)}`;
+    console.log(httpsKakaoImageUrl);
     let genderNumber = '';
     if (gender == 'male') {
       genderNumber = 1;
@@ -232,17 +233,16 @@ const kakaoLogin = async (req, res, next) => {
       //유저 정보 저장
       //카카오 유저가 성별을 제공했을 경우
       if (genderNumber == 0 || 1) {
-        await insertUser(genderNumber, profile_image_url);
+        await insertUser(genderNumber, httpsKakaoImageUrl);
         return await checkKakaoUserAndLogin(kakaoUserId, next, res);
       }
       //카카오 유저가 성별을 제공 안했을 경우
-      await insertUser('', profile_image_url);
+      await insertUser('', httpsKakaoImageUrl);
       return await checkKakaoUserAndLogin(kakaoUserId, next, res);
     } catch (err) {
       return next(customizedError(err, 400));
     }
   } catch (err) {
-    console.log(err);
     return next(customizedError(err.message, 500));
   }
 };
