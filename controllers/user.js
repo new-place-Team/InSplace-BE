@@ -40,7 +40,6 @@ const registUser = async (req, res, next) => {
   //중복검사 통과
   try {
     const randomImageResult = randomRegistImage(maleYN);
-
     //mbti id검사
     const [data] = await pool.query(checkMBTI(mbtiId));
     //비밀번호 암호화
@@ -50,7 +49,6 @@ const registUser = async (req, res, next) => {
     );
 
     //유저 정보 저장
-    console.log('유저 정보 저장 전');
     await pool.query(
       insertNewUser(
         email,
@@ -61,10 +59,8 @@ const registUser = async (req, res, next) => {
         randomImageResult
       )
     );
-    console.log('유저 정보 저장 완료');
     return res.sendStatus(201);
   } catch (err) {
-    console.log('에러 발생');
     return next(customizedError(err, 400));
   }
 };

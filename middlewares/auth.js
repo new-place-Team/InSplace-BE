@@ -8,7 +8,6 @@ const customizedError = require('../controllers/error');
 const isAuth = (req, res, next) => {
   try {
     const authHeader = req.get('Authorization');
-
     /* authHeader == undefined || Bearer로 시작하지 않는 경우 */
     if (!(authHeader && authHeader.startsWith('Bearer'))) {
       return next(
