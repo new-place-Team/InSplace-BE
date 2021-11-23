@@ -6,6 +6,7 @@ const url = process.env.SLACK_WEBHOOK_URL;
 const webhook = new IncomingWebhook(url);
 const schemasOfFeedback = require('../middlewares/validationFeedback');
 const logger = require('../config/logger');
+
 /* 피드백 슬랙에 보내는 함수 */
 const sendMsgToSlack = async (userId, phoneNumber, description) => {
   // Send the notification
@@ -27,6 +28,8 @@ const queryOfAddingFeedback = (userId, phoneNumber, description) => {
 
 /* 피드백 추가 */
 const addFeedback = async (req, res, next) => {
+  const lang = req.headers['language'];
+  let errMsg = '';
   const userId = req.user;
   const { phoneNumber, description } = req.body;
   /* 유효성 검사*/
@@ -37,31 +40,40 @@ const addFeedback = async (req, res, next) => {
       description,
     });
   } catch (err) {
-    logger.error('피드백 추가 중 유효성 검사에서 발생한 에러: ', err);
-    return next(customizedError(err, 400));
+    errMsg =
+      lang === 'ko' || lang === undefined
+        ? '잘못된 형식입니다.'
+        : 'Invalid format.';
+    logger.error(`${errMsg} : ${err}`);
+    return next(customizedError(errMsg, 400));
   }
 
   /* 피드백 슬랙에 보내기 */
   await sendMsgToSlack(userId, phoneNumber, description);
 
-  const connection = await pool.getConnection(async (conn) => conn);
   try {
     /* 피드백 등록 */
-    const [result] = await connection.query(
+    const [result] = await pool.query(
       queryOfAddingFeedback(userId, description)
     );
-    /* 추가 되지 않은 경우 */
+
+    /* 피드백이 등록 되지 않은 경우 */
     if (result.affectedRows === 0) {
-      return next(customizedError('유저 피드백이 추가 되지 않았습니다.', 400));
+      errMsg =
+        lang === 'ko' || lang === undefined
+          ? '유저 피드백이 등록 되지 않았습니다.'
+          : 'User feedback is not registered.';
+      logger.error(`${errMsg}`);
+      return next(customizedError(errMsg, 400));
     }
 
     return res.sendStatus(201);
   } catch (err) {
     /* 피드백 등록: Fail */
     /* Internal Server Error(예상 못한 에러 발생) */
-    return next(customizedError(err, 500));
-  } finally {
-    await connection.release();
+    errMsg = 'Func: addFeedback 에서 internal server error 발생';
+    logger.error(`${errMsg} : ${err}`);
+    return next(customizedError(errMsg, 500));
   }
 };
 
