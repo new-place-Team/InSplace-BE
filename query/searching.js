@@ -4,9 +4,18 @@ const memberQuery = `SELECT description FROM MemberCnt WHERE member_id=?`;
 const genderQuery = `SELECT description FROM Genders WHERE gender_id=?`;
 
 /* 현재 위치 기반 조건 결과 페이지 조회 */
-const queryOfResultPageOfConditionAndCurrentLoc = (userId, x, y, weather, category, num, gender, lang) => {
-	if(lang === 'ko' || lang === undefined){
-		return`
+const queryOfResultPageOfConditionAndCurrentLoc = (
+  userId,
+  x,
+  y,
+  weather,
+  category,
+  num,
+  gender,
+  lang
+) => {
+  if (lang === 'ko' || lang === undefined) {
+    return `
 			SELECT 
 				Posts.post_id AS postId, 
 				title, 
@@ -49,8 +58,8 @@ const queryOfResultPageOfConditionAndCurrentLoc = (userId, x, y, weather, catego
 			LIKE CONCAT('%', (SELECT description FROM Genders WHERE gender_id=${gender}), '%')
 			HAVING distance <= 5
 			`;
-	} else {
-		return`
+  } else {
+    return `
 			SELECT 
 				Posts.post_id AS postId, 
 				Posts.title_en AS title, 
@@ -93,14 +102,20 @@ const queryOfResultPageOfConditionAndCurrentLoc = (userId, x, y, weather, catego
 			LIKE CONCAT('%', (SELECT description FROM Genders WHERE gender_id=${gender}), '%')
 			HAVING distance <= 5
 			`;
-	}
-	
-}
+  }
+};
 
 /* 조건 결과 페이지 조회 */
-const queryOfResultPageOfCondition = (userId, weather, category, num, gender, lang) => {
-	if(lang === 'ko' || lang === undefined){
-		return `
+const queryOfResultPageOfCondition = (
+  userId,
+  weather,
+  category,
+  num,
+  gender,
+  lang
+) => {
+  if (lang === 'ko' || lang === undefined) {
+    return `
 			SELECT 
 			Posts.post_id AS postId, 
 			title, 
@@ -140,8 +155,8 @@ const queryOfResultPageOfCondition = (userId, weather, category, num, gender, la
 			AND Genders.description 
 			LIKE CONCAT('%', (SELECT description FROM Genders WHERE gender_id=${gender}), '%')
 			`;
-	} else {
-		return `
+  } else {
+    return `
 			SELECT 
 			Posts.post_id AS postId, 
 			Posts.title_en AS title, 
@@ -181,9 +196,8 @@ const queryOfResultPageOfCondition = (userId, weather, category, num, gender, la
 			AND Genders.description 
 			LIKE CONCAT('%', (SELECT description FROM Genders WHERE gender_id=${gender}), '%')
 			`;
-	}
-	
-} 
+  }
+};
 
 const queryOfGettingTotalPageNum = `
 	SELECT 
@@ -227,7 +241,8 @@ const queryOfGettingTotalPageNumAndCurrentLoc = (
   category,
   num,
   gender,
-  inside) => {
+  inside
+) => {
   return `
 	SELECT 
 	count(Posts.post_id) AS pageNum, 
@@ -264,9 +279,18 @@ const queryOfGettingTotalPageNumAndCurrentLoc = (
 `;
 };
 /* 조건 결과 상세 페이지 조회 쿼리(실내외 구분) */
-const queryOfDetailPageOfInOutDoors = (userId, weather, category, num, gender, inside, pageNum, lang) => {
-	if(lang === 'ko' || lang === undefined){
-		return `
+const queryOfDetailPageOfInOutDoors = (
+  userId,
+  weather,
+  category,
+  num,
+  gender,
+  inside,
+  pageNum,
+  lang
+) => {
+  if (lang === 'ko' || lang === undefined) {
+    return `
 			SELECT 
 			Posts.post_id AS postId, 
 			title, 
@@ -307,8 +331,8 @@ const queryOfDetailPageOfInOutDoors = (userId, weather, category, num, gender, i
 			AND inside_yn = ${inside}
 			LIMIT ${pageNum}, 12;
 		`;
-	} else {
-		return `
+  } else {
+    return `
 			SELECT 
 			Posts.post_id AS postId, 
 			Posts.title_en AS title, 
@@ -349,13 +373,24 @@ const queryOfDetailPageOfInOutDoors = (userId, weather, category, num, gender, i
 			AND inside_yn = ${inside}
 			LIMIT ${pageNum}, 12;
 		`;
-	}
-} 
+  }
+};
 
 /* 현재 위치 기반, 조건 결과 상세 페이지 조회 쿼리(실내외 구분) */
-const queryOfDetailPageOfInOutDoorsAndCurrentLoc = (userId, x, y, weather, category, num, gender, inside, pageNum, lang) => {
-	if(lang === 'ko' || lang === undefined) {
-		return `
+const queryOfDetailPageOfInOutDoorsAndCurrentLoc = (
+  userId,
+  x,
+  y,
+  weather,
+  category,
+  num,
+  gender,
+  inside,
+  pageNum,
+  lang
+) => {
+  if (lang === 'ko' || lang === undefined) {
+    return `
 			SELECT 
 			Posts.post_id AS postId, 
 			title, 
@@ -399,8 +434,8 @@ const queryOfDetailPageOfInOutDoorsAndCurrentLoc = (userId, x, y, weather, categ
 			HAVING distance <= 5
 			LIMIT ${pageNum}, 12;
 			`;
-	} else {
-		return `
+  } else {
+    return `
 			SELECT 
 			Posts.post_id AS postId, 
 			Posts.title_en AS title, 
@@ -444,12 +479,12 @@ const queryOfDetailPageOfInOutDoorsAndCurrentLoc = (userId, x, y, weather, categ
 			HAVING distance <= 5
 			LIMIT ${pageNum}, 12;
 			`;
-	}
-} 
+  }
+};
 
 const queryOfResultPageOfTotal = (userId, result, pageNum, lang) => {
-	if(lang === 'ko' || lang === undefined) {
-		return `
+  if (lang === 'ko' || lang === undefined) {
+    return `
 		SELECT 
 		Posts.post_id AS postId, 
 		title, 
@@ -475,8 +510,8 @@ const queryOfResultPageOfTotal = (userId, result, pageNum, lang) => {
 		OR post_desc LIKE CONCAT('%', '${result}', '%')
 		LIMIT ${pageNum}, 12;
 		`;
-	} else {
-		return`
+  } else {
+    return `
 			SELECT 
 			Posts.post_id AS postId, 
 			Posts.title_en AS title, 
@@ -502,8 +537,8 @@ const queryOfResultPageOfTotal = (userId, result, pageNum, lang) => {
 			OR post_desc_en LIKE CONCAT('%', '${result}', '%')
 			LIMIT ${pageNum}, 12;
 		`;
-	}
-} 
+  }
+};
 
 module.exports = {
   queryOfResultPageOfCondition,
