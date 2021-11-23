@@ -3,4 +3,4 @@
 echo 'script start'
 
 cd /home/ubuntu/insplace
-kubectl rollout restart deployment insplace
+kubectl get pods
