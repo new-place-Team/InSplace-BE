@@ -27,24 +27,24 @@ const {
 
 const registUser = async (req, res, next) => {
   const lang = req.headers['language'];
-  let errMsg; 
+  let errMsg;
   const { email, nickname, password, maleYN, mbtiId } = req.user;
 
   //Email 중복검사
   if (await checkDuplicateOfEmail(email, next)) {
-    errMsg = 
-    (lang === 'ko' || lang === undefined)
-    ? '이메일이 이미 존재합니다'
-    : 'Email is already exist.'
+    errMsg =
+      lang === 'ko' || lang === undefined
+        ? '이메일이 이미 존재합니다'
+        : 'Email is already exist.';
     return next(customizedError(errMsg, 400));
   }
   //Nickname 중복검사
 
   if (await checkDuplicateOfNickname(nickname, next)) {
-    errMsg = 
-    (lang === 'ko' || lang === undefined)
-    ? '닉네임이 이미 존재합니다 중복검사 에러'
-    : 'Nickname is already exist.'
+    errMsg =
+      lang === 'ko' || lang === undefined
+        ? '닉네임이 이미 존재합니다 중복검사 에러'
+        : 'Nickname is already exist.';
     return next(customizedError(errMsg, 400));
   }
   //중복검사 통과
@@ -83,19 +83,19 @@ const authUser = async (req, res, next) => {
     //해쉬된 비밀번호가 없는경우는 이메일이 없는경우이므로 로그인 실패
     const getUserResult = await getuserPasswordAndId(email);
     if ((await getUserResult.length) == 0) {
-      errMsg = 
-      (lang === 'ko' || lang === undefined)
-      ? 'Email 혹은 Password가 틀렸습니다.'
-      : 'Wrong Email or Password.'
+      errMsg =
+        lang === 'ko' || lang === undefined
+          ? 'Email 혹은 Password가 틀렸습니다.'
+          : 'Wrong Email or Password.';
       return next(customizedError(errMsg, 400));
     }
     const { user_id, nickname, description, user_image, maleYN, deleteYN } =
       getUserResult[0];
     if (deleteYN == 1) {
-      errMsg = 
-      (lang === 'ko' || lang === undefined)
-      ? '탈퇴한 회원입니다.'
-      : 'Already unsubscribed user.'
+      errMsg =
+        lang === 'ko' || lang === undefined
+          ? '탈퇴한 회원입니다.'
+          : 'Already unsubscribed user.';
       return next(customizedError(errMsg, 400));
     }
     const dbUserEmail = getUserResult[0].email;
@@ -120,10 +120,10 @@ const authUser = async (req, res, next) => {
       });
     }
     //비밀번호가 틀려서 로그인 실패
-    errMsg = 
-    (lang === 'ko' || lang === undefined)
-    ? 'Email 혹은 Password가 틀렸습니다.'
-    : 'Wrong Email or Password.'
+    errMsg =
+      lang === 'ko' || lang === undefined
+        ? 'Email 혹은 Password가 틀렸습니다.'
+        : 'Wrong Email or Password.';
     return next(customizedError(errMsg, 400));
   } catch (err) {
     return next(customizedError(err, 400));
@@ -131,15 +131,18 @@ const authUser = async (req, res, next) => {
 };
 
 const checkUser = async (req, res, next) => {
+  console.log('로그인 체크 실행');
   const authHeader = req.get('Authorization');
+  console.log(authHeader);
   const token = authHeader.split(' ')[1];
-
+  console.log('헤더에서 토큰 가져오기 완료', token);
   try {
     const result = jwt.verify(token, process.env.SECRET_KEY);
-
+    console.log('토큰 veryfy성공', result);
     const [userInformation] = await pool.query(
       getUserInformationById(result.user_id)
     );
+    console.log('유저 정보 가져오기 성공', userInformation[0]);
     return res.status(200).json({ ...userInformation[0] });
   } catch (err) {
     if (err.message == 'jwt expired') {
@@ -155,10 +158,10 @@ const deleteUser = async (req, res, next) => {
   try {
     const result = await pool.query(updateUserDeleteYn(req.params.userId));
     if (result[0].changedRows == 0) {
-      errMsg = 
-      (lang === 'ko' || lang === undefined)
-      ? '이미 탈퇴된 회원입니다.'
-      : 'Already unsubscribed user.'
+      errMsg =
+        lang === 'ko' || lang === undefined
+          ? '이미 탈퇴된 회원입니다.'
+          : 'Already unsubscribed user.';
       return next(customizedError(errMsg, 400));
     }
     return res.sendStatus(200);
@@ -216,13 +219,11 @@ const kakaoLogin = async (req, res, next) => {
 
     //Nickname 중복검사
     if (await checkDuplicateOfNickname(nickname, next)) {
-      errMsg = 
-      (lang === 'ko' || lang === undefined)
-      ? '닉네임이 이미 존재합니다'
-      : 'Nickname is already exist.'
-      return next(
-        customizedError(errMsg, 400)
-      );
+      errMsg =
+        lang === 'ko' || lang === undefined
+          ? '닉네임이 이미 존재합니다'
+          : 'Nickname is already exist.';
+      return next(customizedError(errMsg, 400));
     }
 
     //중복검사 통과
@@ -265,11 +266,11 @@ const modifyUser = async (req, res, next) => {
   let errMsg;
 
   if (userInfo !== userId) {
-    errMsg = 
-    (lang === 'ko' || lang === undefined)
-    ? '잘못된 접근입니다'
-    : 'Invalid Request'
-    
+    errMsg =
+      lang === 'ko' || lang === undefined
+        ? '잘못된 접근입니다'
+        : 'Invalid Request';
+
     return next(customizedError(errMsg, 400));
   }
 
