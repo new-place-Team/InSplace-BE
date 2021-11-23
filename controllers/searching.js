@@ -5,10 +5,11 @@ const {
   queryOfResultPageOfCondition,
   queryOfDetailPageOfInOutDoors,
   queryOfResultPageOfTotal,
-  queryOfGettingTotalPageNum,
+  queryOfGettingInOutDoorsPageNum,
   queryOfResultPageOfConditionAndCurrentLoc,
   queryOfDetailPageOfInOutDoorsAndCurrentLoc,
-  queryOfGettingTotalPageNumAndCurrentLoc,
+  queryOfGettingInOutDoorsPageNumAndCurrentLoc,
+  queryOfGettingTotalPageNum,
 } = require('../query/searching');
 const customizedError = require('./error');
 const {
@@ -49,10 +50,11 @@ const getResultPageOfTotal = async (req, res, next) => {
     return next(customizedError(err, 400));
   }
 
-  const params = [userId, userId, result, result, pageNum];
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    const data = await connection.query(queryOfResultPageOfTotal(userId, result, pageNum, lang));
+    const data = await connection.query(
+      queryOfResultPageOfTotal(userId, result, pageNum, lang)
+    );
 
     let posts = data[0];
     // 메인 이미지만 가져오기
@@ -62,7 +64,16 @@ const getResultPageOfTotal = async (req, res, next) => {
         process.env.POST_BASE_URL
       );
     }
+
+    /* 마지막 페이지 수를 구하기 위함 */
+    let [lastPage] = await connection.query(
+      queryOfGettingTotalPageNum(userId, result, lang)
+    );
+
+    lastPage = Math.ceil(lastPage[0].pageNum / 12);
     return res.status(200).json({
+      page: Number(req.params.number),
+      lastPage,
       posts,
     });
   } catch (err) {
@@ -77,11 +88,6 @@ const getResultPageOfCondition = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const { weather, category, num, gender, x, y } = req.query;
   const lang = req.headers['language'];
-  /* 현재 위치가 설정 되어 있을 경우 없을 경우 */
-  const params =
-    x === undefined || y === undefined
-      ? [userId, userId, weather, category, num, gender]
-      : [userId, x, y, x, userId, weather, category, num, gender];
 
   /* 유효성 검사 */
   try {
@@ -101,10 +107,26 @@ const getResultPageOfCondition = async (req, res, next) => {
     /* 현재 위치가 설정 되어있을 경우 없을 경우 */
     const result =
       x === undefined || y === undefined
-        ? await connection.query(queryOfResultPageOfCondition(userId, weather, category, num, gender, lang))
+        ? await connection.query(
+            queryOfResultPageOfCondition(
+              userId,
+              weather,
+              category,
+              num,
+              gender,
+              lang
+            )
+          )
         : await connection.query(
             queryOfResultPageOfConditionAndCurrentLoc(
-            userId, x, y, weather, category, num, gender, lang
+              userId,
+              x,
+              y,
+              weather,
+              category,
+              num,
+              gender,
+              lang
             )
           );
     const insidePlaces = [];
@@ -180,10 +202,32 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
     const result =
       x === undefined || y === undefined
         ? /* 현재 위치가 설정 안된 경우 */
-          await connection.query(queryOfDetailPageOfInOutDoors(userId, weather, category, num, gender, inside, pageNum,lang))
+          await connection.query(
+            queryOfDetailPageOfInOutDoors(
+              userId,
+              weather,
+              category,
+              num,
+              gender,
+              inside,
+              pageNum,
+              lang
+            )
+          )
         : /* 현재 위치가 설정 된 경우 */
           await connection.query(
-            queryOfDetailPageOfInOutDoorsAndCurrentLoc(userId, x, y, weather, category, num, gender, inside, pageNum, lang)
+            queryOfDetailPageOfInOutDoorsAndCurrentLoc(
+              userId,
+              x,
+              y,
+              weather,
+              category,
+              num,
+              gender,
+              inside,
+              pageNum,
+              lang
+            )
           );
     let posts = result[0];
     // 메인 이미지만 가져오기
@@ -197,9 +241,9 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
     /* 마지막 페이지 수를 구하기 위함 */
     let [lastPage] =
       x === undefined || y === undefined
-        ? await connection.query(queryOfGettingTotalPageNum, params)
+        ? await connection.query(queryOfGettingInOutDoorsPageNum, params)
         : await connection.query(
-            queryOfGettingTotalPageNumAndCurrentLoc(
+            queryOfGettingInOutDoorsPageNumAndCurrentLoc(
               userId,
               x,
               y,

@@ -199,7 +199,7 @@ const queryOfResultPageOfCondition = (
   }
 };
 
-const queryOfGettingTotalPageNum = `
+const queryOfGettingInOutDoorsPageNum = `
 	SELECT 
 	count(Posts.post_id) AS pageNum, 
 	Categories.description AS category, 
@@ -233,7 +233,7 @@ const queryOfGettingTotalPageNum = `
 	`;
 
 /* 현재위치 기반 총 페이지 수 가져오는 쿼리 */
-const queryOfGettingTotalPageNumAndCurrentLoc = (
+const queryOfGettingInOutDoorsPageNumAndCurrentLoc = (
   userId,
   x,
   y,
@@ -534,11 +534,60 @@ const queryOfResultPageOfTotal = (userId, result, pageNum, lang) => {
 					where user_id = ${userId}
 			) b 
 			ON Posts.post_id = b.post_id
-			WHERE title LIKE CONCAT('%', '${result}', '%')
+			WHERE title_en LIKE CONCAT('%', '${result}', '%')
 			OR post_desc_en LIKE CONCAT('%', '${result}', '%')
-			OR title LIKE CONCAT('%', REPLACE('${result}', ' ', '') , '%')
+			OR title_en LIKE CONCAT('%', REPLACE('${result}', ' ', ''), '%')
 			LIMIT ${pageNum}, 12;
 		`;
+  }
+};
+
+/* 토탈 검색 페이지 총 게시글 수 가져오기 */
+const queryOfGettingTotalPageNum = (userId, result, lang) => {
+  if (lang === 'ko' || lang === undefined) {
+    return `
+			SELECT 
+			count(Posts.post_id) AS pageNum, 
+			title, 
+			address_short AS addressShort, 
+			favorite_cnt AS favoriteCnt, 
+			post_images AS postImage,
+			Posts.category_id AS category
+			FROM Posts
+			LEFT JOIN Categories 
+			ON Posts.category_id = Categories.category_id
+			LEFT JOIN (
+				SELECT post_id, user_id
+					FROM Favorites
+					where user_id = ${userId}
+			) b 
+			ON Posts.post_id = b.post_id
+			WHERE title LIKE CONCAT('%', '${result}', '%')
+			OR post_desc LIKE CONCAT('%', '${result}', '%')
+			OR title LIKE CONCAT('%', REPLACE('${result}', ' ', '') , '%')
+			`;
+  } else {
+    return `
+				SELECT 
+				count(Posts.post_id) AS pageNum, 
+				Posts.title_en AS title, 
+				Posts.address_short_en AS addressShort, 
+				favorite_cnt AS favoriteCnt, 
+				post_images AS postImage,
+				Posts.category_id AS category
+				FROM Posts
+				LEFT JOIN Categories 
+				ON Posts.category_id = Categories.category_id
+				LEFT JOIN (
+					SELECT post_id, user_id
+						FROM Favorites
+						where user_id = ${userId}
+				) b 
+				ON Posts.post_id = b.post_id
+				WHERE title_en LIKE CONCAT('%', '${result}', '%')
+				OR post_desc_en LIKE CONCAT('%', '${result}', '%')
+				OR title_en LIKE CONCAT('%', REPLACE('${result}', ' ', ''), '%')
+			`;
   }
 };
 
@@ -546,8 +595,9 @@ module.exports = {
   queryOfResultPageOfCondition,
   queryOfDetailPageOfInOutDoors,
   queryOfResultPageOfTotal,
-  queryOfGettingTotalPageNum,
+  queryOfGettingInOutDoorsPageNum,
   queryOfResultPageOfConditionAndCurrentLoc,
   queryOfDetailPageOfInOutDoorsAndCurrentLoc,
-  queryOfGettingTotalPageNumAndCurrentLoc,
+  queryOfGettingInOutDoorsPageNumAndCurrentLoc,
+  queryOfGettingTotalPageNum,
 };
