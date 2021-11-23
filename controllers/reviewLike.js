@@ -13,9 +13,10 @@ require('dotenv').config();
 
 /* 리뷰 좋아요 추가  */
 const addReviewLike = async (req, res, next) => {
+  let errMsg = '';
+  const lang = req.headers['language'];
   const userId = req.user;
   const reviewId = req.params.reviewId;
-
   try {
     /* 유효성 검사: Success */
     await schemasOfReviewLike.validateAsync({ userId, reviewId });
@@ -28,8 +29,8 @@ const addReviewLike = async (req, res, next) => {
   /* 존재 유무 검사 */
   try {
     const params = [userId, reviewId];
-    const result = await connection.query(queryOfGettingReviewLikes, params);
-    if (result[0].length >= 1) {
+    const [result] = await connection.query(queryOfGettingReviewLikes, params);
+    if (result.length >= 1) {
       return next(customizedError('좋아요를 이미 눌렀습니다.', 400));
     }
   } catch (err) {
