@@ -171,14 +171,10 @@ const kakaoLogin = async (req, res, next) => {
   try {
     //사용자 정보를 데이터베이스에 넣어주는 함수
     const insertUser = async (genderNumber, httpsKakaoImageUrl) => {
-      let stateProfile_image = httpsKakaoImageUrl;
-      if (httpsKakaoImageUrl == undefined) {
-        stateProfile_image == null;
-      }
       await pool.query(
         insertNewUserforKakao(
           kakaoUserId,
-          stateProfile_image,
+          httpsKakaoImageUrl,
           nickname,
           genderNumber
         )
@@ -206,7 +202,6 @@ const kakaoLogin = async (req, res, next) => {
     const [, backUrl] = profile_image_url.split(':');
 
     const httpsKakaoImageUrl = `${https}${backUrl}`;
-    console.log(httpsKakaoImageUrl);
     let genderNumber = '';
     if (gender == 'male') {
       genderNumber = 1;

@@ -16,7 +16,6 @@ const checkDuplicateOfNickname = async (nickname, next) => {
 
 //로그인 시키는 함수
 const startLogin = (user_id, nickname, description, user_image, email, res) => {
-  console.log('카카오 로그인성공 후 이미지', user_image);
   const token = jwt.sign({ user_id }, process.env.SECRET_KEY);
   return res.status(200).json({
     userId: user_id,
