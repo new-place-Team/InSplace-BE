@@ -2,4 +2,4 @@
 
 echo 'script start'
 
-kubectl get pods
+kubectl rollout restart deployment insplace
