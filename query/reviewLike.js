@@ -11,9 +11,13 @@ const updateReviewLikeCnt = (reviewId) => {
     `;
 };
 
-const queryOfGettingReviewLikes = `
-  SELECT * FROM ReviewLikes WHERE user_id=? AND review_id=?
-`;
+const queryOfGettingReviewLikes = (userId, reviewId) => {
+  return `
+    SELECT * FROM ReviewLikes
+    WHERE review_id=${reviewId} 
+    AND user_id=${userId}
+  `;
+};
 
 const queryOfDecreasingReviewLikeCnt = `
   UPDATE Reviews SET 
