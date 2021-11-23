@@ -27,6 +27,7 @@ const queryOfAddingFeedback = (userId, phoneNumber, description) => {
 
 /* 피드백 추가 */
 const addFeedback = async (req, res, next) => {
+  console.log('asdasdasad');
   const userId = req.user;
   const { phoneNumber, description } = req.body;
   /* 유효성 검사*/
