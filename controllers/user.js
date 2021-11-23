@@ -26,16 +26,26 @@ const {
 } = require('../controllers/utils/user');
 
 const registUser = async (req, res, next) => {
+  const lang = req.headers['language'];
+  let errMsg; 
   const { email, nickname, password, maleYN, mbtiId } = req.user;
 
   //Email 중복검사
   if (await checkDuplicateOfEmail(email, next)) {
-    return next(customizedError('이메일이 이미 존재합니다', 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? '이메일이 이미 존재합니다'
+    : 'Email is already exist.'
+    return next(customizedError(errMsg, 400));
   }
   //Nickname 중복검사
 
   if (await checkDuplicateOfNickname(nickname, next)) {
-    return next(customizedError('닉네임이 이미 존재합니다 중복검사 에러', 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? '닉네임이 이미 존재합니다 중복검사 에러'
+    : 'Nickname is already exist.'
+    return next(customizedError(errMsg, 400));
   }
   //중복검사 통과
   try {
@@ -67,16 +77,26 @@ const registUser = async (req, res, next) => {
 
 const authUser = async (req, res, next) => {
   const { email, password } = req.body;
+  const lang = req.headers['language'];
+  let errMsg;
   try {
     //해쉬된 비밀번호가 없는경우는 이메일이 없는경우이므로 로그인 실패
     const getUserResult = await getuserPasswordAndId(email);
     if ((await getUserResult.length) == 0) {
-      return next(customizedError('Email 혹은 Password가 틀렸습니다', 400));
+      errMsg = 
+      (lang === 'ko' || lang === undefined)
+      ? 'Email 혹은 Password가 틀렸습니다.'
+      : 'Wrong Email or Password.'
+      return next(customizedError(errMsg, 400));
     }
     const { user_id, nickname, description, user_image, maleYN, deleteYN } =
       getUserResult[0];
     if (deleteYN == 1) {
-      return next(customizedError('탈퇴한 회원입니다.', 400));
+      errMsg = 
+      (lang === 'ko' || lang === undefined)
+      ? '탈퇴한 회원입니다.'
+      : 'Already unsubscribed user.'
+      return next(customizedError(errMsg, 400));
     }
     const dbUserEmail = getUserResult[0].email;
     // 해쉬된 비밀번호와 유저가 입력한 비밀번호를 비교
@@ -100,8 +120,11 @@ const authUser = async (req, res, next) => {
       });
     }
     //비밀번호가 틀려서 로그인 실패
-
-    return next(customizedError('Email 혹은 Password가 틀렸습니다', 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? 'Email 혹은 Password가 틀렸습니다.'
+    : 'Wrong Email or Password.'
+    return next(customizedError(errMsg, 400));
   } catch (err) {
     return next(customizedError(err, 400));
   }
@@ -127,10 +150,16 @@ const checkUser = async (req, res, next) => {
 };
 
 const deleteUser = async (req, res, next) => {
+  const lang = req.headers['language'];
+  let errMsg;
   try {
     const result = await pool.query(updateUserDeleteYn(req.params.userId));
     if (result[0].changedRows == 0) {
-      return next(customizedError('이미 탈퇴된 회원입니다.', 400));
+      errMsg = 
+      (lang === 'ko' || lang === undefined)
+      ? '이미 탈퇴된 회원입니다.'
+      : 'Already unsubscribed user.'
+      return next(customizedError(errMsg, 400));
     }
     return res.sendStatus(200);
   } catch (err) {
@@ -139,6 +168,8 @@ const deleteUser = async (req, res, next) => {
 };
 
 const kakaoLogin = async (req, res, next) => {
+  const lang = req.headers['language'];
+  let errMsg;
   try {
     //사용자 정보를 데이터베이스에 넣어주는 함수
     const insertUser = async (genderNumber, profile_image_url) => {
@@ -185,8 +216,12 @@ const kakaoLogin = async (req, res, next) => {
 
     //Nickname 중복검사
     if (await checkDuplicateOfNickname(nickname, next)) {
+      errMsg = 
+      (lang === 'ko' || lang === undefined)
+      ? '닉네임이 이미 존재합니다'
+      : 'Nickname is already exist.'
       return next(
-        customizedError('닉네임이 이미 존재합니다 중복검사 에러', 400)
+        customizedError(errMsg, 400)
       );
     }
 
@@ -226,9 +261,16 @@ const modifyUser = async (req, res, next) => {
   const userId = parseInt(req.params.userId);
   const userInfo = req.user;
   const { nickname, mbtiId, maleYN } = req.body;
+  const lang = req.headers['language'];
+  let errMsg;
 
   if (userInfo !== userId) {
-    return next(customizedError('잘못된 접근입니다', 400));
+    errMsg = 
+    (lang === 'ko' || lang === undefined)
+    ? '잘못된 접근입니다'
+    : 'Invalid Request'
+    
+    return next(customizedError(errMsg, 400));
   }
 
   const userImage =
