@@ -197,13 +197,13 @@ const kakaoLogin = async (req, res, next) => {
       id: kakaoUserId,
       kakao_account: {
         gender,
-        profile: { nickname, httpsKakaoImageUrl },
+        profile: { nickname, profile_image_url },
       },
     } = getKakaoUserResult.data;
 
     const https = 'https:';
 
-    const [, backUrl] = httpsKakaoImageUrl.split(':');
+    const [, backUrl] = profile_image_url.split(':');
 
     const httpsKakaoImageUrl = `${(https, backUrl)}`;
     console.log(httpsKakaoImageUrl);
