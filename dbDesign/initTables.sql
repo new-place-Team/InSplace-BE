@@ -140,7 +140,7 @@ CREATE TABLE `CurrentWeather` (
 
 -- 신고 테이블
 CREATE TABLE `Reports` (
-  `report_id` integer PRIMARY KEY,
+  `report_id` integer PRIMARY KEY AUTO_INCREMENT,
   `from_user_id` integer NOT NULL,
   `to_user_id` integer NOT NULL,
   `review_id` integer NOT NULL,
@@ -152,8 +152,9 @@ CREATE TABLE `Reports` (
 CREATE TABLE `Feedbacks` (
   `fb_id` integer PRIMARY KEY AUTO_INCREMENT,
   `user_id` integer NOT NULL,
+  `nickname` varchar(255) NOT NULL,
   `phone_number` varchar(15),
-  `description` text NULL
+  `description` text
  );
  
 -- Foreign Key

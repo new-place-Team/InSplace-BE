@@ -8,21 +8,21 @@ const schemasOfFeedback = require('../middlewares/validationFeedback');
 const logger = require('../config/logger');
 
 /* 피드백 슬랙에 보내는 함수 */
-const sendMsgToSlack = async (userId, phoneNumber, description) => {
+const sendMsgToSlack = async (userId, nickname, phoneNumber, description) => {
   // Send the notification
   await webhook.send({
     text: `
-    유저 아이디: ${userId} \n 핸드폰 번호: ${phoneNumber} \n 피드백 내용: ${description} \n
+      유저 아이디: ${userId}\n유저 이름: ${nickname}\n핸드폰 번호: ${phoneNumber}\n피드백 내용: ${description}\n
     `,
   });
 };
 
 /* Feedback 추가하는 쿼리문 */
-const queryOfAddingFeedback = (userId, phoneNumber, description) => {
+const queryOfAddingFeedback = (userId, nickname, phoneNumber, description) => {
   return `
         INSERT INTO
-        Feedbacks(user_id, phone_number,description) 
-        VALUES(${userId}, '${phoneNumber}', '${description}');    
+        Feedbacks(user_id, nickname, phone_number, description) 
+        VALUES(${userId}, '${nickname}' ,'${phoneNumber}', '${description}');    
         `;
 };
 
@@ -32,6 +32,7 @@ const addFeedback = async (req, res, next) => {
   let errMsg = '';
   const userId = req.user;
   const { phoneNumber, description } = req.body;
+
   /* 유효성 검사*/
   try {
     await schemasOfFeedback.validateAsync({
@@ -49,12 +50,16 @@ const addFeedback = async (req, res, next) => {
   }
 
   /* 피드백 슬랙에 보내기 */
-  await sendMsgToSlack(userId, phoneNumber, description);
-
+  /* 유저 닉네임 가져오기 */
+  let [[nickname]] = await pool.query(
+    `SELECT nickname FROM Users WHERE user_id=${userId}`
+  );
+  nickname = nickname.nickname;
+  await sendMsgToSlack(userId, nickname, phoneNumber, description);
   try {
     /* 피드백 등록 */
     const [result] = await pool.query(
-      queryOfAddingFeedback(userId, description)
+      queryOfAddingFeedback(userId, nickname, phoneNumber, description)
     );
 
     /* 피드백이 등록 되지 않은 경우 */
@@ -66,7 +71,6 @@ const addFeedback = async (req, res, next) => {
       logger.error(`${errMsg}`);
       return next(customizedError(errMsg, 400));
     }
-
     return res.sendStatus(201);
   } catch (err) {
     /* 피드백 등록: Fail */

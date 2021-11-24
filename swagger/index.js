@@ -56,8 +56,8 @@
  *              type: string
  *              description: 유저 핸드폰 번호(옵션)
  *           example:
- *             description: "예시로 작성된 피드백 내용!"
  *             phoneNumber: "010-2514-0552"
+ *             description: "예시로 작성된 피드백 내용!"
  *     responses:
  *       '201':
  *         description: 유저 피드백 추가 성공
