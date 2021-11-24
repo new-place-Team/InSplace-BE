@@ -506,9 +506,8 @@ const queryOfResultPageOfTotal = (userId, result, pageNum, lang) => {
 				where user_id = ${userId}
 		) b 
 		ON Posts.post_id = b.post_id
-		WHERE title LIKE CONCAT('%', '${result}', '%')
+		WHERE REPLACE(title, ' ', '') LIKE CONCAT('%', REPLACE('${result}', ' ', '') , '%')
 		OR post_desc LIKE CONCAT('%', '${result}', '%')
-		OR title LIKE CONCAT('%', REPLACE('${result}', ' ', '') , '%')
 		LIMIT ${pageNum}, 12;
 		`;
   } else {
@@ -534,9 +533,8 @@ const queryOfResultPageOfTotal = (userId, result, pageNum, lang) => {
 					where user_id = ${userId}
 			) b 
 			ON Posts.post_id = b.post_id
-			WHERE title_en LIKE CONCAT('%', '${result}', '%')
+			WHERE REPLACE(title_en, ' ', '') LIKE CONCAT('%', REPLACE('${result}', ' ', '') , '%')
 			OR post_desc_en LIKE CONCAT('%', '${result}', '%')
-			OR title_en LIKE CONCAT('%', REPLACE('${result}', ' ', ''), '%')
 			LIMIT ${pageNum}, 12;
 		`;
   }
