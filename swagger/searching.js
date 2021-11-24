@@ -67,16 +67,20 @@
  *           type: Number
  *       - name: x
  *         in: query
- *         required: true
  *         description: 위도(x)
  *         default: 37.51350
  *         schema:
  *           type: string
  *       - name: y
  *         in: query
- *         required: true
  *         description: 경도(y)
  *         default: 127.10009
+ *         schema:
+ *           type: string
+ *       - name: area
+ *         in: query
+ *         description: 서울 지역
+ *         default: 관악구
  *         schema:
  *           type: string
  *     responses:
@@ -138,16 +142,20 @@
  *           type: Number
  *       - name: x
  *         in: query
- *         required: true
  *         description: 위도(x)
  *         default: 37.51350
  *         schema:
  *           type: string
  *       - name: y
  *         in: query
- *         required: true
  *         description: 경도(y)
  *         default: 127.10009
+ *         schema:
+ *           type: string
+ *       - name: area
+ *         in: query
+ *         description: 서울 지역
+ *         default: 관악구
  *         schema:
  *           type: string
  *     responses:

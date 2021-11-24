@@ -10,6 +10,9 @@ const {
   queryOfDetailPageOfInOutDoorsAndCurrentLoc,
   queryOfGettingInOutDoorsPageNumAndCurrentLoc,
   queryOfGettingTotalPageNum,
+  queryOfResultPageOfConditionAndArea,
+  queryOfDetailPageOfInOutDoorsAndArea,
+  queryOfGettingInOutDoorsPageNumAndArea,
 } = require('../query/searching');
 const customizedError = require('./error');
 const {
@@ -92,7 +95,7 @@ const getResultPageOfTotal = async (req, res, next) => {
 /* 조건 결과 페이지 조회  */
 const getResultPageOfCondition = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
-  const { weather, category, num, gender, x, y } = req.query;
+  const { weather, category, num, gender, x, y, area } = req.query;
   const lang = req.headers['language'];
   let errMsg;
   /* 유효성 검사 */
@@ -114,31 +117,47 @@ const getResultPageOfCondition = async (req, res, next) => {
 
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    /* 현재 위치가 설정 되어있을 경우 없을 경우 */
-    const result =
-      x === undefined || y === undefined
-        ? await connection.query(
-            queryOfResultPageOfCondition(
-              userId,
-              weather,
-              category,
-              num,
-              gender,
-              lang
-            )
-          )
-        : await connection.query(
-            queryOfResultPageOfConditionAndCurrentLoc(
-              userId,
-              x,
-              y,
-              weather,
-              category,
-              num,
-              gender,
-              lang
-            )
-          );
+    let result;
+    if (x === undefined && y === undefined && area === undefined) {
+      /* 전국 검색인 경우 */
+      result = await connection.query(
+        queryOfResultPageOfCondition(
+          userId,
+          weather,
+          category,
+          num,
+          gender,
+          lang
+        )
+      );
+    } else if (x === undefined && y === undefined && area !== undefined) {
+      /* 지역 검색인 경우 */
+      result = await connection.query(
+        queryOfResultPageOfConditionAndArea(
+          userId,
+          weather,
+          category,
+          num,
+          gender,
+          area,
+          lang
+        )
+      );
+    } else {
+      /* 현재 위치 검색인 경우 */
+      result = await connection.query(
+        queryOfResultPageOfConditionAndCurrentLoc(
+          userId,
+          x,
+          y,
+          weather,
+          category,
+          num,
+          gender,
+          lang
+        )
+      );
+    }
     const insidePlaces = [];
     const outSidePlaces = [];
     // 실내 실외 포스트 구분(최대 9개씩 받기)
@@ -177,26 +196,11 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
   const userId = checkLoginUser(req.user);
   const lang = req.headers['language'];
   let errMsg;
-  const { weather, category, num, gender, inside, x, y } = req.query;
+  const { weather, category, num, gender, inside, x, y, area } = req.query;
   const page = req.params.number;
   const pageNum = (Number(req.params.number) - 1) * 12;
-  const params =
-    x === undefined || y === undefined
-      ? [userId, userId, weather, category, num, gender, inside, pageNum]
-      : [
-          userId,
-          x,
-          y,
-          x,
-          userId,
-          weather,
-          category,
-          num,
-          gender,
-          inside,
-          pageNum,
-        ];
 
+  console.log(`x: ${x}, y: ${y}, area: ${area}`);
   /* 유효성 검사 */
   try {
     await schemasOfDetailPageOfInOutDoors.validateAsync({
@@ -217,36 +221,54 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
   }
   const connection = await pool.getConnection(async (conn) => conn);
   try {
-    const result =
-      x === undefined || y === undefined
-        ? /* 현재 위치가 설정 안된 경우 */
-          await connection.query(
-            queryOfDetailPageOfInOutDoors(
-              userId,
-              weather,
-              category,
-              num,
-              gender,
-              inside,
-              pageNum,
-              lang
-            )
-          )
-        : /* 현재 위치가 설정 된 경우 */
-          await connection.query(
-            queryOfDetailPageOfInOutDoorsAndCurrentLoc(
-              userId,
-              x,
-              y,
-              weather,
-              category,
-              num,
-              gender,
-              inside,
-              pageNum,
-              lang
-            )
-          );
+    let result;
+    if (x === undefined && y === undefined && area === undefined) {
+      /* 전국 검색인 경우*/
+      result = await connection.query(
+        queryOfDetailPageOfInOutDoors(
+          userId,
+          weather,
+          category,
+          num,
+          gender,
+          inside,
+          pageNum,
+          lang
+        )
+      );
+    } else if (x === undefined && y === undefined && area !== undefined) {
+      /* 지역 검색인 경우 */
+      result = await connection.query(
+        queryOfDetailPageOfInOutDoorsAndArea(
+          userId,
+          weather,
+          category,
+          num,
+          gender,
+          inside,
+          pageNum,
+          area,
+          lang
+        )
+      );
+    } else {
+      /* 현재 위치 검색인 경우 */
+      result = await connection.query(
+        queryOfDetailPageOfInOutDoorsAndCurrentLoc(
+          userId,
+          x,
+          y,
+          weather,
+          category,
+          num,
+          gender,
+          inside,
+          pageNum,
+          lang
+        )
+      );
+    }
+
     let posts = result[0];
     // 메인 이미지만 가져오기
     for (let i = 0; i < posts.length; i++) {
@@ -257,23 +279,49 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
     }
 
     /* 마지막 페이지 수를 구하기 위함 */
-    let [lastPage] =
-      x === undefined || y === undefined
-        ? await connection.query(queryOfGettingInOutDoorsPageNum, params)
-        : await connection.query(
-            queryOfGettingInOutDoorsPageNumAndCurrentLoc(
-              userId,
-              x,
-              y,
-              weather,
-              category,
-              num,
-              gender,
-              inside
-            )
-          );
-    lastPage = Math.ceil(lastPage[0].pageNum / 12);
+    let lastPage;
+    if (x === undefined && y === undefined && area === undefined) {
+      /* 전역 검색인 경우 */
+      [lastPage] = await connection.query(
+        queryOfGettingInOutDoorsPageNum(
+          userId,
+          weather,
+          category,
+          num,
+          gender,
+          inside
+        )
+      );
+    } else if (x === undefined && y === undefined && area !== undefined) {
+      /* 지역 검색인 경우 */
+      [lastPage] = await connection.query(
+        queryOfGettingInOutDoorsPageNumAndArea(
+          userId,
+          weather,
+          category,
+          num,
+          gender,
+          inside,
+          area
+        )
+      );
+    } else {
+      /* 현재 위치 검색인 경우 */
+      [lastPage] = await connection.query(
+        queryOfGettingInOutDoorsPageNumAndCurrentLoc(
+          userId,
+          x,
+          y,
+          weather,
+          category,
+          num,
+          gender,
+          inside
+        )
+      );
+    }
 
+    lastPage = Math.ceil(lastPage[0].pageNum / 12);
     return res.status(200).json({
       page: Number(page),
       lastPage,
