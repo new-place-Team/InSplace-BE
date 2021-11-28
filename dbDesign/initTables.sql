@@ -45,7 +45,8 @@ CREATE TABLE `Posts` (
   `md_pick` boolean NOT NULL DEFAULT 0,
   `permission_state` integer NOT NULL DEFAULT 2,
   `source` varchar(20),
-  `admin` varchar(20)
+  `admin` varchar(20),
+  `link_id` varchar(20)
 );
 
 
@@ -184,18 +185,18 @@ ALTER TABLE `Feedbacks` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id
 
 
 -- Charset UTF-8 추가 
-ALTER TABLE Users CONVERT TO character SET utf8;
-ALTER TABLE Posts CONVERT TO character SET utf8;
-ALTER TABLE Favorites CONVERT TO character SET utf8;
-ALTER TABLE Mbti CONVERT TO character SET utf8;
-ALTER TABLE ReviewLikes CONVERT TO character SET utf8;
-ALTER TABLE Categories CONVERT TO character SET utf8;
-ALTER TABLE Reviews CONVERT TO character SET utf8;
-ALTER TABLE VisitedPosts CONVERT TO character SET utf8;
-ALTER TABLE Genders CONVERT TO character SET utf8;
-ALTER TABLE Weathers CONVERT TO character SET utf8;
-ALTER TABLE MemberCnt CONVERT TO character SET utf8;
-ALTER TABLE CurrentWeather CONVERT TO character SET utf8;
-ALTER TABLE ReviewWeathers CONVERT TO character SET utf8;
-ALTER TABLE Reports CONVERT TO character SET utf8;
-ALTER TABLE Feedbacks CONVERT TO character SET utf8;
+ALTER TABLE Users CONVERT TO character SET utf8mb4;
+ALTER TABLE Posts CONVERT TO character SET utf8mb4;
+ALTER TABLE Favorites CONVERT TO character SET utf8mb4;
+ALTER TABLE Mbti CONVERT TO character SET utf8mb4;
+ALTER TABLE ReviewLikes CONVERT TO character SET utf8mb4;
+ALTER TABLE Categories CONVERT TO character SET utf8mb4;
+ALTER TABLE Reviews CONVERT TO character SET utf8mb4;
+ALTER TABLE VisitedPosts CONVERT TO character SET utf8mb4;
+ALTER TABLE Genders CONVERT TO character SET utf8mb4;
+ALTER TABLE Weathers CONVERT TO character SET utf8mb4;
+ALTER TABLE MemberCnt CONVERT TO character SET utf8mb4;
+ALTER TABLE CurrentWeather CONVERT TO character SET utf8mb4;
+ALTER TABLE ReviewWeathers CONVERT TO character SET utf8mb4;
+ALTER TABLE Reports CONVERT TO character SET utf8mb4;
+ALTER TABLE Feedbacks CONVERT TO character SET utf8mb4;
