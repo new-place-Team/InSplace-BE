@@ -202,7 +202,7 @@ const mdQuery = (user, lang) => {
     (
       SELECT post_id, user_id
         FROM Favorites
-        where user_id = 41
+        where user_id = ${user}
     ) b ON a.post_id = b.post_id
     WHERE a.md_pick = 1
     `; 
@@ -233,7 +233,7 @@ const mdQuery = (user, lang) => {
     (
       SELECT post_id, user_id
         FROM Favorites
-        where user_id = 41
+        where user_id = ${user}
     ) b ON a.post_id = b.post_id
     WHERE a.md_pick = 1
     `; 
