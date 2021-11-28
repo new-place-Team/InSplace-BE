@@ -25,7 +25,8 @@ const findDetailPosts = (postID, userID, lang) => {
         CASE WHEN VisitedPosts.user_id = "${userID}"
         THEN 1
         ELSE 0
-        END AS visitedStatus
+        END AS visitedStatus,
+        link_id AS linkId
       FROM Posts 
       INNER JOIN Categories 
       ON Posts.category_id = Categories.category_id   
@@ -59,7 +60,8 @@ const findDetailPosts = (postID, userID, lang) => {
           CASE WHEN VisitedPosts.user_id = "${userID}"
           THEN 1
           ELSE 0
-          END AS visitedStatus
+          END AS visitedStatus,
+          link_id AS linkId
       FROM Posts 
       INNER JOIN Categories 
       ON Posts.category_id = Categories.category_id   
