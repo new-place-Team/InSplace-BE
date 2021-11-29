@@ -27,7 +27,8 @@ const queryOfAddingFeedback = (userId, nickname, phoneNumber, description) => {
 };
 
 const convertDescription = (description) => {
-  return description.replace(/\"/gi, '');
+  let result = description.replace(/\"/gi, '');
+  return result.replace('"', '');
 };
 /* 피드백 추가 */
 const addFeedback = async (req, res, next) => {
@@ -36,7 +37,6 @@ const addFeedback = async (req, res, next) => {
   const userId = req.user;
   let { phoneNumber, description } = req.body;
   description = convertDescription(description);
-  console.log('desc:', description);
   /* 유효성 검사*/
   try {
     await schemasOfFeedback.validateAsync({
