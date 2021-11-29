@@ -4,12 +4,14 @@ const {
   likeQuery,
   mdQuery,
   weatherQuery,
+  queryOfGettingMainMap,
 } = require('../query/main');
 const { getUserVisitedQuery, getUserFavoriteQuery } = require('../query/index');
 const customizedError = require('./error');
 const { getMainImage } = require('./utils/image');
 const logger = require('../config/logger');
-
+const schemasOfMainMap = require('../middlewares/validationMainMap');
+require('dotenv').config();
 const searchMain = async (req, res, next) => {
   const lang = req.headers['language'];
   let errMsg;
@@ -84,11 +86,13 @@ const searchMain = async (req, res, next) => {
       pickPlace: adjMd,
     });
   } catch (err) {
-    errMsg = 
-    (lang === 'ko' || lang === undefined)
-    ? `잘못된 요청입니다 : ${err}`
-    : `Invalid Request : ${err}`
-    logger.error(`스케쥴러에서 에러가 발생했습니다. SQL 컬럼과 API요청을 확인해주세요 : ${err}`)
+    errMsg =
+      lang === 'ko' || lang === undefined
+        ? `잘못된 요청입니다 : ${err}`
+        : `Invalid Request : ${err}`;
+    logger.error(
+      `스케쥴러에서 에러가 발생했습니다. SQL 컬럼과 API요청을 확인해주세요 : ${err}`
+    );
     return next(customizedError(errMsg, 400));
   } finally {
     await connection.release();
@@ -98,7 +102,7 @@ const searchMain = async (req, res, next) => {
 /* 가본 리스트 조회  */
 const getVisitedPosts = async (req, res, next) => {
   const userId = req.user;
-  const lang = req.headers['language']; 
+  const lang = req.headers['language'];
   try {
     const [visitedPosts] = await pool.query(getUserVisitedQuery(userId, lang));
     for (let i = 0; i < visitedPosts.length; i++) {
@@ -112,7 +116,9 @@ const getVisitedPosts = async (req, res, next) => {
       visitedPosts,
     });
   } catch (err) {
-    logger.error(`가본 리스트를 조회하던 도중 서버에러가 발생했습니다 : ${err}`);
+    logger.error(
+      `가본 리스트를 조회하던 도중 서버에러가 발생했습니다 : ${err}`
+    );
     return next(customizedError(err, 500));
   }
 };
@@ -123,7 +129,9 @@ const getFavoritesPosts = async (req, res, next) => {
   const lang = req.headers['language'];
 
   try {
-    const [favoritePosts] = await pool.query(getUserFavoriteQuery(userId, lang));
+    const [favoritePosts] = await pool.query(
+      getUserFavoriteQuery(userId, lang)
+    );
     for (let i = 0; i < favoritePosts.length; i++) {
       favoritePosts[i].postImage = getMainImage(
         favoritePosts[i].postImage,
@@ -140,8 +148,68 @@ const getFavoritesPosts = async (req, res, next) => {
   }
 };
 
+/*
+ * 로그인한 유저가 아니면 0
+ * 로그인한 유저라면 userId
+ */
+const checkLoginUser = (target) => {
+  let userId = target;
+  if (!userId) {
+    userId = 0;
+  }
+  return userId;
+};
+
+/* nav map 조회 */
+const getMainMap = async (req, res, next) => {
+  const { x, y } = req.query;
+  const lang = req.headers['language'];
+  const userId = Number(checkLoginUser(req.user));
+  console.log(`userId:${userId}, x: ${x}, y: ${y}`);
+  let errMsg = '';
+  /* 유효성 검사 */
+  try {
+    await schemasOfMainMap.validateAsync({
+      userId,
+      x,
+      y,
+    });
+  } catch (err) {
+    errMsg =
+      lang === 'ko' || lang === undefined
+        ? `유효하지 않은 요청입니다. 다시 확인해주세요`
+        : `Invalid Request. Please check your request`;
+    return next(customizedError(errMsg, 400));
+  }
+
+  const connection = await pool.getConnection(async (conn) => conn);
+  try {
+    /* 현재 위치 검색인 경우 */
+    const result = await connection.query(
+      queryOfGettingMainMap(userId, x, y, lang)
+    );
+    let posts = result[0];
+    // 메인 이미지만 가져오기
+    for (let i = 0; i < posts.length; i++) {
+      posts[i].postImage = getMainImage(
+        posts[i].postImage,
+        process.env.POST_BASE_URL
+      );
+    }
+
+    return res.status(200).json({
+      posts,
+    });
+  } catch (err) {
+    logger.error(`nav안에 map을 조회하면서 서버측 에러가 발생했습니다: ${err}`);
+    return next(customizedError(err, 500));
+  } finally {
+    await connection.release();
+  }
+};
 module.exports = {
   searchMain,
   getVisitedPosts,
   getFavoritesPosts,
+  getMainMap,
 };

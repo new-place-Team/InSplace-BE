@@ -1,5 +1,5 @@
 const searchMainQuery = (weatherCondition, user, lang) => {
-    return `
+  return `
       SELECT DISTINCT
       a.post_id AS postId, 
       a.title,
@@ -50,7 +50,7 @@ const searchMainQuery = (weatherCondition, user, lang) => {
 };
 
 const likeQuery = (user, lang) => {
-    return `
+  return `
       SELECT DISTINCT
       a.post_id AS postId, 
       a.title,
@@ -87,10 +87,10 @@ const likeQuery = (user, lang) => {
         )
     ORDER BY favorite_cnt DESC limit 9
     `;
-}
+};
 
 const mdQuery = (user, lang) => {
-    return `
+  return `
       SELECT DISTINCT
       a.post_id AS postId, 
       a.title,
@@ -121,8 +121,8 @@ const mdQuery = (user, lang) => {
         where user_id = ${user}
     ) b ON a.post_id = b.post_id
     WHERE a.md_pick = 1
-    `; 
-}
+    `;
+};
 
 const weatherQuery = `
 SELECT *
@@ -130,5 +130,68 @@ FROM CurrentWeather
 WHERE cur_weather_id = 0
 `; //데이터베이스에 저장된 날씨 가져오기
 
+const queryOfGettingMainMap = (userId, x, y, lang) => {
+  if (lang === 'ko' || lang === undefined) {
+    return `
+    SELECT 
+			Posts.post_id AS postId, 
+			title, 
+			address_short AS addressShort,
+			favorite_cnt AS favoriteCnt, 
+			post_images AS postImage, 
+			inside_yn AS insideYN,
+			Posts.category_id AS category, 
+			permission_state AS permissionState, 
+				CASE WHEN b.user_id = ${userId} THEN 1 
+				ELSE 0 
+				END AS favoriteState,
+			post_loc_x AS postLocationX, 
+			post_loc_y AS postLocationY,
+			ROUND(6371 * acos(cos(radians(${x})) * cos(radians(post_loc_y)) * cos(radians(post_loc_x) - radians(${y})) + sin(radians(${x})) * sin(radians(post_loc_y)))) 
+			AS distance
+			FROM Posts 
+			LEFT JOIN (
+				SELECT post_id, user_id
+					FROM Favorites
+					where user_id = ${userId}
+			) b 
+			ON Posts.post_id = b.post_id
+      HAVING distance <= 5;
+			`;
+  } else {
+    return `
+			SELECT 
+			Posts.post_id AS postId, 
+			Posts.title_en AS title, 
+			Posts.address_short_en AS addressShort,
+			favorite_cnt AS favoriteCnt, 
+			post_images AS postImage, 
+			inside_yn AS insideYN,
+			Posts.category_id AS category, 
+			permission_state AS permissionState, 
+				CASE WHEN b.user_id = ${userId} THEN 1 
+				ELSE 0 
+				END AS favoriteState,
+			post_loc_x AS postLocationX, 
+			post_loc_y AS postLocationY,
+			ROUND(6371 * acos(cos(radians(${x})) * cos(radians(post_loc_y)) * cos(radians(post_loc_x) - radians(${y})) + sin(radians(${x})) * sin(radians(post_loc_y)))) 
+			AS distance
+			FROM Posts 
+			LEFT JOIN (
+				SELECT post_id, user_id
+					FROM Favorites
+					where user_id = ${userId}
+			) b 
+			ON Posts.post_id = b.post_id
+			HAVING distance <= 5;
+			`;
+  }
+};
 
-module.exports = { searchMainQuery, likeQuery, mdQuery, weatherQuery };
+module.exports = {
+  searchMainQuery,
+  likeQuery,
+  mdQuery,
+  weatherQuery,
+  queryOfGettingMainMap,
+};

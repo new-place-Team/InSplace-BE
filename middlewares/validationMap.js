@@ -17,4 +17,5 @@ const schemasOfResultPageofTotal = Joi.object({
 module.exports = {
   schemasOfDetailPageOfInOutDoors,
   schemasOfResultPageofTotal,
+  
 };

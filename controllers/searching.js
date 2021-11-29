@@ -329,7 +329,7 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
     });
   } catch (err) {
     logger.error(
-      `조건 결과 상세 페이지 조회(실내외중 한개)에서 서버축 에러가 발생했습니다: ${err}`
+      `조건 결과 상세 페이지 조회(실내외중 한개)에서 서버측 에러가 발생했습니다: ${err}`
     );
     return next(customizedError(err, 500));
   } finally {

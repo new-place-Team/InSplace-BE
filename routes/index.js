@@ -9,6 +9,7 @@ const {
   searchMain,
   getFavoritesPosts,
   getVisitedPosts,
+  getMainMap,
 } = require('../controllers/index');
 
 const addFeedback = require('../controllers/feedback');
@@ -69,6 +70,9 @@ router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /* 메인 페이지 조회 */
 router.get('/main', justCheckAuth, searchMain);
+
+/* nav map 조회 */
+router.get('/main/maps', justCheckAuth, getMainMap);
 
 /* FeedBack 받기 */
 router.post('/feedbacks', isAuth, addFeedback);

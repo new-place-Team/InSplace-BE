@@ -65,4 +65,31 @@
  *         description: Bad Request
  *       '500':
  *         description: Internal Serve Error
+ * /main/maps?x={x}&y={y}:
+ *   get:
+ *     security:
+ *      - bearerAuth: []
+ *     tags:
+ *      - Index
+ *     summary: nav에서 현재 위치 기준 5km 이내 검색
+ *     parameters:
+ *       - name: x
+ *         in: query
+ *         description: 위도(x)
+ *         default: 37.51350
+ *         schema:
+ *           type: string
+ *       - name: y
+ *         in: query
+ *         description: 경도(y)
+ *         default: 127.10009
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: 데이터 불러오기 성공
+ *       '400':
+ *         description: Bad Request
+ *       '500':
+ *         description: Internal Server Error(백엔드 문제)
  */
