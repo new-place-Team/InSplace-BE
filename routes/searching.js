@@ -8,6 +8,9 @@ const {
   getResultPageOfTotal,
 } = require('../controllers/searching');
 
+const mapRouter = require('./map');
+/* maps Router */
+router.use('/maps', mapRouter);
 /* 토탈 결과 페이지 조회 */
 router.get('/pages/:number/total', justCheckAuth, getResultPageOfTotal);
 
