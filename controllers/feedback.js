@@ -27,9 +27,7 @@ const queryOfAddingFeedback = (userId, nickname, phoneNumber, description) => {
 };
 
 const convertDescription = (description) => {
-  let result = description.replace(`'`, ``);
-  result = result.replace(`"`, '');
-  return result;
+  return description.replace(/\"/gi, '');
 };
 /* 피드백 추가 */
 const addFeedback = async (req, res, next) => {
