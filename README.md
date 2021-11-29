@@ -3,6 +3,7 @@
 ## ✍🏻 서비스 소개
 
 ## ⛅️ 팀원 소개
+
 - **Back End**
   - 나종완(팀장)([https://github.com/jongwanra](https://github.com/jongwanra))
   - 이병관([https://github.com/fnrkp089](https://github.com/fnrkp089))
@@ -15,6 +16,8 @@
   - 이미주([]())
   - 이경미([https://github.com/leekyungmimiii](https://github.com/leekyungmimiii))
 
-## ERD
+## 📋 ERD
 
-## Library
+![ERD](./readme_images/erd.png)
+
+## 🌧 Library
