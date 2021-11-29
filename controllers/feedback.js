@@ -26,13 +26,19 @@ const queryOfAddingFeedback = (userId, nickname, phoneNumber, description) => {
         `;
 };
 
+const convertDescription = (description) => {
+  let result = description.replace(`'`, ``);
+  result = result.replace(`"`, '');
+  return result;
+};
 /* 피드백 추가 */
 const addFeedback = async (req, res, next) => {
   const lang = req.headers['language'];
   let errMsg = '';
   const userId = req.user;
-  const { phoneNumber, description } = req.body;
-
+  let { phoneNumber, description } = req.body;
+  description = convertDescription(description);
+  console.log('desc:', description);
   /* 유효성 검사*/
   try {
     await schemasOfFeedback.validateAsync({
