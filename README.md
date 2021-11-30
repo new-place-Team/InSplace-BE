@@ -41,20 +41,20 @@ InSplace는 In Seoul Place의 약자로,
 
 |       library       |              description               |
 | :-----------------: | :------------------------------------: |
-|       dotenv        |  보안적으로 문제가 있는 데이터 숨기기  |
-|        cors         |                                        |
-|       bcrypt        |                                        |
+|       dotenv        |  보안적으로 문제가 있는 데이터 숨기기   |
+|        cors         |   CORS보안 정책을 해결하기 위하여 사용. |
+|       bcrypt        |해시함수를 사용하여 암호화 하기 위해 사용.|
 |         joi         |                                        |
 |   @slack/webhook    |                                        |
 |     compression     |                                        |
 |       express       |                                        |
 |    jsonwebtoken     |                                        |
-|  morgan, wingston   |                                        |
+|  morgan, wingston   |  에러 로그 관리하기 위해 사용.          |
 |       mysql2        |                                        |
-|      artillery      |                                        |
+|      artillery      |  서버 부하테스트 하기 위해 사용한다.    |
 |       multer        |              파일 업로드               |
 |      multer-s3      |            S3에 파일 업로드            |
-| multer-s3-transform | upload시 자동으로 파일을 변형시켜준다. |
+| multer-s3-transform | upload시 자동으로 파일을 변형시켜준다.  |
 |    swagger-jsdoc    |                                        |
 | swagger-ui-express  |                                        |
 |                     |                                        |
