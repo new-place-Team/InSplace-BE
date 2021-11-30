@@ -19,18 +19,41 @@ InSplace는 In Seoul Place의 약자로,
   - 이미주([]())
   - 이경미([https://github.com/leekyungmimiii](https://github.com/leekyungmimiii))
 
-## 기술 스택
-![image](https://user-images.githubusercontent.com/86820463/143979071-fc6ceacc-be9b-45a7-981f-6f2e034812ed.png)
-![image](https://user-images.githubusercontent.com/86820463/143998068-54c126fa-fad8-4842-86e9-62998c62cade.png)
-![image](https://user-images.githubusercontent.com/86820463/143997786-31d1fa68-15ef-4307-bd95-769b327f467e.png)
-![image](https://user-images.githubusercontent.com/86820463/143997881-fb7ccf5c-02bd-4c4e-b320-c39be8600509.png)
-
-
-
-
-## ❄️ Architecture
+## ❄️ Project Architecture
 
 ![Architecture](./readme_images/project-architecture.png)
+
+## 🛠 Tech Stack
+
+- Express.js
+- MySQL
+- Nginx Ingress
+- Code Pipeline
+- Code Deploy
+- Docker
+- Kubernetes
+
+## 🌧 Library
+
+|       library       |              description               |
+| :-----------------: | :------------------------------------: |
+|       dotenv        |  보안적으로 문제가 있는 데이터 숨기기  |
+|        cors         |                                        |
+|       bcrypt        |                                        |
+|         joi         |                                        |
+|   @slack/webhook    |                                        |
+|     compression     |                                        |
+|       express       |                                        |
+|    jsonwebtoken     |                                        |
+|  morgan, wingston   |                                        |
+|       mysql2        |                                        |
+|      artillery      |                                        |
+|       multer        |              파일 업로드               |
+|      multer-s3      |            S3에 파일 업로드            |
+| multer-s3-transform | upload시 자동으로 파일을 변형시켜준다. |
+|    swagger-jsdoc    |                                        |
+| swagger-ui-express  |                                        |
+|                     |                                        |
 
 ## 🔎 API
 
@@ -44,46 +67,6 @@ InSplace는 In Seoul Place의 약자로,
 
 ![ERD](./readme_images/erd.png)
 
-## 🌧 Library
-
-```json
-"dependencies": {
-    "@slack/webhook": "^6.0.0",
-    "app-root-path": "^3.0.0",
-    "aws-sdk": "^2.1013.0",
-    "axios": "^0.24.0",
-    "bcrypt": "^5.0.1",
-    "compression": "^1.7.4",
-    "connect-redis": "^6.0.0",
-    "cors": "^2.8.5",
-    "date-utils": "^1.2.21",
-    "debug": "~2.6.9",
-    "dotenv": "^10.0.0",
-    "ejs": "~2.6.1",
-    "express": "~4.16.1",
-    "joi": "^17.4.2",
-    "jsonwebtoken": "^8.5.1",
-    "morgan": "~1.9.1",
-    "multer": "^1.4.3",
-    "multer-s3": "^2.10.0",
-    "multer-s3-transform": "^2.3.2",
-    "mysql2": "^2.3.2",
-    "node-cron": "^3.0.0",
-    "node-schedule": "^2.0.0",
-    "qs": "^6.10.1",
-    "redis": "^3.1.2",
-    "sharp": "^0.29.2",
-    "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.1.6",
-    "winston-daily-rotate-file": "^4.5.5"
-  },
-  "devDependencies": {
-    "artillery": "^1.7.9",
-    "jest": "^27.3.1",
-    "supertest": "^6.1.6",
-    "winston": "^3.3.3"
-  }
-```
 ## Trouble Shooting
-- 
 
+-
