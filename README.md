@@ -21,7 +21,7 @@ InSplace는 In Seoul Place의 약자로,
 
 ## ❄️ Project Architecture
 
-![Architecture](./readme_images/project-architecture.png)
+![Architecture](./readme_images/project_architecture.png)
 
 ## 🛠 Tech Stack
 
@@ -30,8 +30,12 @@ InSplace는 In Seoul Place의 약자로,
 - Nginx Ingress
 - Code Pipeline
 - Code Deploy
+- Swagger
 - Docker
 - Kubernetes
+- EC2
+- S3
+- RDS
 
 ## 🌧 Library
 
