@@ -19,6 +19,12 @@ InSplace는 In Seoul Place의 약자로,
   - 이미주([]())
   - 이경미([https://github.com/leekyungmimiii](https://github.com/leekyungmimiii))
 
+## 기술 스택
+![image](https://user-images.githubusercontent.com/86820463/143979071-fc6ceacc-be9b-45a7-981f-6f2e034812ed.png)
+![image](https://user-images.githubusercontent.com/86820463/143979251-41ecab34-3360-4120-a6bf-9c3b51d1081f.png)
+
+
+
 ## ❄️ Architecture
 
 ![Architecture](./readme_images/project-architecture.png)
@@ -75,3 +81,6 @@ InSplace는 In Seoul Place의 약자로,
     "winston": "^3.3.3"
   }
 ```
+## Trouble Shooting
+- 
+
