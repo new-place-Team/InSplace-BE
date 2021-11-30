@@ -21,7 +21,7 @@ InSplace는 In Seoul Place의 약자로,
 
 ## ❄️ Project Architecture
 
-![Architecture](./readme_images/project_architecture.png)
+![Architecture](./readme_images/project_architecture0.2.png)
 
 ## 🛠 Tech Stack
 
