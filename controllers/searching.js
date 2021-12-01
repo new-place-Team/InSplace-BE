@@ -69,7 +69,7 @@ const getResultPageOfTotal = async (req, res, next) => {
     for (let i = 0; i < posts.length; i++) {
       posts[i].postImage = getMainImage(
         posts[i].postImage,
-        process.env.POST_BASE_URL
+        process.env.POST_THUMB_URL
       );
     }
 
@@ -169,7 +169,7 @@ const getResultPageOfCondition = async (req, res, next) => {
       }
       result[0][i].postImage = getMainImage(
         result[0][i].postImage,
-        process.env.POST_BASE_URL
+        process.env.POST_THUMB_URL
       );
       if (result[0][i].insideYN === 1 && insideSize < 9) {
         insidePlaces.push(result[0][i]);
@@ -274,7 +274,7 @@ const getDetailPageOfInOutDoors = async (req, res, next) => {
     for (let i = 0; i < posts.length; i++) {
       posts[i].postImage = getMainImage(
         posts[i].postImage,
-        process.env.POST_BASE_URL
+        process.env.POST_THUMB_URL
       );
     }
 
