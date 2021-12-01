@@ -197,12 +197,12 @@ const kakaoLogin = async (req, res, next) => {
       },
     } = getKakaoUserResult.data;
 
-    const https = 'https:';
-
     const [, backUrl] = profile_image_url.split(':');
 
-    const httpsKakaoImageUrl = `${https}${backUrl}`;
+    const httpsKakaoImageUrl = `https:${backUrl}`;
+
     let genderNumber = '';
+
     if (gender == 'male') {
       genderNumber = 1;
     } else if (gender == 'female') {

@@ -36,7 +36,7 @@ router.delete('/:userId', isAuth, deleteUser);
 router.post('/check/nickname', checkUserNickname);
 
 //유저 리폿 라우터
-router.post('/report', isAuth, addUserReport);
+router.post('/reports', isAuth, addUserReport);
 
 /* 유저 정보 수정 */
 router.put(
