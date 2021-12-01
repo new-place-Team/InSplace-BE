@@ -59,7 +59,7 @@ const getMapDataOfResultPageOfTotal = async (req, res, next) => {
     for (let i = 0; i < posts.length; i++) {
       posts[i].postImage = getMainImage(
         posts[i].postImage,
-        process.env.POST_BASE_URL
+        process.env.POST_THUMB_URL
       );
     }
 
@@ -149,7 +149,7 @@ const getMapDataOfResultPageOfInOutDoors = async (req, res, next) => {
     for (let i = 0; i < posts.length; i++) {
       posts[i].postImage = getMainImage(
         posts[i].postImage,
-        process.env.POST_BASE_URL
+        process.env.POST_THUMB_URL
       );
     }
 
