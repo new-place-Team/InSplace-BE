@@ -81,6 +81,9 @@ InSplace는 In Seoul Place의 약자로,
 
   - 부하 테스트 결과
 
+    ![Before-Test-1](readme_images/before-kuber-1.png)
+    ![Before-Test-2](readme_images/before-kuber-2.png)
+
 - **쿠버네티스 적용 후**
 
   - 아키텍쳐
@@ -88,3 +91,5 @@ InSplace는 In Seoul Place의 약자로,
     ![After-Architecture](./readme_images/test_after.png)
 
   - 부하 테스트 결과
+    ![After-Test-1](readme_images/after-kuber-1.png)
+    ![After-Test-2](readme_images/after-kuber-2.png)
