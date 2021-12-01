@@ -71,6 +71,20 @@ InSplace는 In Seoul Place의 약자로,
 
 ![ERD](./readme_images/erd.png)
 
-## Trouble Shooting
+## ✅ 부하 테스트
 
--
+- **쿠버네티스 적용 전**
+
+  - 아키텍쳐
+
+    ![Before-Architecture](./readme_images/test_before.png)
+
+  - 부하 테스트 결과
+
+- **쿠버네티스 적용 후**
+
+  - 아키텍쳐
+
+    ![After-Architecture](./readme_images/test_after.png)
+
+  - 부하 테스트 결과
