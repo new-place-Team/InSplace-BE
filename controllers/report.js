@@ -1,7 +1,11 @@
 const { pool } = require('../models/index');
 const customizedError = require('./error');
 const schemasOfReport = require('../middlewares/validationReport');
-const queryOfAddingReport = require('../query/report');
+const {
+  queryOfAddingReport,
+  addReportUser,
+  FindReportUser,
+} = require('../query/report');
 const logger = require('../config/logger');
 
 /* 신고한 내용 DB에 추가 */
@@ -68,11 +72,20 @@ const addUserReport = async (req, res, next) => {
   const { toUserId, categoryNum } = req.body;
   const lang = req.headers['language'];
   try {
-    await pool.query(
-      `INSERT INTO UserReports(from_user_id,to_user_id,category_num) VALUES(${fromUser},${toUserId},${categoryNum})`
+    const findReportUserResult = await pool.query(
+      FindReportUser(fromUser, toUserId)
     );
-    return res.sendStatus(200);
+    if (findReportUserResult[0].length == 0) {
+      await pool.query(addReportUser(fromUser, toUserId, categoryNum));
+      return res.sendStatus(200);
+    }
+    errMsg =
+      lang === 'ko' || lang === undefined
+        ? `이미 신고한 유저입니다`
+        : `User has already reported`;
+    return next(customizedError(errMsg, 400));
   } catch (err) {
+    console.log(err);
     errMsg =
       lang === 'ko' || lang === undefined
         ? `유효하지 않은 요청입니다. 다시 확인해주세요`
