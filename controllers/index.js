@@ -22,7 +22,7 @@ const searchMain = async (req, res, next) => {
   const adjImg = (result) => {
     let resultImg = result[0];
     for (let i = 0; i < resultImg.length; i++) {
-      resultImg[i].postImage = `${process.env.POST_THUMB_URL}${
+      resultImg[i].postImage = `${process.env.POST_BASE_URL}${
         result[0][i].postImage.split('&&')[0]
       }`;
     }
@@ -108,7 +108,7 @@ const getVisitedPosts = async (req, res, next) => {
     for (let i = 0; i < visitedPosts.length; i++) {
       visitedPosts[i].postImage = getMainImage(
         visitedPosts[i].postImage,
-        process.env.POST_THUMB_URL
+        process.env.POST_BASE_URL
       );
     }
 
@@ -135,7 +135,7 @@ const getFavoritesPosts = async (req, res, next) => {
     for (let i = 0; i < favoritePosts.length; i++) {
       favoritePosts[i].postImage = getMainImage(
         favoritePosts[i].postImage,
-        process.env.POST_THUMB_URL
+        process.env.POST_BASE_URL
       );
     }
 
@@ -193,7 +193,7 @@ const getMainMap = async (req, res, next) => {
     for (let i = 0; i < posts.length; i++) {
       posts[i].postImage = getMainImage(
         posts[i].postImage,
-        process.env.POST_THUMB_URL
+        process.env.POST_BASE_URL
       );
     }
 
