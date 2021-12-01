@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const helmet = require('helmet');
 const logger = require('./config/logger');
 const compression = require('compression');
 require('dotenv').config;
@@ -15,7 +16,7 @@ const morganFormat = process.env.NODE_ENV !== 'production' ? combined : 'dev';
 logger.info(`Current NODE_ENV: ${morganFormat}`);
 app.use(morgan(morganFormat, { stream: logger.stream })); // morgan 로그 설정
 app.use(compression());
-
+app.use(helmet());
 //CORS
 const cors = require('cors');
 const corsOptions = {
@@ -34,6 +35,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', require('./routes/index'));
 
