@@ -39,25 +39,25 @@ InSplace는 In Seoul Place의 약자로,
 
 ## 🌧 Library
 
-|       library       |              description               |
-| :-----------------: | :------------------------------------: |
-|       dotenv        |  보안적으로 문제가 있는 데이터 숨기기  |
-|        cors         |                                        |
-|       bcrypt        |                                        |
-|         joi         |                                        |
-|   @slack/webhook    |                                        |
-|     compression     |                                        |
-|       express       |                                        |
-|    jsonwebtoken     |                                        |
-|  morgan, wingston   |                                        |
-|       mysql2        |                                        |
-|      artillery      |                                        |
-|       multer        |              파일 업로드               |
-|      multer-s3      |            S3에 파일 업로드            |
-| multer-s3-transform | upload시 자동으로 파일을 변형시켜준다. |
-|    swagger-jsdoc    |                                        |
-| swagger-ui-express  |                                        |
-|                     |                                        |
+|       library       |                         description                         |
+| :-----------------: | :---------------------------------------------------------: |
+|       dotenv        |            보안적으로 문제가 있는 데이터 숨기기             |
+|        cors         |            CORS보안 정책을 해결하기 위하여 사용.            |
+|       bcrypt        |         해시함수를 사용하여 암호화 하기 위해 사용.          |
+|         joi         |                    Validate를 위해 사용.                    |
+|   @slack/webhook    |                slack 채팅을 하기 위해 사용.                 |
+|     compression     |                페이지를 압축하기 위해 사용.                 |
+|       express       |       빠르고 개방적인 개발을 위해 웹 프레임워크 사용.       |
+|    jsonwebtoken     |                    JWT Token 위해 사용.                     |
+|  morgan, wingston   |                에러 로그 관리하기 위해 사용.                |
+|       mysql2        |           Node.js에서 MySQL을 사용하기 위해 사용.           |
+|      artillery      |             서버 부하테스트 하기 위해 사용한다.             |
+|       multer        |                         파일 업로드                         |
+|      multer-s3      |                      S3에 파일 업로드                       |
+| multer-s3-transform |           upload시 자동으로 파일을 변형시켜준다.            |
+|    swagger-jsdoc    | 주석에 Swagger 태그를 추가하여 API를 문서화 하기 위해 사용. |
+| swagger-ui-express  |            API 문서를 UI 렌더링 하기 위해 사용.             |
+|                     |                                                             |
 
 ## 🔎 API
 
@@ -71,6 +71,25 @@ InSplace는 In Seoul Place의 약자로,
 
 ![ERD](./readme_images/erd.png)
 
-## Trouble Shooting
+## ✅ 부하 테스트
 
--
+- **쿠버네티스 적용 전**
+
+  - 아키텍쳐
+
+    ![Before-Architecture](./readme_images/test_before.png)
+
+  - 부하 테스트 결과
+
+    ![Before-Test-1](readme_images/before-kuber-1.png)
+    ![Before-Test-2](readme_images/before-kuber-2.png)
+
+- **쿠버네티스 적용 후**
+
+  - 아키텍쳐
+
+    ![After-Architecture](./readme_images/test_after.png)
+
+  - 부하 테스트 결과
+    ![After-Test-1](readme_images/after-kuber-1.png)
+    ![After-Test-2](readme_images/after-kuber-2.png)
