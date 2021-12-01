@@ -57,7 +57,7 @@ InSplace는 In Seoul Place의 약자로,
 | multer-s3-transform |           upload시 자동으로 파일을 변형시켜준다.            |
 |    swagger-jsdoc    | 주석에 Swagger 태그를 추가하여 API를 문서화 하기 위해 사용. |
 | swagger-ui-express  |            API 문서를 UI 렌더링 하기 위해 사용.             |
-|                     |                                                             |
+| helmet   | 서버 어플리케이션의 보안을 위해 사용  |                                                             |
 
 ## 🔎 API
 
