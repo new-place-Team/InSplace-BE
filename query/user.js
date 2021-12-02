@@ -53,14 +53,14 @@ const getKakaoUser = (userKakaoId) => {
 const insertNewUserforKakao = (kakaoId, userImage, nickname, gender) => {
   if (gender == '') {
     return `
-    INSERT INTO Users 
-    (kakao_id, user_image, nickname, kakao_yn,mbti_id) 
-    VALUES(${kakaoId},"${userImage}","${nickname}", 1,17)`;
+      INSERT INTO Users 
+      (kakao_id, user_image, nickname, kakao_yn,mbti_id) 
+      VALUES(${kakaoId},"${userImage}","${nickname}", 1,17)`;
   }
   return `
-  INSERT INTO Users 
-  (kakao_id, user_image, nickname, kakao_yn, male_yn,mbti_id) 
-  VALUES(${kakaoId},"${userImage}","${nickname}", 1, ${gender},17)`;
+    INSERT INTO Users 
+    (kakao_id, user_image, nickname, kakao_yn, male_yn, mbti_id) 
+    VALUES(${kakaoId},"${userImage}","${nickname}", 1, ${gender},17)`;
 };
 
 const modifyUserQuery = (userId, nickname, mbtiId, maleYN, userImage) => {

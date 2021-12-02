@@ -40,7 +40,7 @@ InSplace는 In Seoul Place의 약자로,
 ## 🌧 Library
 
 |       library       |                         description                         |
-| :-----------------: | :---------------------------------------------------------: |
+| :-----------------: | :---------------------------------------------------------: | --- |
 |       dotenv        |            보안적으로 문제가 있는 데이터 숨기기             |
 |        cors         |            CORS보안 정책을 해결하기 위하여 사용.            |
 |       bcrypt        |         해시함수를 사용하여 암호화 하기 위해 사용.          |
@@ -57,7 +57,7 @@ InSplace는 In Seoul Place의 약자로,
 | multer-s3-transform |           upload시 자동으로 파일을 변형시켜준다.            |
 |    swagger-jsdoc    | 주석에 Swagger 태그를 추가하여 API를 문서화 하기 위해 사용. |
 | swagger-ui-express  |            API 문서를 UI 렌더링 하기 위해 사용.             |
-| helmet   | 서버 어플리케이션의 보안을 위해 사용  |                                                             |
+|       helmet        |            서버 어플리케이션의 보안을 위해 사용             |     |
 
 ## 🔎 API
 
@@ -77,13 +77,12 @@ InSplace는 In Seoul Place의 약자로,
 
   - 아키텍쳐
 
- ![image](https://user-images.githubusercontent.com/86820463/144431984-430266f0-cc39-45f2-97f9-02f0faafb3fc.png)
+![image](https://user-images.githubusercontent.com/86820463/144431984-430266f0-cc39-45f2-97f9-02f0faafb3fc.png)
 
+- 부하 테스트 결과
 
-  - 부하 테스트 결과
-
-    ![Before-Test-1](readme_images/before-kuber-1.png)
-    ![Before-Test-2](readme_images/before-kuber-2.png)
+  ![Before-Test-1](readme_images/before-kuber-1.png)
+  ![Before-Test-2](readme_images/before-kuber-2.png)
 
 - **쿠버네티스 적용 후**
 
@@ -94,19 +93,25 @@ InSplace는 In Seoul Place의 약자로,
   - 부하 테스트 결과
     ![After-Test-1](readme_images/after-kuber-1.png)
     ![After-Test-2](readme_images/after-kuber-2.png)
-    
+
 - **이전 이미지로딩 vs 썸네일 적용후**
 
   - 이전 이미지 로딩
 
     <img src="https://user-images.githubusercontent.com/44608012/144354535-f6b1614e-1fad-4312-bebe-6a02965d5f40.gif">
-    
 
   - 썸네일
-  
+
     <img src="https://user-images.githubusercontent.com/44608012/144354579-0c043cea-aec1-4168-88d6-f7497f9a3d47.gif">
-    
+
+  - 썸네일 적용 전 후 응답 속도 차이
+
     ![image](https://user-images.githubusercontent.com/86820463/144435084-f3623bd3-e068-4f4b-88de-b7701e72fe2e.png)
 
-    
-    
+    Slow 3G 환경에서 약 2배 정도 속도개선이 되었다는 것을 알 수 있고 InSplace는 이미지가 주된 서비스이므로 2배 이상의 효과를 나타낼 것으로 기대하고 있습니다.
+
+## ✅ 향후 프로젝트의 목표
+
+- **에러 로그 관리**
+
+  - 현재 백엔드 에러 로그
