@@ -93,3 +93,13 @@ InSplace는 In Seoul Place의 약자로,
   - 부하 테스트 결과
     ![After-Test-1](readme_images/after-kuber-1.png)
     ![After-Test-2](readme_images/after-kuber-2.png)
+    
+- **이전 이미지로딩 vs 썸네일 적용후**
+
+  - 이전 이미지 로딩
+
+    ![Before-Image](readme_images/이전로딩.gif)
+
+  - 썸네일
+    ![After-Image](readme_images/썸네일.gif)
+    
