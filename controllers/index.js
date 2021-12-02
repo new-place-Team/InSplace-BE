@@ -22,7 +22,7 @@ const searchMain = async (req, res, next) => {
   const adjImg = (result) => {
     let resultImg = result[0];
     for (let i = 0; i < resultImg.length; i++) {
-      resultImg[i].postImage = `${process.env.POST_THUMB_URL}${
+      resultImg[i].postImage = `${process.env.POST_BASE_URL}${
         result[0][i].postImage.split('&&')[0]
       }`;
     }
