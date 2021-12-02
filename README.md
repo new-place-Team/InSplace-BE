@@ -119,11 +119,13 @@ InSplace는 In Seoul Place의 약자로,
 
   - 적용 시킬 에러 로그 관리(키바나)
     <p align="center"><img src="https://user-images.githubusercontent.com/86820463/144443197-7554779c-53e0-4f7d-a450-53cd1d9f584d.png" width="500" height="200"></p>
-
-  
     
-   
-  
   - 기존 로그 관리법과 ELK의 차이점.
     - 키바나를 사용하면 파일로 로그 관리하는 것 보다 직관적이다.
     - Elastic Search 사용하면 파일로 로그 관리하는 것 보다 해당하는 에러를 찾기가 더 쉽다.
+
+- **테스트 코드 작성**
+     <p align="center"><img src="https://user-images.githubusercontent.com/86820463/144460650-409b1351-e12d-4a62-818a-8973590786b3.png" width="500" height="200"></p>
+  
+
+
