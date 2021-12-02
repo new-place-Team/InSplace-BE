@@ -127,6 +127,7 @@ InSplace는 In Seoul Place의 약자로,
 - **테스트 코드 작성**
     <p align="center"><img src="https://user-images.githubusercontent.com/86820463/144460650-409b1351-e12d-4a62-818a-8973590786b3.png" width="500" height="200"></p>
   - 테스트 코드 작성하는 이유.
+  
     - 서버를 실행하는 등의 시간을 절약할 수 있다.
     - 필요한 데이터를 미리 기입하고, 테스트가 끝나고 정리하는 등의 행동을 하지 않아도 된다.
     - 단위테스트의 경우 수십 ms 이기 때문에 테스트가 매우 빠르다.
