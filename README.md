@@ -126,6 +126,6 @@ InSplace는 In Seoul Place의 약자로,
 
 - **테스트 코드 작성**
      <p align="center"><img src="https://user-images.githubusercontent.com/86820463/144460650-409b1351-e12d-4a62-818a-8973590786b3.png" width="500" height="200"></p>
-  
+   
 
 
