@@ -77,7 +77,8 @@ InSplace는 In Seoul Place의 약자로,
 
   - 아키텍쳐
 
-    ![Before-Architecture](./readme_images/test_before.png)
+ ![image](https://user-images.githubusercontent.com/86820463/144431984-430266f0-cc39-45f2-97f9-02f0faafb3fc.png)
+
 
   - 부하 테스트 결과
 
