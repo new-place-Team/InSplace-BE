@@ -115,12 +115,11 @@ InSplace는 In Seoul Place의 약자로,
 - **에러 로그 관리**
 
   - 현재 백엔드 에러 로그 관리
-    <div style="display:flex"><img src="https://user-images.githubusercontent.com/86820463/144436859-85a6fddb-135b-4565-8c49-f3cbdeb1e1a2.png" style="width:300px "/><img src="https://user-images.githubusercontent.com/86820463/144441481-56bc65a4-a9fc-4ad0-8899-cc2728534b24.png" style="margin-left:20px; width:600px"/></div>
+    <div style="display:flex"><img src="https://user-images.githubusercontent.com/86820463/144436859-85a6fddb-135b-4565-8c49-f3cbdeb1e1a2.png" style="width:300px"/><img src="https://user-images.githubusercontent.com/86820463/144441481-56bc65a4-a9fc-4ad0-8899-cc2728534b24.png" style="margin-left:20px; width:600px"/></div>
 
   - 적용 시킬 에러 로그 관리(키바나)
-
-
-    ![image](https://user-images.githubusercontent.com/86820463/144443197-7554779c-53e0-4f7d-a450-53cd1d9f584d.png)
+    <img src="https://user-images.githubusercontent.com/86820463/144443197-7554779c-53e0-4f7d-a450-53cd1d9f584d.png" style="width:300px "/>
+    
    
   
   - 기존 로그 관리법과 ELK의 차이점.
