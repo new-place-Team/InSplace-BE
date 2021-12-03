@@ -16,8 +16,8 @@ InSplace는 In Seoul Place의 약자로,
   - 이미다([https://github.com/dam-lee](https://github.com/dam-lee))
   - 고규식([https://github.com/kokyusik91](https://github.com/kokyusik91))
 - **Designer**
-  - 이미주([]())
-  - 이경미([https://github.com/leekyungmimiii](https://github.com/leekyungmimiii))
+  - 이미주
+  - 이경미
 
 ## ❄️ Project Architecture
 
