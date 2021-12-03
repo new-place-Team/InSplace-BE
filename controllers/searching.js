@@ -37,7 +37,6 @@ const checkLoginUser = (target) => {
 
 /* 토탈 결과 페이지 조회 */
 const getResultPageOfTotal = async (req, res, next) => {
-  logger.info('토탈 결과 페이지 조회');
   const userId = Number(checkLoginUser(req.user));
   const pageNum = (Number(req.params.number) - 1) * 12; // Pages Number
   const result = req.query.result; // Searching Result
@@ -58,6 +57,7 @@ const getResultPageOfTotal = async (req, res, next) => {
     return next(customizedError(errMsg, 400));
   }
 
+  /* connection 접속*/
   const connection = await pool.getConnection(async (conn) => conn);
   try {
     const data = await connection.query(

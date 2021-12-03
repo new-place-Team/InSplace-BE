@@ -69,7 +69,7 @@ InSplace는 In Seoul Place의 약자로,
 
 ## 📋 ERD
 
-![ERD](./readme_images/erd.png)
+![ERD](./readme_images/erd2.png)
 
 ## ✅ 부하 테스트
 

@@ -20,13 +20,13 @@ const queryOfResultPageOfConditionAndCurrentLoc = (
 				inside_yn AS insideYN,
 				Posts.category_id AS category,
 				permission_state AS permissionState, 
-					CASE WHEN b.user_id = ${userId} THEN 1 
-					ELSE 0 
-					END AS favoriteState,
+				CASE WHEN b.user_id = ${userId} THEN 1 
+				ELSE 0 
+				END AS favoriteState,
 				post_loc_x AS postLocationX, 
 				post_loc_y AS postLocationY,
-					ROUND(6371 * acos(cos(radians(${x})) * cos(radians(post_loc_y)) * cos(radians(post_loc_x) - radians(${y})) + sin(radians(${x})) * sin(radians(post_loc_y)))) 
-					AS distance
+				ROUND(6371 * acos(cos(radians(${x})) * cos(radians(post_loc_y)) * cos(radians(post_loc_x) - radians(${y})) + sin(radians(${x})) * sin(radians(post_loc_y)))) 
+				AS distance
 			FROM Posts 
 			INNER JOIN Genders 
 			ON Posts.gender_id = Genders.gender_id
@@ -120,9 +120,10 @@ const queryOfResultPageOfCondition = (
 			inside_yn AS insideYN,
 			Posts.category_id AS category, 
 			permission_state AS permissionState, 
-				CASE WHEN b.user_id = ${userId} THEN 1 
-				ELSE 0 
-				END AS favoriteState,
+			CASE WHEN 
+			b.user_id = ${userId} THEN 1 
+			ELSE 0 
+			END AS favoriteState,
 			post_loc_x AS postLocationX, 
 			post_loc_y AS postLocationY
 			FROM Posts 
@@ -135,9 +136,10 @@ const queryOfResultPageOfCondition = (
 			INNER JOIN Categories 
 			ON Posts.category_id = Categories.category_id
 			LEFT JOIN (
-				SELECT post_id, user_id
-					FROM Favorites
-					where user_id = ${userId}
+				SELECT 
+				post_id, user_id
+				FROM Favorites
+				where user_id = ${userId}
 			) b 
 			ON Posts.post_id = b.post_id
 			WHERE
@@ -161,9 +163,9 @@ const queryOfResultPageOfCondition = (
 			inside_yn AS insideYN,
 			Posts.category_id AS category, 
 			permission_state AS permissionState, 
-				CASE WHEN b.user_id = ${userId} THEN 1 
-				ELSE 0 
-				END AS favoriteState,
+			CASE WHEN b.user_id = ${userId} THEN 1 
+			ELSE 0 
+			END AS favoriteState,
 			post_loc_x AS postLocationX, 
 			post_loc_y AS postLocationY
 			FROM Posts 
@@ -176,9 +178,10 @@ const queryOfResultPageOfCondition = (
 			INNER JOIN Categories 
 			ON Posts.category_id = Categories.category_id
 			LEFT JOIN (
-				SELECT post_id, user_id
-					FROM Favorites
-					where user_id = ${userId}
+				SELECT
+				post_id, user_id
+				FROM Favorites
+				where user_id = ${userId}
 			) b 
 			ON Posts.post_id = b.post_id
 			WHERE
@@ -252,9 +255,9 @@ const queryOfGettingInOutDoorsPageNumAndCurrentLoc = (
 	count(Posts.post_id) AS pageNum, 
 	Categories.description AS category, 
 	permission_state AS permissionState, 
-		CASE WHEN b.user_id =${userId} THEN 1 
-		ELSE 0 
-		END AS favoriteState
+	CASE WHEN b.user_id =${userId} THEN 1 
+	ELSE 0 
+	END AS favoriteState
 	FROM Posts 
 	INNER JOIN Genders 
 	ON Posts.gender_id = Genders.gender_id
@@ -304,9 +307,9 @@ const queryOfDetailPageOfInOutDoors = (
 			inside_yn AS insideYN,
 			Posts.category_id AS category, 
 			permission_state AS permissionState, 
-				CASE WHEN b.user_id = ${userId} THEN 1 
-				ELSE 0 
-				END AS favoriteState,
+			CASE WHEN b.user_id = ${userId} THEN 1 
+			ELSE 0 
+			END AS favoriteState,
 			post_loc_x AS postLocationX, 
 			post_loc_y AS postLocationY
 			FROM Posts 
@@ -346,9 +349,9 @@ const queryOfDetailPageOfInOutDoors = (
 			inside_yn AS insideYN,
 			Posts.category_id AS category,
 			permission_state AS permissionState, 
-				CASE WHEN b.user_id = ${userId} THEN 1 
-				ELSE 0 
-				END AS favoriteState,
+			CASE WHEN b.user_id = ${userId} THEN 1 
+			ELSE 0 
+			END AS favoriteState,
 			post_loc_x AS postLocationX, 
 			post_loc_y AS postLocationY
 			FROM Posts 
@@ -361,9 +364,10 @@ const queryOfDetailPageOfInOutDoors = (
 			INNER JOIN Categories 
 			ON Posts.category_id = Categories.category_id
 			LEFT JOIN (
-				SELECT post_id, user_id
-					FROM Favorites
-					where user_id = ${userId}
+				SELECT 
+				post_id, user_id
+				FROM Favorites
+				where user_id = ${userId}
 			) b 
 			ON Posts.post_id = b.post_id
 			WHERE Weathers.description
@@ -404,9 +408,9 @@ const queryOfDetailPageOfInOutDoorsAndCurrentLoc = (
 			inside_yn AS insideYN,
 			Posts.category_id AS category, 
 			permission_state AS permissionState, 
-				CASE WHEN b.user_id = ${userId} THEN 1 
-				ELSE 0 
-				END AS favoriteState,
+			CASE WHEN b.user_id = ${userId} THEN 1 
+			ELSE 0 
+			END AS favoriteState,
 			post_loc_x AS postLocationX, 
 			post_loc_y AS postLocationY,
 			ROUND(6371 * acos(cos(radians(${x})) * cos(radians(post_loc_y)) * cos(radians(post_loc_x) - radians(${y})) + sin(radians(${x})) * sin(radians(post_loc_y)))) 
@@ -449,9 +453,9 @@ const queryOfDetailPageOfInOutDoorsAndCurrentLoc = (
 			inside_yn AS insideYN,
 			Posts.category_id AS category, 
 			permission_state AS permissionState, 
-				CASE WHEN b.user_id = ${userId} THEN 1 
-				ELSE 0 
-				END AS favoriteState,
+			CASE WHEN b.user_id = ${userId} THEN 1 
+			ELSE 0 
+			END AS favoriteState,
 			post_loc_x AS postLocationX, 
 			post_loc_y AS postLocationY,
 			ROUND(6371 * acos(cos(radians(${x})) * cos(radians(post_loc_y)) * cos(radians(post_loc_x) - radians(${y})) + sin(radians(${x})) * sin(radians(post_loc_y)))) 
@@ -497,8 +501,8 @@ const queryOfResultPageOfTotal = (userId, result, pageNum, lang) => {
 		post_images AS postImage,
 		Posts.category_id AS category, 
 		permission_state AS permissionState,
-			CASE WHEN b.user_id = ${userId} THEN 1 
-				ELSE 0 END AS favoriteState,
+		CASE WHEN b.user_id = ${userId} THEN 1 
+		ELSE 0 END AS favoriteState,
 		post_loc_x AS postLocationX, 
 		post_loc_y AS postLocationY
 		FROM Posts
@@ -510,7 +514,8 @@ const queryOfResultPageOfTotal = (userId, result, pageNum, lang) => {
 				where user_id = ${userId}
 		) b 
 		ON Posts.post_id = b.post_id
-		WHERE REPLACE(title, ' ', '') LIKE CONCAT('%', REPLACE('${result}', ' ', '') , '%')
+		WHERE REPLACE(title, ' ', '')
+		LIKE CONCAT('%', REPLACE('${result}', ' ', '') , '%')
 		OR post_desc LIKE CONCAT('%', '${result}', '%')
 		LIMIT ${pageNum}, 12;
 		`;
