@@ -56,10 +56,10 @@ const showDetailPost = async (req, res, next) => {
         findDetailReviews(req.params.postId, req.user)
       );
       if (detailPosts.length == 0) {
-        errMsg = 
-        (lang === 'ko' || lang === undefined)
-        ? `포스트가 없습니다.`
-        : `There is no Posts`
+        errMsg =
+          lang === 'ko' || lang === undefined
+            ? `포스트가 없습니다.`
+            : `There is no Posts`;
         return next(customizedError(errMsg, 400));
       }
       return {
@@ -68,11 +68,11 @@ const showDetailPost = async (req, res, next) => {
         totalReviewPage,
       };
     } catch (err) {
-      logger.error(`Post Detail에서 발생한 에러입니다 : ${err}`)
-      errMsg = 
-        (lang === 'ko' || lang === undefined)
-        ? `포스트에 대한 상세 설명을 조회하는데 오류가 발생했습니다. 관리자에 문의하세요`
-        : `There is an Error in Loading Posts Info Progress, Please contact Administor`
+      logger.error(`Post Detail에서 발생한 에러입니다 : ${err}`);
+      errMsg =
+        lang === 'ko' || lang === undefined
+          ? `포스트에 대한 상세 설명을 조회하는데 오류가 발생했습니다. 관리자에 문의하세요`
+          : `There is an Error in Loading Posts Info Progress, Please contact Administor`;
       return next(customizedError(errMsg, 400));
     }
   };
@@ -91,7 +91,7 @@ const showDetailPost = async (req, res, next) => {
 
     return res.status(200).json({ ...resultSplitAddress });
   } catch (err) {
-    logger.error(`상세페이지를 찾는 과정에서 에러가 발생했습니다 : ${err}`)
+    logger.error(`상세페이지를 찾는 과정에서 에러가 발생했습니다 : ${err}`);
     return next(customizedError(err.message, 500));
   }
 };

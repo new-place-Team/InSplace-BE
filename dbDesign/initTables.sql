@@ -157,7 +157,11 @@ CREATE TABLE `Feedbacks` (
   `phone_number` varchar(15),
   `description` text
  );
- 
+
+CREATE TABLE `UserReportCategories` (
+  `category_id` integer PRIMARY KEY AUTO_INCREMENT,
+  `description` varchar(45) NOT NULL
+)
 -- Foreign Key
 ALTER TABLE `Favorites` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 ALTER TABLE `Reviews` ADD FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE ON UPDATE NO ACTION;
@@ -200,3 +204,4 @@ ALTER TABLE CurrentWeather CONVERT TO character SET utf8mb4;
 ALTER TABLE ReviewWeathers CONVERT TO character SET utf8mb4;
 ALTER TABLE Reports CONVERT TO character SET utf8mb4;
 ALTER TABLE Feedbacks CONVERT TO character SET utf8mb4;
+ALTER TABLE UserReportCategories CONVERT TO character SET utf8mb4;
