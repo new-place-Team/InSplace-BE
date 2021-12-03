@@ -40,7 +40,7 @@ InSplace는 In Seoul Place의 약자로,
 ## 🌧 Library
 
 |       library       |                         description                         |
-| :-----------------: | :---------------------------------------------------------: | --- |
+| :-----------------: | :---------------------------------------------------------: |
 |       dotenv        |            보안적으로 문제가 있는 데이터 숨기기             |
 |        cors         |            CORS보안 정책을 해결하기 위하여 사용.            |
 |       bcrypt        |         해시함수를 사용하여 암호화 하기 위해 사용.          |
@@ -57,7 +57,7 @@ InSplace는 In Seoul Place의 약자로,
 | multer-s3-transform |           upload시 자동으로 파일을 변형시켜준다.            |
 |    swagger-jsdoc    | 주석에 Swagger 태그를 추가하여 API를 문서화 하기 위해 사용. |
 | swagger-ui-express  |            API 문서를 UI 렌더링 하기 위해 사용.             |
-|       helmet        |            서버 어플리케이션의 보안을 위해 사용             |     |
+|       helmet        |            서버 어플리케이션의 보안을 위해 사용             |
 
 ## 🔎 API
 
@@ -69,7 +69,7 @@ InSplace는 In Seoul Place의 약자로,
 
 ## 📋 ERD
 
-![ERD](./readme_images/erd.png)
+![ERD](./readme_images/erd2.png)
 
 ## ✅ 부하 테스트
 
