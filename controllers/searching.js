@@ -57,6 +57,7 @@ const getResultPageOfTotal = async (req, res, next) => {
     return next(customizedError(errMsg, 400));
   }
 
+  /* connection 접속*/
   const connection = await pool.getConnection(async (conn) => conn);
   try {
     const data = await connection.query(
