@@ -8,7 +8,7 @@ InSplace는 In Seoul Place의 약자로,
 ## ⛅️ 팀원 소개
 
 - **Back End**
-  - 나종완([https://github.com/jongwanra](https://github.com/jongwanra))
+  - 나종완(팀장)([https://github.com/jongwanra](https://github.com/jongwanra))
   - 이병관([https://github.com/fnrkp089](https://github.com/fnrkp089))
   - 김기태([https://github.com/TAE6919](https://github.com/TAE6919))
 - **Front End**
